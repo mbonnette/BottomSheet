@@ -5,7 +5,7 @@
 import UIKit
 
 private let borderWidth: CGFloat = 1
-private let cornerRadius: CGFloat = 12
+private let cornerRadius: CGFloat = 10
 
 class BottomSheetBackgroundView: UIView {
 

@@ -4,11 +4,10 @@
 
 import UIKit
 
-private let maxVisibleContentHeight: CGFloat = 400
+private let maxVisibleContentHeight: CGFloat = 120.0
 
-private let numberOfCountries = 20
+private let numberOfCountries = 5
 private let countries = Locale.isoRegionCodes.prefix(numberOfCountries).map(Locale.current.localizedString(forRegionCode:))
-private let reuseIdentifier = "cell"
 
 class CountriesTableViewController: UITableViewController, BottomSheet {
     
@@ -17,9 +16,13 @@ class CountriesTableViewController: UITableViewController, BottomSheet {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: reuseIdentifier)
-        
-        tableView.contentInset.top = maxVisibleContentHeight
+		tableView.register(UINib(nibName: "GrabberCellID", bundle: nil), forCellReuseIdentifier: "GrabberCellID")
+		tableView.register(UINib(nibName: "RouteSetterCellID", bundle: nil), forCellReuseIdentifier: "RouteSetterCellID")
+		tableView.register(UINib(nibName: "RouteDetailsCellID", bundle: nil), forCellReuseIdentifier: "RouteDetailsCellID")
+
+		let screenHeight = UIScreen.main.bounds.size.height
+
+        tableView.contentInset.top = screenHeight - maxVisibleContentHeight
         tableView.backgroundColor = .clear
         tableView.showsVerticalScrollIndicator = false
         tableView.decelerationRate = .fast
@@ -44,12 +47,32 @@ class CountriesTableViewController: UITableViewController, BottomSheet {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier)!
-        cell.textLabel?.text = countries[indexPath.row]
+		
+		var cell:UITableViewCell
+		if ( indexPath.row == 0 ) {
+			cell = tableView.dequeueReusableCell(withIdentifier: "GrabberCellID")!
+		}
+		else if ( indexPath.row == 1 ) {
+			cell = tableView.dequeueReusableCell(withIdentifier: "RouteSetterCellID")!
+			cell.textLabel?.text = countries[indexPath.row-1]
+		}
+		else {
+			cell = tableView.dequeueReusableCell(withIdentifier: "RouteDetailsCellID")!
+			cell.textLabel?.text = countries[indexPath.row-1]
+		}
         cell.backgroundColor = .clear
         return cell
     }
-    
+	
+	override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+		if (indexPath.row == 0) {
+			return 120.0
+		}
+		else {
+			return super.tableView(tableView, heightForRowAt: indexPath)
+		}
+	}
+	
     // MARK: - Table view delegate
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
