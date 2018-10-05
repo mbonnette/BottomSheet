@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait">
+    <device id="retina6_5" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
@@ -10,34 +10,44 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="RoutePickerCmdPanel" rowHeight="120" id="0ZR-Ol-rK4" userLabel="GrabberCellID" customClass="RoutePickerCmdPanel" customModule="BottomSheet" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="605" height="93"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="RoutePickerCmdPanel" rowHeight="138" id="0ZR-Ol-rK4" userLabel="GrabberCellID" customClass="RoutePickerCmdPanel" customModule="BottomSheet" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="374" height="111"/>
             <autoresizingMask key="autoresizingMask"/>
             <tableViewCellContentView key="contentView" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" restorationIdentifier="GrabberCellID" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="0ZR-Ol-rK4" id="Dku-jt-7y4">
-                <rect key="frame" x="0.0" y="0.0" width="605" height="92.5"/>
+                <rect key="frame" x="0.0" y="0.0" width="374" height="110.66666666666667"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" fixedFrame="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="J3H-Bh-CjD" userLabel="Lt Gray Line">
-                        <rect key="frame" x="275" y="4" width="56" height="3"/>
+                        <rect key="frame" x="159" y="9" width="56" height="3"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <fontDescription key="fontDescription" type="system" pointSize="11"/>
                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <color key="highlightedColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </label>
-                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lcZ-vK-Wc4">
-                        <rect key="frame" x="0.0" y="24" width="55" height="55"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <state key="normal" backgroundImage="icons8-google-web-search-416"/>
-                    </button>
                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Avu-JL-NWP">
-                        <rect key="frame" x="530" y="14" width="75" height="75"/>
+                        <rect key="frame" x="318" y="21" width="65" height="65"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                         <state key="normal" image="icons8-route-filled-100"/>
                         <connections>
                             <action selector="fetchRoute:" destination="0ZR-Ol-rK4" eventType="touchUpInside" id="lpN-XZ-vO1"/>
                         </connections>
                     </button>
+                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lcZ-vK-Wc4">
+                        <rect key="frame" x="2" y="31" width="50" height="50"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <state key="normal" backgroundImage="icons8-google-web-search-416"/>
+                        <connections>
+                            <action selector="findLocation:" destination="0ZR-Ol-rK4" eventType="touchUpInside" id="Amx-2K-aoN"/>
+                        </connections>
+                    </button>
+                    <textField hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" preservesSuperviewLayoutMargins="YES" layoutMarginsFollowReadableWidth="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" clearsOnBeginEditing="YES" adjustsFontForContentSizeCategory="YES" minimumFontSize="17" clearButtonMode="always" translatesAutoresizingMaskIntoConstraints="NO" id="QFr-19-qOO">
+                        <rect key="frame" x="52" y="39" width="302" height="30"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <nil key="textColor"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                        <textInputTraits key="textInputTraits" keyboardAppearance="alert" returnKeyType="search" enablesReturnKeyAutomatically="YES" textContentType="location"/>
+                    </textField>
                 </subviews>
                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             </tableViewCellContentView>
@@ -47,8 +57,10 @@
             </accessibility>
             <connections>
                 <outlet property="routeButton" destination="Avu-JL-NWP" id="74N-CQ-5Ru"/>
+                <outlet property="searchButton" destination="lcZ-vK-Wc4" id="iQA-VV-n7D"/>
+                <outlet property="searchLocationTextField" destination="QFr-19-qOO" id="S8z-tL-k0K"/>
             </connections>
-            <point key="canvasLocation" x="-173.59999999999999" y="-686.80659670164926"/>
+            <point key="canvasLocation" x="-352.17391304347831" y="-679.35267857142856"/>
         </tableViewCell>
     </objects>
     <resources>

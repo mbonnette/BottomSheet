@@ -11,7 +11,10 @@ import MapKit
 
 class RoutePickerCmdPanel : UITableViewCell {
 	
+	@IBOutlet weak var searchLocationTextField: UITextField!
+	@IBOutlet weak var searchButton: UIButton!
 	@IBOutlet weak var routeButton: UIButton!
+
 	@IBAction func fetchRoute(_ sender: UIButton) {
 
 		sender.isEnabled = false
@@ -47,6 +50,21 @@ class RoutePickerCmdPanel : UITableViewCell {
 
 	}
 
+	@IBAction func findLocation(_ sender: Any) {
+		searchLocationTextField.isHidden = !searchLocationTextField.isHidden
+		if ( searchLocationTextField.isHidden ) {
+			routeButton.isHidden = false
+			routeButton.resignFirstResponder()
+			searchLocationTextField.endEditing(true)
+		}
+		else {
+			routeButton.isHidden = true
+			searchLocationTextField.resignFirstResponder()
+			searchLocationTextField.becomeFirstResponder()
+		}
+	}
+	
+	
 	override func draw(_ rect: CGRect) {
 		super.draw(rect)
 		
