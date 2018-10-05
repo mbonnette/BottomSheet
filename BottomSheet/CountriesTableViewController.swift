@@ -4,7 +4,7 @@
 
 import UIKit
 
-private let maxVisibleContentHeight: CGFloat = 150.0
+private let maxVisibleContentHeight: CGFloat = 120.0
 
 private let numberOfCountries = 5
 private let countries = Locale.isoRegionCodes.prefix(numberOfCountries).map(Locale.current.localizedString(forRegionCode:))
