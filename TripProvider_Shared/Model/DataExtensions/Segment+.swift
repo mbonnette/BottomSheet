@@ -36,7 +36,34 @@ extension Segment  {
 		super.awakeFromFetch()
 	}
 
+	static func segmentTypeEnum(_ segmentTypeStr:String) -> Int32 {
+		switch segmentTypeStr {
+		case "DRIVE","drive","Drive","driving":
+			return segmentTypes.driving.rawValue
+		case "WALK","walk","Walk","walking":
+			return segmentTypes.walking.rawValue
+		default:
+			return segmentTypes.driving.rawValue
+		}
+	}
 	
+	static func segmentTypeString(_ segmentType:segmentTypes) -> String {
+		switch segmentType {
+		case .driving:
+			return "driving"
+		case .walking:
+			return "walking"
+		default:
+			return "driving"
+		}
+	}
+	
+	
+	
+	//MARK:______________________________
+	//MARK: OBJECT routines
+	
+
 	/**
 	A convenience method to update a segment object with a dictionary.
 	*/
@@ -109,15 +136,25 @@ extension Segment  {
 	//MARK:______________________________
 	//MARK: PRIVATE routines
 	
-	private func segmentTypeEnum(_ segmentTypeStr:String) -> Int32 {
-
+	func segmentTypeEnum(_ segmentTypeStr:String) -> Int32 {
 		switch segmentTypeStr {
-				case "Driving":
-					return segmentTypes.driving.rawValue
-				case "Walking":
-					return segmentTypes.walking.rawValue
-				default:
-					return 	segmentTypes.driving.rawValue
-			}
+		case "DRIVE","drive","Drive":
+			return segmentTypes.driving.rawValue
+		case "WALK","walk","Walk":
+			return segmentTypes.walking.rawValue
+		default:
+			return segmentTypes.driving.rawValue
+		}
+	}
+	
+	func segmentTypeString(_ segmentType:segmentTypes) -> String {
+		switch segmentType {
+		case .driving:
+			return "driving"
+		case .walking:
+			return "walking"
+		default:
+			return "driving"
+		}
 	}
 }

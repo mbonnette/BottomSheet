@@ -11,6 +11,7 @@
  */
 
 import CoreData
+import MapKit
 
 /**
  Error handling
@@ -60,31 +61,75 @@ class TripProvider: NSObject {
         
         return container
     }()
-    
-    /**
-     NSFetchedResultsController is available on macOS since 10.12.
-     Create a controller for "Location" entity, sorting with "time" field, and perform fetch.
-    */
-    lazy var fetchedResultsController: NSFetchedResultsController<Location> = {
-        
-        let fetchRequest = NSFetchRequest<Location>(entityName:"Location")
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "time", ascending:false)]
-        
-        let controller = NSFetchedResultsController(fetchRequest: fetchRequest,
-                                                    managedObjectContext: persistentContainer.viewContext,
-                                                    sectionNameKeyPath: nil, cacheName: nil)
-        controller.delegate = fetchedResultsControllerDelegate
-        
-        do {
-            try controller.performFetch()
-        } catch {
-            let nserror = error as NSError
-            fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
-        }
-        
-        return controller
-    }()
+	
+	/**
+	NSFetchedResultsController is available on macOS since 10.12.
+	Create a controller for "Location" entity, sorting with "time" field, and perform fetch.
+	*/
+	lazy var fetchedLocationsResultsController: NSFetchedResultsController<Location> = {
+		
+		let fetchRequest = NSFetchRequest<Location>(entityName:"Location")
+		fetchRequest.sortDescriptors = [NSSortDescriptor(key: "time", ascending:false)]
+		
+		let controller = NSFetchedResultsController(fetchRequest: fetchRequest,
+													managedObjectContext: persistentContainer.viewContext,
+													sectionNameKeyPath: nil, cacheName: nil)
+		controller.delegate = fetchedResultsControllerDelegate
+		
+		do {
+			try controller.performFetch()
+		} catch {
+			let nserror = error as NSError
+			fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+		}
+		
+		return controller
+	}()
+	
+	/**
+	NSFetchedResultsController is available on macOS since 10.12.
+	Create a controller for "Location" entity, sorting with "time" field, and perform fetch.
+	*/
+	lazy var fetchedTripsResultsController: NSFetchedResultsController<Trip> = {
+		
+		let fetchRequest = NSFetchRequest<Trip>(entityName:"Trip")
+		fetchRequest.sortDescriptors = [NSSortDescriptor(key: "arrivalTime", ascending:false)]
+		
+		let controller = NSFetchedResultsController(fetchRequest: fetchRequest,
+													managedObjectContext: persistentContainer.viewContext,
+													sectionNameKeyPath: nil, cacheName: nil)
+		controller.delegate = fetchedResultsControllerDelegate
+		
+		do {
+			try controller.performFetch()
+		} catch {
+			let nserror = error as NSError
+			fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+		}
+		
+		return controller
+	}()
 
+	
+	
+	func fetchTrip(start startLoc:MKMapPoint, stop stopLoc:MKMapPoint, _ type:segmentTypes, completionHandler: @escaping (Error?) -> Void) {
+	
+		let urlString =
+				"https://api.takemobi.com/intermodal/v1/routes?origin=" +
+					String(startLoc.coordinate.latitude) + "," +
+					String(startLoc.coordinate.longitude) +
+				"&destination=" +
+					String(stopLoc.coordinate.latitude) + "," +
+					String(stopLoc.coordinate.longitude) +
+				"&mode=" +
+					Segment.segmentTypeString(type) +
+				"&departure_time=now"
+	
+		print(urlString)
+		fetchTrip(withURLString: urlString, completionHandler: completionHandler)
+	}
+	
+	
     /**
      Fetch trip from the remote server.
 	
@@ -97,7 +142,7 @@ class TripProvider: NSObject {
      servers, or when the services you use offer a secure communication
      option, you should always prefer to use HTTPS.
     */
-    func fetchTrip(completionHandler: @escaping (Error?) -> Void) {
+	private func fetchTrip(withURLString:String, completionHandler: @escaping (Error?) -> Void) {
         
 		let session = URLSession(configuration: .default)
 
@@ -109,7 +154,9 @@ class TripProvider: NSObject {
 //				let jsonURL = URL(string: "http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson")!
 //				let task = session.dataTask(with: jsonURL) { data, _, error in
 
-		let jsonURL = URL(string: "https://api.takemobi.com/intermodal/v1/routes?origin=42.377806,-71.111969&destination=42.481285,-71.214729&mode=driving&departure_time=now")!
+//		let jsonURL = URL(string: "https://api.takemobi.com/intermodal/v1/routes?origin=42.377806,-71.111969&destination=42.481285,-71.214729&mode=driving&departure_time=now")!
+
+		let jsonURL = URL(string: withURLString)!
 		let task = session.dataTask(with: jsonURL) { data, _, error in
 
 		

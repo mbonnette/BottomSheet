@@ -4,7 +4,7 @@
 
 import UIKit
 
-private let maxVisibleContentHeight: CGFloat = 120.0
+private let maxVisibleContentHeight: CGFloat = 150.0
 
 private let numberOfCountries = 5
 private let countries = Locale.isoRegionCodes.prefix(numberOfCountries).map(Locale.current.localizedString(forRegionCode:))
@@ -16,7 +16,7 @@ class CountriesTableViewController: UITableViewController, BottomSheet {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-		tableView.register(UINib(nibName: "GrabberCellID", bundle: nil), forCellReuseIdentifier: "GrabberCellID")
+		tableView.register(UINib(nibName: "RoutePickerCmdPanel", bundle: nil), forCellReuseIdentifier: "RoutePickerCmdPanel")
 		tableView.register(UINib(nibName: "RouteSetterCellID", bundle: nil), forCellReuseIdentifier: "RouteSetterCellID")
 		tableView.register(UINib(nibName: "RouteDetailsCellID", bundle: nil), forCellReuseIdentifier: "RouteDetailsCellID")
 
@@ -50,7 +50,7 @@ class CountriesTableViewController: UITableViewController, BottomSheet {
 		
 		var cell:UITableViewCell
 		if ( indexPath.row == 0 ) {
-			cell = tableView.dequeueReusableCell(withIdentifier: "GrabberCellID")!
+			cell = tableView.dequeueReusableCell(withIdentifier: "RoutePickerCmdPanel")!
 		}
 		else if ( indexPath.row == 1 ) {
 			cell = tableView.dequeueReusableCell(withIdentifier: "RouteSetterCellID")!
