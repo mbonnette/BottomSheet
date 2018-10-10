@@ -36,6 +36,11 @@ class JourneySingleton {
 	var tripProvider = TripProvider()
 	
 	
+	func retrieveDrivingJourney(completionHandler: @escaping (Error?) -> Void) {
+		tripProvider.fetchTrip(start: startPoint!, stop: endPoint!, segmentTypes.driving, completionHandler: completionHandler)
+	}
+	
+
 	func retrieveDrivingJourney(start:MKMapPoint, stop:MKMapPoint, completionHandler: @escaping (Error?) -> Void) {
 		tripProvider.fetchTrip(start: start, stop: stop, segmentTypes.driving, completionHandler: completionHandler)
 	}

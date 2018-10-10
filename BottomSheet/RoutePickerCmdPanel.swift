@@ -24,10 +24,7 @@ class RoutePickerCmdPanel : UITableViewCell {
 		sender.isHidden = true
 		spinner.startAnimating()
 		
-		let begin = MKMapPoint(CLLocationCoordinate2D(latitude: 42.377806, longitude: -71.111969))
-		let end = MKMapPoint(CLLocationCoordinate2D(latitude: 42.481285, longitude: -71.214729))
-		
-		JourneySingleton.sharedInstance.retrieveDrivingJourney(start: begin, stop: end, completionHandler: { error in
+		JourneySingleton.sharedInstance.retrieveDrivingJourney(completionHandler: { error in
 			
 			DispatchQueue.main.async {
 				
