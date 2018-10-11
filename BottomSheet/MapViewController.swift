@@ -106,7 +106,8 @@ class MapViewController: UIViewController, NSFetchedResultsControllerDelegate, C
 					print (lat, long)
 					print (addressString)
 					JourneySingleton.sharedInstance.startPoint = MKMapPoint(CLLocationCoordinate2D(latitude: lat, longitude: long))
-					JourneySingleton.sharedInstance.endPoint = MKMapPoint(CLLocationCoordinate2D(latitude: 42.481285, longitude: -71.214729))
+					
+					// TODO end point would get set on search process.  Harvard set as default for now
 				}
 			})
 		}
