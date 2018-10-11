@@ -105,7 +105,8 @@ class MapViewController: UIViewController, NSFetchedResultsControllerDelegate, C
 					self.currentAddress = addressString
 					print (lat, long)
 					print (addressString)
-					JourneySingleton.sharedInstance.startPoint = MKMapPoints(CLLocationCoordinate2D(latitude: lat, longitude: long))
+					JourneySingleton.sharedInstance.startPoint = MKMapPoint(CLLocationCoordinate2D(latitude: lat, longitude: long))
+					JourneySingleton.sharedInstance.endPoint = MKMapPoint(CLLocationCoordinate2D(latitude: 42.481285, longitude: -71.214729))
 				}
 			})
 		}

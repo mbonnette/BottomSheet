@@ -37,6 +37,9 @@ class JourneySingleton {
 	
 	
 	func retrieveDrivingJourney(completionHandler: @escaping (Error?) -> Void) {
+		if (endPoint == nil) {
+			endPoint = MKMapPoint(CLLocationCoordinate2D(latitude: 42.481285, longitude: -71.214729))
+		}
 		tripProvider.fetchTrip(start: startPoint!, stop: endPoint!, segmentTypes.driving, completionHandler: completionHandler)
 	}
 	
