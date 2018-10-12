@@ -64,14 +64,11 @@ class TripProvider: NSObject {
 	
 	/**
 	NSFetchedResultsController is available on macOS since 10.12.
-	Create a controller for "Location" entity, sorting with "time" field, and perform fetch.
+	Create a controller for "Location" entity and perform fetch.
 	*/
 	lazy var fetchedLocationsResultsController: NSFetchedResultsController<Location> = {
-		
-		let fetchRequest = NSFetchRequest<Location>(entityName:"Location")
-		fetchRequest.sortDescriptors = [NSSortDescriptor(key: "time", ascending:false)]
-		
-		let controller = NSFetchedResultsController(fetchRequest: fetchRequest,
+
+		let controller = NSFetchedResultsController(fetchRequest: Location.sortedFetchRequest,
 													managedObjectContext: persistentContainer.viewContext,
 													sectionNameKeyPath: nil, cacheName: nil)
 		controller.delegate = fetchedResultsControllerDelegate
@@ -88,14 +85,11 @@ class TripProvider: NSObject {
 	
 	/**
 	NSFetchedResultsController is available on macOS since 10.12.
-	Create a controller for "Location" entity, sorting with "time" field, and perform fetch.
+	Create a controller for "Trip" entity, sorting with "time" field, and perform fetch.
 	*/
 	lazy var fetchedTripsResultsController: NSFetchedResultsController<Trip> = {
-		
-		let fetchRequest = NSFetchRequest<Trip>(entityName:"Trip")
-		fetchRequest.sortDescriptors = [NSSortDescriptor(key: "arrivalTime", ascending:false)]
-		
-		let controller = NSFetchedResultsController(fetchRequest: fetchRequest,
+				
+		let controller = NSFetchedResultsController(fetchRequest: Trip.sortedFetchRequest,
 													managedObjectContext: persistentContainer.viewContext,
 													sectionNameKeyPath: nil, cacheName: nil)
 		controller.delegate = fetchedResultsControllerDelegate

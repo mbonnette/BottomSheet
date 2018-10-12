@@ -38,12 +38,11 @@ class JourneySingleton {
 	
 	func retrieveDrivingJourney(completionHandler: @escaping (Error?) -> Void) {
 		if (endPoint == nil) {
-			endPoint = MKMapPoint(CLLocationCoordinate2D(latitude: 42.481285, longitude: -71.214729))
+			endPoint = MKMapPoint(CLLocationCoordinate2D(latitude: 42.481285, longitude: -71.214729))	// Harvard
 		}
 		tripProvider.fetchTrip(start: startPoint!, stop: endPoint!, segmentTypes.driving, completionHandler: completionHandler)
 	}
 	
-
 	func retrieveDrivingJourney(start:MKMapPoint, stop:MKMapPoint, completionHandler: @escaping (Error?) -> Void) {
 		tripProvider.fetchTrip(start: start, stop: stop, segmentTypes.driving, completionHandler: completionHandler)
 	}
@@ -52,4 +51,8 @@ class JourneySingleton {
 		tripProvider.fetchTrip(start: start, stop: stop, segmentTypes.walking, completionHandler: completionHandler)
 	}
 
+	func getTrip(byType type:segmentTypes) -> Trip? {
+		let matchingTrips = Trip.findTrips(from: (startPoint?.coordinate)!, to: (endPoint?.coordinate)!)
+		return matchingTrips?.filter{ $0.tripType == type.rawValue }.first ?? nil
+	}
 }

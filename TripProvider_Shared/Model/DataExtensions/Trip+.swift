@@ -7,6 +7,7 @@
 
 import Foundation
 import CoreData
+import MapKit
 
 
 //MARK:______________________________
@@ -20,12 +21,62 @@ extension Trip  {
 	//MARK: CLASS routines
 	
 	static func newTrip(inContext context:NSManagedObjectContext) -> Trip {
-
 		let trip = NSEntityDescription.insertNewObject(forEntityName: "Trip", into:context) as! Trip
-
 		return trip
 	}
 	
+
+	static var defaultSortDescriptors: [NSSortDescriptor] {
+		return ([NSSortDescriptor(key: "arrivalTime", ascending: true)])
+	}
+	
+	
+	static var sortedFetchRequest: NSFetchRequest<Trip> {
+		let request: NSFetchRequest<Trip> = Trip.fetchRequest()
+		request.sortDescriptors = Trip.defaultSortDescriptors
+		return request
+	}
+	
+	
+	static var allTrips: [Trip]? {
+		var trips:[Trip]? = nil
+		do {
+			trips = try PersistentContainerSingleton.shared.persistentContainer.viewContext.fetch(Trip.sortedFetchRequest)
+		}
+		catch {
+			print("!!!!!!!!!!!!!!No trips received and a throw was hit: \(error)")
+		}
+		return trips
+	}
+	
+	
+	static func findTrips(from begin:CLLocationCoordinate2D,to end:CLLocationCoordinate2D) -> [Trip]? {
+		var trips:[Trip]? = nil
+		let request = Trip.sortedFetchRequest
+		request.predicate = NSPredicate(format: "startLocation.latitude = %@ AND startLocation.longtitude = %@ AND stopLocation.latitude = %@ AND stopLocation.longtitude", begin.latitude, begin.longitude, end.latitude, end.longitude)
+		do {
+			trips = try PersistentContainerSingleton.shared.persistentContainer.viewContext.fetch(request)
+		}
+		catch {
+			print("!!!!!!!!!!!!!!No trips received and a throw was hit: \(error)")
+		}
+		return trips
+	}
+	
+	static func findFastestTrip(from begin:CLLocationCoordinate2D,to end:CLLocationCoordinate2D) -> Trip? {
+		var trips:[Trip]? = Trip.findTrips(from:begin, to:end)
+		if (trips?.count ?? 0 >= 1) {
+			return trips![0]
+		}
+		else {
+			return nil
+		}
+	}
+
+	
+	
+	//MARK:______________________________
+	//MARK: OBJECT routines
 	public override func awakeFromFetch() {
 		super.awakeFromFetch()
 	}
@@ -54,8 +105,9 @@ extension Trip  {
 			let localCost				= tripDictionary["cost"] as? NSNumber,
 			let localCo2				= tripDictionary["co2"] as? NSNumber,
 			let localCalories			= tripDictionary["calories"] as? NSNumber,
-			let localResponseIdentifier	= tripDictionary["response_id"] as? String
-		
+			let localResponseIdentifier	= tripDictionary["response_id"] as? String,
+			let localTripType			= tripDictionary["mobi_identifier"] as? String
+
 		else {
 			let description = NSLocalizedString("Missing basic trip information -- doesn't look like a mobi payload", comment: "")
 			throw NSError(domain: locationsErrorDomain, code: TripProviderErrorCode.wrongDataFormat.rawValue, userInfo: [NSLocalizedDescriptionKey: description])
@@ -77,12 +129,12 @@ extension Trip  {
 		self.co2				= Int32(truncating: localCo2)
 		self.calories			= Int32(truncating: localCalories)
 		self.responseIdentifier	= localResponseIdentifier
+		self.tripType			= Segment.segmentTypeEnum(localTripType)
 
 		//??? Not stored
 		//		"mobi_score": 0,
 		//		"to_drop": false,
 		//		"is_awesome": false,
-		//		"mobi_identifier": "driving"
 	}
 
 }

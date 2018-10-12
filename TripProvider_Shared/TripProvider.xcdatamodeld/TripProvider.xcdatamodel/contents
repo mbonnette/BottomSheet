@@ -53,11 +53,11 @@
         <attribute name="drivingDistance" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="drivingTime" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="identifier" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="mobi_identifier" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="responseIdentifier" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="totalDistance" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="totalDuration" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="totalTime" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="tripType" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="walkingDistance" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="walkingTime" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <relationship name="endLocation" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Location" syncable="YES"/>
@@ -69,6 +69,6 @@
         <element name="Location" positionX="-272.58984375" positionY="-206.5" width="128" height="195"/>
         <element name="Path" positionX="-183.51953125" positionY="132.25390625" width="128" height="150"/>
         <element name="Segment" positionX="-456.29296875" positionY="56.96875" width="128" height="255"/>
-        <element name="Trip" positionX="-697.0625" positionY="-305.21875" width="128" height="358"/>
+        <element name="Trip" positionX="-697.0625" positionY="-305.21875" width="128" height="360"/>
     </elements>
 </model>

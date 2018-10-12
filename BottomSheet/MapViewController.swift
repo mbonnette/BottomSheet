@@ -9,15 +9,16 @@ import CoreData
 class MapViewController: UIViewController, NSFetchedResultsControllerDelegate, CLLocationManagerDelegate, MKMapViewDelegate {
 
     private lazy var mapView = MKMapView(frame: view.bounds)
-	private lazy var mapCenteredFirstTime = false
 	private lazy var locationMgr = CLLocationManager()
-	private lazy var currentAddress: String? = nil
-	private lazy var curLocation:CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: 0, longitude: 0)
 	private lazy var tripProvider: TripProvider = {
 		let provider = TripProvider()
 		provider.fetchedResultsControllerDelegate = self
 		return provider
 	}()
+	private var displayedTrip:Trip? = nil
+	private var mapCenteredFirstTime = false
+	private var currentAddress: String? = nil
+	private var curLocation:CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: 0, longitude: 0)
 
 	private let regionRadius: CLLocationDistance = 100000
 
@@ -41,6 +42,7 @@ class MapViewController: UIViewController, NSFetchedResultsControllerDelegate, C
 		checkLocationAuthorizationStatus()
 	}
 
+	
 	// MARK: - MKMapViewDelegate
 	func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
 		
@@ -114,6 +116,27 @@ class MapViewController: UIViewController, NSFetchedResultsControllerDelegate, C
 	}
 
 	
+	
+	// MARK: - Internal Route UI
+	func showNewTrip(_ trip:Trip?) {
+		guard (trip == nil ) else {
+			if (displayedTrip != nil) {
+				hideLastTrip()
+			}
+			displayedTrip = trip
+			return
+		}
+	}
+	
+	func hideLastTrip() {
+		// displayedTrip
+		displayedTrip = nil
+	}
+	
+
+	
+	
+	
 	// MARK: - CLLocationManager
 	
 	func checkLocationAuthorizationStatus() {
@@ -142,6 +165,7 @@ class MapViewController: UIViewController, NSFetchedResultsControllerDelegate, C
 }
 
 
+// MARK: - NSFetchedResultsControllerDelegate
 /**
 NSFetchedResultsControllerDelegate, available since macOS 10.12+
 */
@@ -149,11 +173,13 @@ extension MapViewController {
 	
 	func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
 		mapView.reloadInputViews()
+		showNewTrip(JourneySingleton.sharedInstance.getTrip(byType: .driving))
 	}
 
 }
 
 
+// MARK: - Double helper
 extension Double {
 	/// Rounds the double to decimal places value
 	func rounded(toPlaces places:Int) -> Double {
