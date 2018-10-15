@@ -29,7 +29,7 @@ extension Coordinate  {
 	func update(_ lat:NSNumber, _ long:NSNumber)  {
 
 		self.latitude = Double(truncating: lat)
-		self.longtitude = Double(truncating: long)
+		self.longitude = Double(truncating: long)
 	}
 }
 

@@ -35,32 +35,32 @@ class TripProvider: NSObject {
     /**
      Persistent container: use NSPersistentContainer to create the Core Data stack
     */
-    lazy var persistentContainer: NSPersistentContainer = {
-        
-        let container = NSPersistentContainer(name: "TripProvider")
-        
-        /**
-         fatalError() causes the application to generate a crash log and terminate.
-         You should not use this function in a shipping application.
-        */
-        container.loadPersistentStores(completionHandler: { (_, error) in
-            guard let error = error as NSError? else { return }
-            fatalError("Unresolved error \(error), \(error.userInfo)")
-        })
-        
-        container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-        container.viewContext.undoManager = nil // We don't need undo so set it to nil.
-        container.viewContext.shouldDeleteInaccessibleFaults = true
-        
-        /**
-         Merge the changes from other contexts automatically.
-         You can also choose to merge the changes by observing NSManagedObjectContextDidSave
-         notification and calling mergeChanges(fromContextDidSave notification: Notification)
-        */
-        container.viewContext.automaticallyMergesChangesFromParent = true
-        
-        return container
-    }()
+//    lazy var persistentContainer: NSPersistentContainer = {
+//
+//        let container = NSPersistentContainer(name: "TripProvider")
+//
+//        /**
+//         fatalError() causes the application to generate a crash log and terminate.
+//         You should not use this function in a shipping application.
+//        */
+//        container.loadPersistentStores(completionHandler: { (_, error) in
+//            guard let error = error as NSError? else { return }
+//            fatalError("Unresolved error \(error), \(error.userInfo)")
+//        })
+//
+//        container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+//        container.viewContext.undoManager = nil // We don't need undo so set it to nil.
+//        container.viewContext.shouldDeleteInaccessibleFaults = true
+//
+//        /**
+//         Merge the changes from other contexts automatically.
+//         You can also choose to merge the changes by observing NSManagedObjectContextDidSave
+//         notification and calling mergeChanges(fromContextDidSave notification: Notification)
+//        */
+//        container.viewContext.automaticallyMergesChangesFromParent = true
+//
+//        return container
+//    }()
 	
 	/**
 	NSFetchedResultsController is available on macOS since 10.12.
@@ -69,7 +69,7 @@ class TripProvider: NSObject {
 	lazy var fetchedLocationsResultsController: NSFetchedResultsController<Location> = {
 
 		let controller = NSFetchedResultsController(fetchRequest: Location.sortedFetchRequest,
-													managedObjectContext: persistentContainer.viewContext,
+													managedObjectContext: PersistentContainerSingleton.shared.persistentContainer.viewContext,
 													sectionNameKeyPath: nil, cacheName: nil)
 		controller.delegate = fetchedResultsControllerDelegate
 		
@@ -90,7 +90,7 @@ class TripProvider: NSObject {
 	lazy var fetchedTripsResultsController: NSFetchedResultsController<Trip> = {
 				
 		let controller = NSFetchedResultsController(fetchRequest: Trip.sortedFetchRequest,
-													managedObjectContext: persistentContainer.viewContext,
+													managedObjectContext: PersistentContainerSingleton.shared.persistentContainer.viewContext,
 													sectionNameKeyPath: nil, cacheName: nil)
 		controller.delegate = fetchedResultsControllerDelegate
 		
@@ -220,7 +220,7 @@ class TripProvider: NSObject {
 		- Fetch existing locations to compare with incoming data.
 		- Create new locations as required.
 		*/
-		let taskContext = persistentContainer.newBackgroundContext()
+		let taskContext = PersistentContainerSingleton.shared.persistentContainer.newBackgroundContext()
 		taskContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
 		taskContext.undoManager = nil // We don't need undo so set it to nil.
 		
@@ -319,7 +319,7 @@ class TripProvider: NSObject {
                 
                 if let deletedObjectIDs = batchDeleteResult?.result as? [NSManagedObjectID] {
                     NSManagedObjectContext.mergeChanges(fromRemoteContextSave: [NSDeletedObjectsKey: deletedObjectIDs],
-                                                        into: [self.persistentContainer.viewContext])
+                                                        into: [PersistentContainerSingleton.shared.persistentContainer.viewContext])
                 }
             } catch {
                 print("Error: \(error)\nCould not batch delete existing records.")

@@ -52,8 +52,8 @@ extension Trip  {
 	
 	static func findTrips(from begin:CLLocationCoordinate2D,to end:CLLocationCoordinate2D) -> [Trip]? {
 		var trips:[Trip]? = nil
-		let request = Trip.sortedFetchRequest
-		request.predicate = NSPredicate(format: "startLocation.latitude = %@ AND startLocation.longtitude = %@ AND stopLocation.latitude = %@ AND stopLocation.longtitude", begin.latitude, begin.longitude, end.latitude, end.longitude)
+		let request = sortedFetchRequest
+		request.predicate = NSPredicate(format: "startLocation.latitude=%f AND startLocation.longitude=%f AND stopLocation.latitude=%f AND stopLocation.longitude=%f", begin.latitude, begin.longitude, end.latitude, end.longitude)
 		do {
 			trips = try PersistentContainerSingleton.shared.persistentContainer.viewContext.fetch(request)
 		}

@@ -139,7 +139,7 @@ extension Location  {
 			let localName 		= locationDictionary["name"] as? String,
 //			let localAddress 	= locationDictionary["address"] as? String, ----- coming thru null and then odd number from json process
 			let localLatitude 	= (locationDictionary["lat"] as? NSNumber),
-			let localLongtitude = locationDictionary["lng"] as? NSNumber,
+			let localLongitude = locationDictionary["lng"] as? NSNumber,
 			let localAltitude 	= locationDictionary["alt"] as? NSNumber
 			
 			else {
@@ -152,7 +152,7 @@ extension Location  {
 		self.name		= localName
 //		self.address	= localAddress
 		self.latitude	= Double( truncating: localLatitude )
-		self.longtitude	= Double( truncating: localLongtitude )
+		self.longitude	= Double( truncating: localLongitude )
 		self.altitude	= Int32( truncating: localAltitude )
 	}
 }

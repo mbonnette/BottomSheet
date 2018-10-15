@@ -115,13 +115,13 @@ extension Segment  {
 		//	"controllable": true,
 
 		do {
-			let fromLocation = Location.newLocation(inContext:context)
-			try fromLocation.update(with:fromDictionary, inContext:context)
-			self.startLocation = fromLocation
+			let startLocation = Location.newLocation(inContext:context)
+			try startLocation.update(with:fromDictionary, inContext:context)
+			self.startLocation = startLocation
 
-			let toLocation = Location.newLocation(inContext:context)
-			try toLocation.update(with:toDictionary, inContext:context)
-			self.endLocation = toLocation
+			let stopLocation = Location.newLocation(inContext:context)
+			try stopLocation.update(with:toDictionary, inContext:context)
+			self.stopLocation = stopLocation
 			
 			let segmentPath = Path.newPath(inContext:context)
 			try segmentPath.update(with:pathDictionary, inContext:context)
