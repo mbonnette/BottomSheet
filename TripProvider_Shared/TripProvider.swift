@@ -278,6 +278,23 @@ class TripProvider: NSObject {
                 return
             }
         }
+		let numSegs = trip?.segments!.count
+		if (numSegs! >= 1) {
+			trip?.startLocation = (trip?.segments![0] as! Segment).startLocation
+			trip?.stopLocation = (trip?.segments![numSegs!-1] as! Segment).stopLocation
+		}
+		
+		// Save all the changes just made and reset the taskContext to free the cache.
+		if taskContext.hasChanges {
+			do {
+				try taskContext.save()
+			} catch {
+				print("Error: \(error)\nCould not save Core Data context.")
+				return
+			}
+			taskContext.reset() // Reset the context to clean up the cache and low the memory footprint.
+		}
+
     }
     
     /**
@@ -343,17 +360,6 @@ class TripProvider: NSObject {
 					taskContext.delete(segment)
 				}
 			}
-            
-            // Save all the changes just made and reset the taskContext to free the cache.
-            if taskContext.hasChanges {
-                do {
-                    try taskContext.save()
-                } catch {
-                    print("Error: \(error)\nCould not save Core Data context.")
-                    return
-                }
-                taskContext.reset() // Reset the context to clean up the cache and low the memory footprint.
-            }
             success = true
         }
         return success

@@ -151,8 +151,8 @@ extension Location  {
 		self.identifier = localIdentifier
 		self.name		= localName
 //		self.address	= localAddress
-		self.latitude	= Double( truncating: localLatitude )
-		self.longitude	= Double( truncating: localLongitude )
+		self.latitude	= Double( truncating: localLatitude ).rounded(toPlaces: 5)
+		self.longitude	= Double( truncating: localLongitude ).rounded(toPlaces: 5)
 		self.altitude	= Int32( truncating: localAltitude )
 	}
 }
