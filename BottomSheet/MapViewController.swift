@@ -114,8 +114,8 @@ class MapViewController: UIViewController, NSFetchedResultsControllerDelegate, C
 					print (addressString)
 					JourneySingleton.sharedInstance.startPoint = MKMapPoint(CLLocationCoordinate2D(latitude: lat, longitude: long))
 //DEBUG SO DON't HIT SERVER
-//JourneySingleton.sharedInstance.endPoint = MKMapPoint(CLLocationCoordinate2D(latitude: lat, longitude: long))
-//self.showNewTrip(JourneySingleton.sharedInstance.getTrip(byType: .driving))
+JourneySingleton.sharedInstance.endPoint = MKMapPoint(CLLocationCoordinate2D(latitude: lat, longitude: long))
+self.showNewTrip(JourneySingleton.sharedInstance.getTrip(byType: .driving))
 					// TODO end point would get set on search process.  Harvard set as default for now
 				}
 			})
@@ -131,6 +131,7 @@ class MapViewController: UIViewController, NSFetchedResultsControllerDelegate, C
 				hideLastTrip()
 			}
 			displayedTrip = trip
+			print(displayedTrip as Any)
 
 			// 1.
 			let sourcePlacemark = MKPlacemark(coordinate: (JourneySingleton.sharedInstance.startPoint?.coordinate)!, addressDictionary: nil)
@@ -149,8 +150,8 @@ class MapViewController: UIViewController, NSFetchedResultsControllerDelegate, C
 
 			// Pull the polyline from the trip and have it lazily build the polyline I'm expecting
 			var polyLine:MKPolyline? = nil
-			for seg in (trip?.segments)! {
-				let segment = seg as! Segment
+			let segs:NSOrderedSet = (trip?.segments!)!
+			for segment in segs.array as! [Segment] {
 				let poly = Array(segment.path!.polyline!) as! [CLLocationCoordinate2D]
 				print(poly)
 //				polyLine = MKPolyline(poly, count:poly.count)

@@ -27,7 +27,7 @@ extension Trip  {
 	
 
 	static var defaultSortDescriptors: [NSSortDescriptor] {
-		return ([NSSortDescriptor(key: "arrivalTime", ascending: true)])
+		return ([NSSortDescriptor(key: "arrivalTime", ascending: false)])
 	}
 	
 	
@@ -53,8 +53,7 @@ extension Trip  {
 	static func findTrips(from begin:CLLocationCoordinate2D,to end:CLLocationCoordinate2D) -> [Trip]? {
 		var trips:[Trip]? = nil
 		let request = sortedFetchRequest
-		request.predicate = NSPredicate(format: "((abs(startLocation.latitude)-%f) < 0.01) ", abs(begin.latitude.rounded(toPlaces: 5)))
-//		request.predicate = NSPredicate(format: "((abs(startLocation.latitude)-abs(%f)) < 0.01) AND ((abs(startLocation.longitude)-abs(%f)) < 0.01) AND ((abs(stopLocation.latitude)-abs(%f)) < 0.01) AND ((abs(stopLocation.longitude)-abs(%f)) < 0.01)", begin.latitude.rounded(toPlaces: 5), begin.longitude.rounded(toPlaces: 5), end.latitude.rounded(toPlaces: 5), end.longitude.rounded(toPlaces: 5))
+		request.predicate = NSPredicate(format: "abs(startLocation.latitude)-%f < 0.01 AND abs(startLocation.longitude)-%f < 0.01 AND abs(stopLocation.latitude)-%f < 0.01 AND abs(stopLocation.longitude)-%f < 0.01",abs(begin.latitude),abs(begin.longitude),abs(end.latitude),abs(end.longitude))
 		print(request as Any)
 		do {
 			trips = try PersistentContainerSingleton.shared.persistentContainer.viewContext.fetch(request)
