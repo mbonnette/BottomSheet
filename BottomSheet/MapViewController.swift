@@ -16,6 +16,7 @@ class MapViewController: UIViewController, NSFetchedResultsControllerDelegate, C
 		return provider
 	}()
 	private var displayedTrip:Trip? = nil
+	private var displayedOverlay:MKOverlay? = nil
 	private var mapCenteredFirstTime = false
 	private var currentAddress: String? = nil
 	private var curLocation:CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: 0, longitude: 0)
@@ -49,8 +50,11 @@ class MapViewController: UIViewController, NSFetchedResultsControllerDelegate, C
 	// MARK: - MKMapViewDelegate
 	func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
 		
-		let lat = userLocation.coordinate.latitude.rounded(toPlaces: 3)
-		let long = userLocation.coordinate.longitude.rounded(toPlaces: 3)
+//		let lat = userLocation.coordinate.latitude.rounded(toPlaces: 5)
+//		let long = userLocation.coordinate.longitude.rounded(toPlaces: 5)
+let lat = 42.775000
+let long = -71.616000
+		let userCoordinates = CLLocation(latitude: lat,longitude: long)
 
 		if  (lat != 0.0) &&
 			(long != 0.0) &&
@@ -61,11 +65,11 @@ class MapViewController: UIViewController, NSFetchedResultsControllerDelegate, C
 
 			if (mapCenteredFirstTime == false) {
 				self.mapCenteredFirstTime = true
-				self.centerMapOnLocation(location: userLocation.location!)
+				self.centerMapOnLocation(location: userCoordinates)
 			}
 
 			// Lookup the information for the current location
-			CLGeocoder().reverseGeocodeLocation(userLocation.location!, completionHandler: {(placemarks, error)->Void in
+			CLGeocoder().reverseGeocodeLocation(userCoordinates, completionHandler: {(placemarks, error)->Void in
 				if error == nil && (placemarks?.count)! > 0 {
 					let placemark = placemarks![0] as CLPlacemark
 					
@@ -114,15 +118,34 @@ class MapViewController: UIViewController, NSFetchedResultsControllerDelegate, C
 					print (addressString)
 					JourneySingleton.sharedInstance.startPoint = MKMapPoint(CLLocationCoordinate2D(latitude: lat, longitude: long))
 //DEBUG SO DON't HIT SERVER
-JourneySingleton.sharedInstance.endPoint = MKMapPoint(CLLocationCoordinate2D(latitude: lat, longitude: long))
-self.showNewTrip(JourneySingleton.sharedInstance.getTrip(byType: .driving))
+//JourneySingleton.sharedInstance.endPoint = MKMapPoint(CLLocationCoordinate2D(latitude: lat, longitude: long))
+//self.showNewTrip(JourneySingleton.sharedInstance.getTrip(byType: .driving))
 					// TODO end point would get set on search process.  Harvard set as default for now
 				}
 			})
 		}
 	}
 
-	
+	func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+
+		if overlay is MKPolyline
+		{
+			let route: MKPolyline = overlay as! MKPolyline
+			let routeRenderer = MKPolylineRenderer(polyline:route)
+			routeRenderer.lineWidth = 3.0
+			if overlay.title == "one"
+			{
+				routeRenderer.strokeColor = UIColor(red: 240.0/255.0, green: 68.0/255.0, blue: 0.0/255.0, alpha: 1);
+			}
+			else
+			{
+				routeRenderer.strokeColor = UIColor(red: 45.0/255.0, green: 200.0/255.0, blue: 0.0/255.0, alpha: 1);
+			}
+			displayedOverlay = overlay
+			return routeRenderer
+		}
+		return MKPolylineRenderer()
+	}
 	
 	// MARK: - Internal Route UI
 	func showNewTrip(_ trip:Trip?) {
@@ -149,26 +172,28 @@ self.showNewTrip(JourneySingleton.sharedInstance.getTrip(byType: .driving))
 			self.mapView.showAnnotations([sourceAnnotation,destinationAnnotation], animated: true )
 
 			// Pull the polyline from the trip and have it lazily build the polyline I'm expecting
-			var polyLine:MKPolyline? = nil
 			let segs:NSOrderedSet = (trip?.segments!)!
+			var polyline:MKPolyline? = nil
 			for segment in segs.array as! [Segment] {
-				let poly = Array(segment.path!.polyline!) as! [CLLocationCoordinate2D]
-				print(poly)
-//				polyLine = MKPolyline(poly, count:poly.count)
-//				let overlay = MKOverlay(polyLine)
-//				self.mapView.addOverlay(overlay, level: MKOverlayLevel.aboveRoads)
+				polyline = createPolyline(segment)
+				self.mapView.addOverlay(polyline!)
 			}
 			
-//			let rect:MKMapRect = (polyLine?.boundingMapRect)!
-//			self.mapView.setRegion(MKCoordinateRegion(rect), animated: true)
-
+			let rect:MKMapRect = (polyline?.boundingMapRect)!
+			self.mapView.setRegion(MKCoordinateRegion(rect), animated: true)
+			self.mapView.setVisibleMapRect(rect, edgePadding: UIEdgeInsets(top:10.0,left:60.0,bottom:10.0,right:60.0), animated:true)
 			return
 		}
 	}
-	
+
 	func hideLastTrip() {
-		// displayedTrip
-		displayedTrip = nil
+		guard (displayedTrip == nil) else {
+			
+			self.mapView.removeOverlay(displayedOverlay!)
+			displayedTrip = nil
+			displayedOverlay = nil
+			return
+		}
 	}
 	
 
@@ -199,6 +224,20 @@ self.showNewTrip(JourneySingleton.sharedInstance.getTrip(byType: .driving))
 		mapView.setRegion(coordinateRegion, animated: true)
 	}
 	
+
+	func createPolyline(_ seg:Segment) -> MKPolyline {
+
+		let polyArray = Array(seg.path!.polyline!)
+		var coordinateArray:[CLLocationCoordinate2D] = []
+		
+		for coord in polyArray as! [Coordinate]  {
+			let newCoordinate = CLLocationCoordinate2D(latitude: coord.latitude, longitude: coord.longitude)
+			coordinateArray.append(newCoordinate)
+		}
+		let polyLine = MKPolyline(coordinates:coordinateArray, count:coordinateArray.count)
+		print(polyLine as Any)
+		return polyLine
+	}
 
 }
 
