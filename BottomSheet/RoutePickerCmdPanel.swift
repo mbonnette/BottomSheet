@@ -44,7 +44,6 @@ class RoutePickerCmdPanel : UITableViewCell {
 				
 			}
 		})
-
 	}
 
 	@IBAction func findLocation(_ sender: Any) {

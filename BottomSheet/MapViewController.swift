@@ -12,7 +12,7 @@ class MapViewController: UIViewController, NSFetchedResultsControllerDelegate, C
 	private lazy var locationMgr = CLLocationManager()
 	private lazy var tripProvider: TripProvider = {
 		let provider = TripProvider()
-		provider.fetchedResultsControllerDelegate = self
+		provider.fetchedTripResultsControllerDelegate = self
 		return provider
 	}()
 	private var displayedTrip:Trip? = nil
@@ -50,10 +50,10 @@ class MapViewController: UIViewController, NSFetchedResultsControllerDelegate, C
 	// MARK: - MKMapViewDelegate
 	func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
 		
-//		let lat = userLocation.coordinate.latitude.rounded(toPlaces: 5)
-//		let long = userLocation.coordinate.longitude.rounded(toPlaces: 5)
-let lat = 42.775000
-let long = -71.616000
+		let lat = userLocation.coordinate.latitude.rounded(toPlaces: 5)
+		let long = userLocation.coordinate.longitude.rounded(toPlaces: 5)
+//let lat = 42.775000  // Home
+//let long = -71.616000
 		let userCoordinates = CLLocation(latitude: lat,longitude: long)
 
 		if  (lat != 0.0) &&
@@ -158,7 +158,7 @@ let long = -71.616000
 
 			// 1.
 			let sourcePlacemark = MKPlacemark(coordinate: (JourneySingleton.sharedInstance.startPoint?.coordinate)!, addressDictionary: nil)
-			let destinationPlacemark = MKPlacemark(coordinate: (JourneySingleton.sharedInstance.endPoint?.coordinate)!, addressDictionary: nil)
+			let destinationPlacemark = MKPlacemark(coordinate: (JourneySingleton.sharedInstance.stopPoint?.coordinate)!, addressDictionary: nil)
 			
 			// 2.
 			let sourceAnnotation = MKPointAnnotation()

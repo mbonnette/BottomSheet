@@ -3,16 +3,35 @@
 //
 
 import UIKit
+import CoreData
+import MapKit
+
 
 private let maxVisibleContentHeight: CGFloat = 120.0
 
 private let numberOfCountries = 5
 private let countries = Locale.isoRegionCodes.prefix(numberOfCountries).map(Locale.current.localizedString(forRegionCode:))
 
-class CountriesTableViewController: UITableViewController, BottomSheet {
+class CountriesTableViewController: UITableViewController, NSFetchedResultsControllerDelegate, BottomSheet {
     
     var bottomSheetDelegate: BottomSheetDelegate?
-    
+	
+	lazy var fetchedLocationsResultsController: NSFetchedResultsController<Location> = {
+		
+		let controller = NSFetchedResultsController(fetchRequest: Location.sortedFetchRequest,
+													managedObjectContext: PersistentContainerSingleton.shared.persistentContainer.viewContext,
+													sectionNameKeyPath: nil, cacheName: nil)
+		controller.delegate = self
+		
+		do {
+			try controller.performFetch()
+		} catch {
+			let nserror = error as NSError
+			fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+		}
+		return controller
+	}()
+	
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -43,7 +62,7 @@ class CountriesTableViewController: UITableViewController, BottomSheet {
     // MARK: - Table view data source
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return countries.count
+		return (self.fetchedLocationsResultsController.fetchedObjects?.count)! + 2
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -58,7 +77,9 @@ class CountriesTableViewController: UITableViewController, BottomSheet {
 		}
 		else {
 			cell = tableView.dequeueReusableCell(withIdentifier: "RouteDetailsCellID")!
-			cell.textLabel?.text = countries[indexPath.row-1]
+
+			// cell.configure(withLocation:location)
+			cell.textLabel?.text = self.locationAt(indexPath).name
 		}
         cell.backgroundColor = .clear
         return cell
@@ -76,7 +97,17 @@ class CountriesTableViewController: UITableViewController, BottomSheet {
     // MARK: - Table view delegate
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
+		let loc = locationAt(indexPath)
+		let stop = MKMapPoint(CLLocationCoordinate2D(latitude: loc.latitude, longitude: loc.longitude))
+		JourneySingleton.sharedInstance.retrieveDrivingJourney(stop:stop, completionHandler: { error in
+			
+			DispatchQueue.main.async {
+				
+				tableView.deselectRow(at: indexPath, animated: true)
+				
+				// Auto collapse the view???
+			}
+		})
     }
     
     // MARK: - Scroll view delegate
@@ -94,4 +125,14 @@ class CountriesTableViewController: UITableViewController, BottomSheet {
             }
         }
     }
+	
+	
+	// MARK: - Private Convenience
+	private func locationAt(_ indexPath:IndexPath) -> Location {
+		// Put state machine in here... right now just have 3 row types
+		
+		let newIndex = IndexPath(row:indexPath.row-2, section:indexPath.section)
+		return fetchedLocationsResultsController.object(at:newIndex)
+	}
+	
 }

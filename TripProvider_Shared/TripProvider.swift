@@ -26,63 +26,11 @@ enum TripProviderErrorCode: NSInteger {
 
 class TripProvider: NSObject {
     
-    /**
-     Delegate of the fetchedResultsController.
-     Give consumers a chance to upate UI when the fetchedResultsController content is changed.
-    */
-    weak var fetchedResultsControllerDelegate: NSFetchedResultsControllerDelegate?
+    // Give consumers a chance to upate UI when the trip/location content is changed.
+	weak var fetchedTripResultsControllerDelegate: NSFetchedResultsControllerDelegate?
+	weak var fetchedLocationResultsControllerDelegate: NSFetchedResultsControllerDelegate?
 
-    /**
-     Persistent container: use NSPersistentContainer to create the Core Data stack
-    */
-//    lazy var persistentContainer: NSPersistentContainer = {
-//
-//        let container = NSPersistentContainer(name: "TripProvider")
-//
-//        /**
-//         fatalError() causes the application to generate a crash log and terminate.
-//         You should not use this function in a shipping application.
-//        */
-//        container.loadPersistentStores(completionHandler: { (_, error) in
-//            guard let error = error as NSError? else { return }
-//            fatalError("Unresolved error \(error), \(error.userInfo)")
-//        })
-//
-//        container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-//        container.viewContext.undoManager = nil // We don't need undo so set it to nil.
-//        container.viewContext.shouldDeleteInaccessibleFaults = true
-//
-//        /**
-//         Merge the changes from other contexts automatically.
-//         You can also choose to merge the changes by observing NSManagedObjectContextDidSave
-//         notification and calling mergeChanges(fromContextDidSave notification: Notification)
-//        */
-//        container.viewContext.automaticallyMergesChangesFromParent = true
-//
-//        return container
-//    }()
-	
-	/**
-	NSFetchedResultsController is available on macOS since 10.12.
-	Create a controller for "Location" entity and perform fetch.
-	*/
-	lazy var fetchedLocationsResultsController: NSFetchedResultsController<Location> = {
 
-		let controller = NSFetchedResultsController(fetchRequest: Location.sortedFetchRequest,
-													managedObjectContext: PersistentContainerSingleton.shared.persistentContainer.viewContext,
-													sectionNameKeyPath: nil, cacheName: nil)
-		controller.delegate = fetchedResultsControllerDelegate
-		
-		do {
-			try controller.performFetch()
-		} catch {
-			let nserror = error as NSError
-			fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
-		}
-		
-		return controller
-	}()
-	
 	/**
 	NSFetchedResultsController is available on macOS since 10.12.
 	Create a controller for "Trip" entity, sorting with "time" field, and perform fetch.
@@ -92,7 +40,7 @@ class TripProvider: NSObject {
 		let controller = NSFetchedResultsController(fetchRequest: Trip.sortedFetchRequest,
 													managedObjectContext: PersistentContainerSingleton.shared.persistentContainer.viewContext,
 													sectionNameKeyPath: nil, cacheName: nil)
-		controller.delegate = fetchedResultsControllerDelegate
+		controller.delegate = fetchedTripResultsControllerDelegate
 		
 		do {
 			try controller.performFetch()

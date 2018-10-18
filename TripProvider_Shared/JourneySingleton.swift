@@ -32,27 +32,31 @@ class JourneySingleton {
 	//MARK: OBJECT routines
 	
 	var startPoint:MKMapPoint? = nil
-	var endPoint:MKMapPoint? = nil
+	var stopPoint:MKMapPoint? = nil
 	var tripProvider = TripProvider()
 	
 	
 	func retrieveDrivingJourney(completionHandler: @escaping (Error?) -> Void) {
-		if (endPoint == nil) {
-			endPoint = MKMapPoint(CLLocationCoordinate2D(latitude: 42.481285, longitude: -71.214729))	// Harvard
+		if (stopPoint == nil) {
+			stopPoint = MKMapPoint(CLLocationCoordinate2D(latitude: 42.481285, longitude: -71.214729))	// Harvard
 		}
-		tripProvider.fetchTrip(start: startPoint!, stop: endPoint!, segmentTypes.driving, completionHandler: completionHandler)
+		tripProvider.fetchTrip(start: startPoint!, stop: stopPoint!, segmentTypes.driving, completionHandler: completionHandler)
 	}
 	
-	func retrieveDrivingJourney(start:MKMapPoint, stop:MKMapPoint, completionHandler: @escaping (Error?) -> Void) {
-		tripProvider.fetchTrip(start: start, stop: stop, segmentTypes.driving, completionHandler: completionHandler)
+	func retrieveDrivingJourney(start:MKMapPoint? = nil, stop:MKMapPoint? = nil, completionHandler: @escaping (Error?) -> Void) {
+		startPoint = start ?? startPoint
+		stopPoint = stop ?? stopPoint
+		tripProvider.fetchTrip(start: startPoint!, stop: stopPoint!, segmentTypes.driving, completionHandler: completionHandler)
 	}
 	
-	func retrieveWalkingJourney(start:MKMapPoint, stop:MKMapPoint, completionHandler: @escaping (Error?) -> Void) {
-		tripProvider.fetchTrip(start: start, stop: stop, segmentTypes.walking, completionHandler: completionHandler)
+	func retrieveWalkingJourney(start:MKMapPoint? = nil, stop:MKMapPoint? = nil, completionHandler: @escaping (Error?) -> Void) {
+		startPoint = start ?? startPoint
+		stopPoint = stop ?? stopPoint
+		tripProvider.fetchTrip(start: startPoint!, stop: stopPoint!, segmentTypes.walking, completionHandler: completionHandler)
 	}
 
 	func getTrip(byType type:segmentTypes) -> Trip? {
-		let matchingTrips = Trip.findTrips(from: (startPoint?.coordinate)!, to: (endPoint?.coordinate)!)
+		let matchingTrips = Trip.findTrips(from: (startPoint?.coordinate)!, to: (stopPoint?.coordinate)!)
 		return matchingTrips?.filter{ $0.tripType == type.rawValue }.first ?? nil
 	}
 }
