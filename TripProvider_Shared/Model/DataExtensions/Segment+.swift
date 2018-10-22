@@ -7,6 +7,7 @@
 
 import Foundation
 import CoreData
+import MapKit
 
 
 public enum segmentTypes: Int32 {
@@ -113,16 +114,13 @@ extension Segment  {
 		//	"bikeshare": null,
 		//	"rideshare": null,
 		//	"controllable": true,
-
+		
 		do {
-			let startLocation = Location.newLocation(inContext:context)
-			try startLocation.update(with:fromDictionary, inContext:context)
-			self.startLocation = startLocation
+			self.startLocation = Location.newLocation(inContext:context)
+			try self.startLocation?.update(with:fromDictionary, inContext:context)
+			self.stopLocation = Location.newLocation(inContext:context)
+			try self.stopLocation?.update(with:toDictionary, inContext:context)
 
-			let stopLocation = Location.newLocation(inContext:context)
-			try stopLocation.update(with:toDictionary, inContext:context)
-			self.stopLocation = stopLocation
-			
 			let segmentPath = Path.newPath(inContext:context)
 			try segmentPath.update(with:pathDictionary, inContext:context)
 			self.path = segmentPath
@@ -157,4 +155,6 @@ extension Segment  {
 			return "driving"
 		}
 	}
+	
+
 }

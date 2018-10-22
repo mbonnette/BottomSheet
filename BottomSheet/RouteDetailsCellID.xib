@@ -16,31 +16,7 @@
             <tableViewCellContentView key="contentView" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ouo-8b-fPk" id="l6h-El-tex">
                 <rect key="frame" x="0.0" y="0.0" width="375" height="66.666666666666671"/>
                 <autoresizingMask key="autoresizingMask"/>
-                <subviews>
-                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="200" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0JE-h1-C9u" userLabel="Num Shares Value">
-                        <rect key="frame" x="331" y="21" width="26" height="17"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                        <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <color key="highlightedColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                    </label>
-                    <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="6ij-uB-0Na">
-                        <rect key="frame" x="163" y="15" width="160" height="29"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <segments>
-                            <segment title="Open"/>
-                            <segment title="Closed"/>
-                            <segment title="All" width="44"/>
-                        </segments>
-                        <connections>
-                            <action selector="setTradesToShow:" destination="-2" eventType="valueChanged" id="QVs-EK-jpb"/>
-                        </connections>
-                    </segmentedControl>
-                </subviews>
                 <color key="backgroundColor" red="0.96862745098039216" green="0.96862745098039216" blue="0.96862745098039216" alpha="1" colorSpace="calibratedRGB"/>
-                <constraints>
-                    <constraint firstItem="0JE-h1-C9u" firstAttribute="trailing" secondItem="l6h-El-tex" secondAttribute="trailingMargin" constant="2" id="Hjv-Ee-Ec9"/>
-                    <constraint firstItem="0JE-h1-C9u" firstAttribute="top" secondItem="l6h-El-tex" secondAttribute="topMargin" constant="10" id="os0-KP-bEw"/>
-                </constraints>
             </tableViewCellContentView>
             <point key="canvasLocation" x="32.608695652173914" y="-94.97282608695653"/>
         </tableViewCell>

@@ -236,6 +236,7 @@ class TripProvider: NSObject {
 		if taskContext.hasChanges {
 			do {
 				try taskContext.save()
+				Location.updateMissingAddresses()		// Take opp to fill out any missing addresses sent from route
 			} catch {
 				print("Error: \(error)\nCould not save Core Data context.")
 				return
@@ -303,6 +304,7 @@ class TripProvider: NSObject {
 				do {
 					try segment.update(with: segmentDictionary, inContext: taskContext)
 					trip.addToSegments(segment)
+					try  taskContext.save()
 				} catch {
 					print("Error: \(error)\nThe segment object will be deleted.")
 					taskContext.delete(segment)

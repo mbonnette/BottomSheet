@@ -7,6 +7,7 @@
 
 import Foundation
 import CoreData
+import MapKit
 
 
 public enum locationTypes: Int32 {
@@ -27,14 +28,9 @@ extension Location  {
 		return location
 	}
 	
-	static func newLocation() -> Location {
-		let location = NSEntityDescription.insertNewObject(forEntityName: "Location", into:PersistentContainerSingleton.shared.persistentContainer.viewContext) as! Location
-		location.locationType = locationTypes.temporary.rawValue
-		return location
-	}
-	
-	static func newLocation(named name:String?, withAddress address:String?) -> Location {
-		let location = Location.newLocation()
+
+	static func newLocation(named name:String?, withAddress address:String?, inContext context:NSManagedObjectContext) -> Location {
+		let location = Location.newLocation(inContext:context)
 		location.name = name
 		location.address = address
 		return location
@@ -64,61 +60,155 @@ extension Location  {
 		return locations
 	}
 	
-	static func findLocation(named name:String?) -> Location? {
-		guard (name == nil) else {
-			var locations:[Location]? = nil
-			let request = Location.sortedFetchRequest
-			request.predicate = NSPredicate(format: "name = %@", name!)
-			do {
-				locations = try PersistentContainerSingleton.shared.persistentContainer.viewContext.fetch(request)
-			}
-			catch {
-				print("!!!!!!!!!!!!!!No location received and a throw was hit: \(error)")
-			}
-			assert(locations!.count <= 1)
-			if (locations!.count == 1) {
-				return locations![0]
-			}
-			else {
-				return nil
-			}
+	static func findLocations(withRequest request:NSFetchRequest<Location>) -> [Location]? {
+		var locations:[Location]? = nil
+		do {
+			locations = try PersistentContainerSingleton.shared.persistentContainer.viewContext.fetch(request)
 		}
-		return nil
-	}
-	static func findLocation(atAddress address:String?) -> Location? {
-		guard (address == nil) else {
-			var locations:[Location]? = nil
-			let request = Location.sortedFetchRequest
-			request.predicate = NSPredicate(format: "address = %@", address!)
-			do {
-				locations = try PersistentContainerSingleton.shared.persistentContainer.viewContext.fetch(request)
-			}
-			catch {
-				print("!!!!!!!!!!!!!!No location received and a throw was hit: \(error)")
-			}
-			assert(locations!.count <= 1)
-			if (locations!.count == 1) {
-				return locations![0]
-			}
-			else {
-				return nil
-			}
+		catch {
+			print("!!!!!!!!!!!!!!No location received and throw hit .. errno = : \(error)")
 		}
-		return nil
-	}
-	
-	
-	static func getOrCreateLocation(named name:String? = nil, withAddress address:String?) -> Location {
-		var location = Location.findLocation(named: name)
-		if ( location == nil ) {
-			location = Location.findLocation(atAddress: address)
-			if (location == nil) {
-				location = newLocation(named: name, withAddress:address)
-			}
-		}
-		return location!
+		return locations
 	}
 
+	
+	static func findLocation(withRequest request:NSFetchRequest<Location>) -> Location? {
+		let locations:[Location]? = findLocations(withRequest: request)
+		if (locations!.count >= 1) {
+			return locations![0]
+		}
+		else {
+			return nil
+		}
+	}
+
+	static func findLocation(named name:String?) -> Location? {
+		guard (name == nil) else {
+			let request = Location.sortedFetchRequest
+			request.predicate = NSPredicate(format: "name = %@", name!)
+			return self.findLocation(withRequest:request)
+		}
+		return nil
+	}
+
+	static func findLocation(atAddress address:String?) -> Location? {
+		guard (address == nil) else {
+			let request = Location.sortedFetchRequest
+			request.predicate = NSPredicate(format: "address = %@", address!)
+			return self.findLocation(withRequest:request)
+		}
+		return nil
+	}
+	
+	static func findLocation(at loc:CLLocationCoordinate2D, thatHasValidAddress:Bool = false) -> Location? {
+		let request = sortedFetchRequest
+		if (thatHasValidAddress) {
+			request.predicate = NSPredicate(format: "abs(loc.latitude)-%f < 0.01 AND abs(loc.longitude)-%f < 0.01 AND address != nil ",abs(loc.latitude), abs(loc.longitude))
+		}
+		else {
+			request.predicate = NSPredicate(format: "abs(loc.latitude)-%f < 0.01 AND abs(loc.longitude)-%f < 0.01 ",abs(loc.latitude), abs(loc.longitude))
+		}
+		return self.findLocation(withRequest:request)
+	}
+	
+	static func missingAddressPredicate() -> NSPredicate {
+		return NSPredicate(format: "address == nil")
+	}
+	
+	static func missingNamePredicate() -> NSPredicate {
+		return NSPredicate(format: "name = nil OR name = 'origin' OR name = 'destination'")
+	}
+
+	/// **findMissingAddressLocations**
+	/// 		Retrieve locations that have a missing address and a name that appears to be well defined
+	/// - Oct 21, 2018 at 9:51:53 PM
+	/// - returns: Array of locations that are either missing an address or have a realistic name... e.g. user named the location
+	static func findMissingAddressLocations() -> [Location]?  {
+		let request = sortedFetchRequest
+		request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates:[missingAddressPredicate(),
+																			   missingNamePredicate()])
+		return self.findLocations(withRequest:request)
+	}
+	
+	
+	static func getAddress(fromPlacemark placemark:CLPlacemark) -> String {
+		var addressString = ""
+		if placemark.isoCountryCode == "TW" /*Address Format in Chinese*/ {
+			if placemark.country != nil {
+				addressString = placemark.country!
+			}
+			if placemark.subAdministrativeArea != nil {
+				addressString = addressString + placemark.subAdministrativeArea! + "\n"
+			}
+			if placemark.postalCode != nil {
+				addressString = addressString + placemark.postalCode! + " "
+			}
+			if placemark.locality != nil {
+				addressString = addressString + placemark.locality!
+			}
+			if placemark.thoroughfare != nil {
+				addressString = addressString + placemark.thoroughfare!
+			}
+			if placemark.subThoroughfare != nil {
+				addressString = addressString + placemark.subThoroughfare!
+			}
+		}
+		else {
+			if placemark.subThoroughfare != nil {
+				addressString = placemark.subThoroughfare! + " "
+			}
+			if placemark.thoroughfare != nil {
+				addressString = addressString + placemark.thoroughfare! + "\n"
+			}
+			if placemark.postalCode != nil {
+				addressString = addressString + placemark.postalCode! + " "
+			}
+			if placemark.locality != nil {
+				addressString = addressString + placemark.locality! + "\n"
+			}
+			if placemark.administrativeArea != nil {
+				addressString = addressString + placemark.administrativeArea! + " "
+			}
+			if placemark.country != nil {
+				addressString = addressString + placemark.country!
+			}
+		}
+		print (addressString)
+		return addressString
+	}
+	
+	
+	
+	/// **updateMissingAddresses**
+	/// 		Check the address of all the stored locations and find missing addresses and attempt to geolocate them.
+	/// - parameter locDictionary: Array of strings coming from trip engine representing a location
+	/// - parameter isStart: starting or ending location
+	/// - Oct 18, 2018 at 4:33:54 PM
+	
+	static func updateMissingAddresses() {
+		
+		let potentialLocations = Location.findMissingAddressLocations()
+		
+		for loc in potentialLocations! {
+			
+			let userCoordinates = CLLocation(latitude: loc.latitude, longitude: loc.longitude)
+			
+			CLGeocoder().reverseGeocodeLocation(userCoordinates, completionHandler: {(placemarks, error)->Void in
+				var addressString = ""
+				if error == nil && (placemarks?.count)! > 0 {
+					let placemark = placemarks![0] as CLPlacemark
+					addressString = Location.getAddress(fromPlacemark: placemark)
+					loc.address = addressString
+					do {
+						try PersistentContainerSingleton.shared.persistentContainer.viewContext.save()
+					}
+					catch {
+						print("!!!!!!!!!!!!!!Error received saving context during updateMissingAddresses errno = : \(error)")
+					}
+				}
+			})
+		}
+	}
 
 	//MARK:______________________________
 	//MARK: OBJECT routines
@@ -150,9 +240,9 @@ extension Location  {
 		}
 		self.identifier = localIdentifier
 		self.name		= localName
-//		self.address	= localAddress
-		self.latitude	= Double( truncating: localLatitude ).rounded(toPlaces: 5)
-		self.longitude	= Double( truncating: localLongitude ).rounded(toPlaces: 5)
+		self.latitude	= Double( truncating: localLatitude )
+		self.longitude	= Double( truncating: localLongitude )
+		// self.address	= Using internal CLGeocoder().reverseGeocodeLocation when location saved
 		self.altitude	= Int32( truncating: localAltitude )
 	}
 }

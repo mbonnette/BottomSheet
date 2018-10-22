@@ -15,7 +15,8 @@ private let countries = Locale.isoRegionCodes.prefix(numberOfCountries).map(Loca
 class CountriesTableViewController: UITableViewController, NSFetchedResultsControllerDelegate, BottomSheet {
     
     var bottomSheetDelegate: BottomSheetDelegate?
-	
+	var tableNeedsReload = false
+
 	lazy var fetchedLocationsResultsController: NSFetchedResultsController<Location> = {
 		
 		let controller = NSFetchedResultsController(fetchRequest: Location.sortedFetchRequest,
@@ -79,7 +80,9 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
 			cell = tableView.dequeueReusableCell(withIdentifier: "RouteDetailsCellID")!
 
 			// cell.configure(withLocation:location)
-			cell.textLabel?.text = self.locationAt(indexPath).name
+			let loc = self.locationAt(indexPath)
+			let locAddress = loc.address ?? ""
+			cell.textLabel?.text = loc.name! + ", " + locAddress
 		}
         cell.backgroundColor = .clear
         return cell
@@ -135,4 +138,26 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
 		return fetchedLocationsResultsController.object(at:newIndex)
 	}
 	
+}
+
+
+// MARK: - NSFetchedResultsControllerDelegate
+
+extension CountriesTableViewController {
+	
+	public func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+		
+		if ((type == NSFetchedResultsChangeType.insert) || (type == NSFetchedResultsChangeType.delete)) {
+			tableNeedsReload = true
+		}
+		
+		
+	}
+	public func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+		if (tableNeedsReload) {
+			tableView.reloadData()
+			tableNeedsReload = false
+		}
+	}
+
 }

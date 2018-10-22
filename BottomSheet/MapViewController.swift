@@ -18,7 +18,6 @@ class MapViewController: UIViewController, NSFetchedResultsControllerDelegate, C
 	private var displayedTrip:Trip? = nil
 	private var displayedOverlay:MKOverlay? = nil
 	private var mapCenteredFirstTime = false
-	private var currentAddress: String? = nil
 	private var curLocation:CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: 0, longitude: 0)
 
 	private let regionRadius: CLLocationDistance = 100000
@@ -52,13 +51,11 @@ class MapViewController: UIViewController, NSFetchedResultsControllerDelegate, C
 		
 		let lat = userLocation.coordinate.latitude.rounded(toPlaces: 5)
 		let long = userLocation.coordinate.longitude.rounded(toPlaces: 5)
-//let lat = 42.775000  // Home
-//let long = -71.616000
+		//let lat = 42.775000  // Home
+		//let long = -71.616000
 		let userCoordinates = CLLocation(latitude: lat,longitude: long)
 
-		if  (lat != 0.0) &&
-			(long != 0.0) &&
-			(lat != curLocation.latitude) &&
+		if 	(lat != curLocation.latitude) &&
 			(long != curLocation.longitude) {
 
 			print("Existing number of trips",tripProvider.fetchedTripsResultsController.fetchedObjects?.count as Any)
@@ -68,61 +65,14 @@ class MapViewController: UIViewController, NSFetchedResultsControllerDelegate, C
 				self.centerMapOnLocation(location: userCoordinates)
 			}
 
-			// Lookup the information for the current location
-			CLGeocoder().reverseGeocodeLocation(userCoordinates, completionHandler: {(placemarks, error)->Void in
-				if error == nil && (placemarks?.count)! > 0 {
-					let placemark = placemarks![0] as CLPlacemark
-					
-					var addressString : String = ""
-					if placemark.isoCountryCode == "TW" /*Address Format in Chinese*/ {
-						if placemark.country != nil {
-							addressString = placemark.country!
-						}
-						if placemark.subAdministrativeArea != nil {
-							addressString = addressString + placemark.subAdministrativeArea! + "\n"
-						}
-						if placemark.postalCode != nil {
-							addressString = addressString + placemark.postalCode! + " "
-						}
-						if placemark.locality != nil {
-							addressString = addressString + placemark.locality!
-						}
-						if placemark.thoroughfare != nil {
-							addressString = addressString + placemark.thoroughfare!
-						}
-						if placemark.subThoroughfare != nil {
-							addressString = addressString + placemark.subThoroughfare!
-						}
-					} else {
-						if placemark.subThoroughfare != nil {
-							addressString = placemark.subThoroughfare! + " "
-						}
-						if placemark.thoroughfare != nil {
-							addressString = addressString + placemark.thoroughfare! + "\n"
-						}
-						if placemark.postalCode != nil {
-							addressString = addressString + placemark.postalCode! + " "
-						}
-						if placemark.locality != nil {
-							addressString = addressString + placemark.locality! + "\n"
-						}
-						if placemark.administrativeArea != nil {
-							addressString = addressString + placemark.administrativeArea! + " "
-						}
-						if placemark.country != nil {
-							addressString = addressString + placemark.country!
-						}
-					}
-					self.currentAddress = addressString
-					print (lat, long)
-					print (addressString)
-					JourneySingleton.sharedInstance.startPoint = MKMapPoint(CLLocationCoordinate2D(latitude: lat, longitude: long))
-//DEBUG SO DON't HIT SERVER
-//JourneySingleton.sharedInstance.endPoint = MKMapPoint(CLLocationCoordinate2D(latitude: lat, longitude: long))
-//self.showNewTrip(JourneySingleton.sharedInstance.getTrip(byType: .driving))
-					// TODO end point would get set on search process.  Harvard set as default for now
-				}
-			})
+			// Keep this point in the journey to grab directions
+			JourneySingleton.sharedInstance.startPoint = MKMapPoint(CLLocationCoordinate2D(latitude: lat, longitude: long))
+
+			//DEBUG SO DON't HIT SERVER
+			//JourneySingleton.sharedInstance.endPoint = MKMapPoint(CLLocationCoordinate2D(latitude: lat, longitude: long))
+			//self.showNewTrip(JourneySingleton.sharedInstance.getTrip(byType: .driving))
+			// TODO end point would get set on search process.  Harvard set as default for now
+
 		}
 	}
 
@@ -175,7 +125,7 @@ class MapViewController: UIViewController, NSFetchedResultsControllerDelegate, C
 			let segs:NSOrderedSet = (trip?.segments!)!
 			var polyline:MKPolyline? = nil
 			for segment in segs.array as! [Segment] {
-				polyline = createPolyline(segment)
+				polyline = createPolyline(using:segment)
 				self.mapView.addOverlay(polyline!)
 			}
 			
@@ -225,7 +175,9 @@ class MapViewController: UIViewController, NSFetchedResultsControllerDelegate, C
 	}
 	
 
-	func createPolyline(_ seg:Segment) -> MKPolyline {
+	// MARK: - Private
+	
+	private func createPolyline(using seg:Segment) -> MKPolyline {
 
 		let polyArray = Array(seg.path!.polyline!)
 		var coordinateArray:[CLLocationCoordinate2D] = []
@@ -243,9 +195,7 @@ class MapViewController: UIViewController, NSFetchedResultsControllerDelegate, C
 
 
 // MARK: - NSFetchedResultsControllerDelegate
-/**
-NSFetchedResultsControllerDelegate, available since macOS 10.12+
-*/
+
 extension MapViewController {
 	
 	func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {

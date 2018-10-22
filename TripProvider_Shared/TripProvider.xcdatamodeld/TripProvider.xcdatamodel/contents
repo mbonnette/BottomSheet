@@ -3,6 +3,7 @@
     <entity name="Coordinate" representedClassName=".Coordinate" syncable="YES" codeGenerationType="class">
         <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <relationship name="polyline" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Path" inverseName="polyline" inverseEntity="Path" syncable="YES"/>
     </entity>
     <entity name="Location" representedClassName=".Location" syncable="YES" codeGenerationType="class">
         <attribute name="address" optional="YES" attributeType="String" syncable="YES"/>
@@ -22,7 +23,7 @@
         <attribute name="time" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="type" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="uncongestedTime" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <relationship name="polyline" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Coordinate" syncable="YES"/>
+        <relationship name="polyline" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Coordinate" inverseName="polyline" inverseEntity="Coordinate" syncable="YES"/>
         <relationship name="segment" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Segment" inverseName="path" inverseEntity="Segment" syncable="YES"/>
     </entity>
     <entity name="Segment" representedClassName=".Segment" syncable="YES" codeGenerationType="class">
@@ -65,7 +66,7 @@
         <relationship name="stopLocation" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Location" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Coordinate" positionX="11.0078125" positionY="107.4453125" width="128" height="75"/>
+        <element name="Coordinate" positionX="11.0078125" positionY="107.4453125" width="128" height="90"/>
         <element name="Location" positionX="-272.58984375" positionY="-206.5" width="128" height="195"/>
         <element name="Path" positionX="-183.51953125" positionY="132.25390625" width="128" height="150"/>
         <element name="Segment" positionX="-456.29296875" positionY="56.96875" width="128" height="255"/>

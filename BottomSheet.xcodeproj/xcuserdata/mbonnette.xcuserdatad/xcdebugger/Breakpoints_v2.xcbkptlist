@@ -4,18 +4,36 @@
    version = "2.0">
    <Breakpoints>
       <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.ExceptionBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            scope = "0"
+            stopOnStyle = "0">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.SwiftErrorBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "TripProvider_Shared/JourneySingleton.swift"
-            timestampString = "561529635.099988"
+            timestampString = "561869275.920752"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "49"
-            endingLineNumber = "49"
-            landmarkName = "retrieveDrivingJourney(start:stop:completionHandler:)"
+            startingLineNumber = "61"
+            endingLineNumber = "61"
+            landmarkName = "getTrip(byType:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -26,12 +44,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "BottomSheet/MapViewController.swift"
-            timestampString = "561529635.100312"
+            timestampString = "561869275.921834"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "253"
-            endingLineNumber = "253"
-            landmarkName = "controllerDidChangeContent(_:)"
+            startingLineNumber = "104"
+            endingLineNumber = "104"
+            landmarkName = "showNewTrip(_:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -41,44 +59,44 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "BottomSheet/CountriesTableViewController.swift"
-            timestampString = "561529635.10036"
+            filePath = "BottomSheet/MapViewController.swift"
+            timestampString = "561869424.334157"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "102"
-            endingLineNumber = "102"
-            landmarkName = "tableView(_:didSelectRowAt:)"
+            startingLineNumber = "132"
+            endingLineNumber = "132"
+            landmarkName = "showNewTrip(_:)"
             landmarkType = "7">
             <Locations>
                <Location
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "BottomSheet.CountriesTableViewController.tableView(_: __C.UITableView, didSelectRowAt: Foundation.IndexPath) -&gt; ()"
+                  symbolName = "BottomSheet.MapViewController.showNewTrip(Swift.Optional&lt;BottomSheet.Trip&gt;) -&gt; ()"
                   moduleName = "BottomSheet"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/mbonnette/git/gitHub/BottomSheet/BottomSheet/CountriesTableViewController.swift"
-                  timestampString = "561529635.335431"
+                  urlString = "file:///Users/mbonnette/git/gitHub/BottomSheet/BottomSheet/MapViewController.swift"
+                  timestampString = "561869424.3815711"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "102"
-                  endingLineNumber = "102"
-                  offsetFromSymbolStart = "188">
+                  startingLineNumber = "132"
+                  endingLineNumber = "132"
+                  offsetFromSymbolStart = "2852">
                </Location>
                <Location
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Swift.Optional&lt;Swift.Error&gt;) -&gt; () in BottomSheet.CountriesTableViewController.tableView(_: __C.UITableView, didSelectRowAt: Foundation.IndexPath) -&gt; ()"
+                  symbolName = "BottomSheet.MapViewController.showNewTrip(Swift.Optional&lt;BottomSheet.Trip&gt;) -&gt; ()"
                   moduleName = "BottomSheet"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/mbonnette/git/gitHub/BottomSheet/BottomSheet/CountriesTableViewController.swift"
-                  timestampString = "561529635.337319"
+                  urlString = "file:///Users/mbonnette/git/gitHub/BottomSheet/BottomSheet/MapViewController.swift"
+                  timestampString = "561869424.383612"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "104"
-                  endingLineNumber = "104"
-                  offsetFromSymbolStart = "48">
+                  startingLineNumber = "132"
+                  endingLineNumber = "132"
+                  offsetFromSymbolStart = "3492">
                </Location>
             </Locations>
          </BreakpointContent>
