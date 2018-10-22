@@ -83,21 +83,19 @@ extension Location  {
 	}
 
 	static func findLocation(named name:String?) -> Location? {
-		guard (name == nil) else {
-			let request = Location.sortedFetchRequest
-			request.predicate = NSPredicate(format: "name = %@", name!)
-			return self.findLocation(withRequest:request)
-		}
-		return nil
+		guard (name != nil) else { return nil }
+
+		let request = Location.sortedFetchRequest
+		request.predicate = NSPredicate(format: "name = %@", name!)
+		return self.findLocation(withRequest:request)
 	}
 
 	static func findLocation(atAddress address:String?) -> Location? {
-		guard (address == nil) else {
-			let request = Location.sortedFetchRequest
-			request.predicate = NSPredicate(format: "address = %@", address!)
-			return self.findLocation(withRequest:request)
-		}
-		return nil
+		guard (address != nil) else { return nil }
+
+		let request = Location.sortedFetchRequest
+		request.predicate = NSPredicate(format: "address = %@", address!)
+		return self.findLocation(withRequest:request)
 	}
 	
 	static func findLocation(at loc:CLLocationCoordinate2D, thatHasValidAddress:Bool = false) -> Location? {

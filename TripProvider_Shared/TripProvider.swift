@@ -122,6 +122,8 @@ class TripProvider: NSObject {
             
             // If we get data but can't digest it, alert the user.
 			var newData = data
+			guard newData.count > 0 else {return}
+			
 			if ( !JSONSerialization.isValidJSONObject(data) ) {
 				// Specific data looking at appears to have an enclosing [] which these routines don't like
 				print("Format of JSON not being read properly")
@@ -187,7 +189,6 @@ class TripProvider: NSObject {
          Sort the dictionaries by code so they can be compared in parallel with
          existing segments.
         */
-//		guard let quakeDictionaries = jsonDictionary["features"] as? [[String: AnyObject]] else {
 		guard let segmentDictionaries = jsonDictionary["segments"] as? [[String: AnyObject]] else {
 
 			let description = NSLocalizedString("Segments data doesn't have the right type!", comment: "")
@@ -197,7 +198,6 @@ class TripProvider: NSObject {
         
         let sortedSegmentDictionaries = try segmentDictionaries.sorted { lhs, rhs in
             
-//			guard let lhsResult = lhs["properties"]?["code"] as? String, let rhsResult = rhs["properties"]?["code"] as? String else {
 			guard let lhsResult = lhs["id"] as? String, let rhsResult = rhs["id"] as? String else {
 
                 let description = NSLocalizedString("Segments do not have right id type!", comment: "")

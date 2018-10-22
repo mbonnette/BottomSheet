@@ -99,51 +99,53 @@ class MapViewController: UIViewController, NSFetchedResultsControllerDelegate, C
 	
 	// MARK: - Internal Route UI
 	func showNewTrip(_ trip:Trip?) {
-		guard (trip == nil ) else {
-			if (displayedTrip != nil) {
-				hideLastTrip()
+		guard (trip != nil) else {return}
+		
+		hideLastTrip()
+		displayedTrip = trip
+		print(displayedTrip as Any)
+		
+		// 1.
+		let sourcePlacemark = MKPlacemark(coordinate: (JourneySingleton.sharedInstance.startPoint?.coordinate)!, addressDictionary: nil)
+		let destinationPlacemark = MKPlacemark(coordinate: (JourneySingleton.sharedInstance.stopPoint?.coordinate)!, addressDictionary: nil)
+		
+		// 2.
+		let sourceAnnotation = MKPointAnnotation()
+		sourceAnnotation.title = "Current Location"
+		sourceAnnotation.coordinate = (sourcePlacemark.location?.coordinate)!
+		let destinationAnnotation = MKPointAnnotation()
+		destinationAnnotation.title = "Destination"
+		destinationAnnotation.coordinate = (destinationPlacemark.location?.coordinate)!
+		
+		// 3.
+		self.mapView.showAnnotations([sourceAnnotation,destinationAnnotation], animated: true )
+		
+		// Pull the polyline from the trip and have it lazily build the polyline I'm expecting
+		let segs:NSOrderedSet = trip?.segments ?? []
+		var polyline:MKPolyline? = nil
+		var locRect:MKMapRect? = nil
+		for segment in segs.array as! [Segment] {
+			polyline = createPolyline(using:segment)
+			self.mapView.addOverlay((polyline ?? nil)!)
+			if (locRect == nil) {
+				locRect = polyline?.boundingMapRect
 			}
-			displayedTrip = trip
-			print(displayedTrip as Any)
-
-			// 1.
-			let sourcePlacemark = MKPlacemark(coordinate: (JourneySingleton.sharedInstance.startPoint?.coordinate)!, addressDictionary: nil)
-			let destinationPlacemark = MKPlacemark(coordinate: (JourneySingleton.sharedInstance.stopPoint?.coordinate)!, addressDictionary: nil)
-			
-			// 2.
-			let sourceAnnotation = MKPointAnnotation()
-			sourceAnnotation.title = "Current Location"
-			sourceAnnotation.coordinate = (sourcePlacemark.location?.coordinate)!
-			let destinationAnnotation = MKPointAnnotation()
-			destinationAnnotation.title = "Destination"
-			destinationAnnotation.coordinate = (destinationPlacemark.location?.coordinate)!
-			
-			// 3.
-			self.mapView.showAnnotations([sourceAnnotation,destinationAnnotation], animated: true )
-
-			// Pull the polyline from the trip and have it lazily build the polyline I'm expecting
-			let segs:NSOrderedSet = (trip?.segments!)!
-			var polyline:MKPolyline? = nil
-			for segment in segs.array as! [Segment] {
-				polyline = createPolyline(using:segment)
-				self.mapView.addOverlay(polyline!)
+			else {
+				locRect = locRect!.union(polyline?.boundingMapRect ?? locRect!)
 			}
-			
-			let rect:MKMapRect = (polyline?.boundingMapRect)!
-			self.mapView.setRegion(MKCoordinateRegion(rect), animated: true)
-			self.mapView.setVisibleMapRect(rect, edgePadding: UIEdgeInsets(top:10.0,left:60.0,bottom:10.0,right:60.0), animated:true)
-			return
+		}
+		if (locRect?.isEmpty ?? false) {
+			self.mapView.setRegion(MKCoordinateRegion(locRect!), animated: true)
+			self.mapView.setVisibleMapRect(locRect!, edgePadding: UIEdgeInsets(top:10.0,left:60.0,bottom:10.0,right:60.0), animated:true)
 		}
 	}
 
 	func hideLastTrip() {
-		guard (displayedTrip == nil) else {
+		guard (displayedTrip != nil) && (displayedOverlay != nil) else {return}
 			
-			self.mapView.removeOverlay(displayedOverlay!)
-			displayedTrip = nil
-			displayedOverlay = nil
-			return
-		}
+		self.mapView.removeOverlay(displayedOverlay!)
+		displayedTrip = nil
+		displayedOverlay = nil
 	}
 	
 
@@ -198,10 +200,18 @@ class MapViewController: UIViewController, NSFetchedResultsControllerDelegate, C
 
 extension MapViewController {
 	
-	func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-		mapView.reloadInputViews()
-		showNewTrip(JourneySingleton.sharedInstance.getTrip(byType: .driving))
-	}
+//	func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+//		mapView.reloadInputViews()
+//		showNewTrip(JourneySingleton.sharedInstance.getTrip(byType: .driving))
+//	}
 
+	func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+
+		let locTrip = anObject as? Trip
+		if (locTrip != displayedTrip) {
+			mapView.reloadInputViews()
+			showNewTrip(locTrip)
+		}
+	}
 }
 

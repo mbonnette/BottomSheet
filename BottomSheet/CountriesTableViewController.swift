@@ -74,7 +74,8 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
 		}
 		else if ( indexPath.row == 1 ) {
 			cell = tableView.dequeueReusableCell(withIdentifier: "RouteSetterCellID")!
-			cell.textLabel?.text = countries[indexPath.row-1]
+//			cell.textLabel?.text = countries[indexPath.row-1]
+			cell.textLabel?.text = " "
 		}
 		else {
 			cell = tableView.dequeueReusableCell(withIdentifier: "RouteDetailsCellID")!

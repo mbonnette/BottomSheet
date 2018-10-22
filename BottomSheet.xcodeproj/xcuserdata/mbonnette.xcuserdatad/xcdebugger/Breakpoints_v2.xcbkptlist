@@ -27,13 +27,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "TripProvider_Shared/JourneySingleton.swift"
-            timestampString = "561869275.920752"
+            filePath = "TripProvider_Shared/Model/DataExtensions/Location+.swift"
+            timestampString = "561932607.813381"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "61"
-            endingLineNumber = "61"
-            landmarkName = "getTrip(byType:)"
+            startingLineNumber = "204"
+            endingLineNumber = "204"
+            landmarkName = "updateMissingAddresses()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -43,62 +43,14 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "BottomSheet/MapViewController.swift"
-            timestampString = "561869275.921834"
+            filePath = "TripProvider_Shared/TripProvider.swift"
+            timestampString = "561932607.81519"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "104"
-            endingLineNumber = "104"
-            landmarkName = "showNewTrip(_:)"
+            startingLineNumber = "125"
+            endingLineNumber = "125"
+            landmarkName = "fetchTrip(withURLString:completionHandler:)"
             landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "BottomSheet/MapViewController.swift"
-            timestampString = "561869424.334157"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "132"
-            endingLineNumber = "132"
-            landmarkName = "showNewTrip(_:)"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "BottomSheet.MapViewController.showNewTrip(Swift.Optional&lt;BottomSheet.Trip&gt;) -&gt; ()"
-                  moduleName = "BottomSheet"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/mbonnette/git/gitHub/BottomSheet/BottomSheet/MapViewController.swift"
-                  timestampString = "561869424.3815711"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "132"
-                  endingLineNumber = "132"
-                  offsetFromSymbolStart = "2852">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "BottomSheet.MapViewController.showNewTrip(Swift.Optional&lt;BottomSheet.Trip&gt;) -&gt; ()"
-                  moduleName = "BottomSheet"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/mbonnette/git/gitHub/BottomSheet/BottomSheet/MapViewController.swift"
-                  timestampString = "561869424.383612"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "132"
-                  endingLineNumber = "132"
-                  offsetFromSymbolStart = "3492">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
