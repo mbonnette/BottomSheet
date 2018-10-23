@@ -7,13 +7,14 @@ import CoreData
 import MapKit
 
 
-private let initialVisibleContentHeight: CGFloat = 160.0
-private let maxVisibleContentHeight: CGFloat = 80.0
+private let initialVisibleContentHeight: CGFloat = 166.0
+private let smallVisibleContentHeight: CGFloat = 120.0
 
 class LocationsTableViewController: UITableViewController, NSFetchedResultsControllerDelegate, BottomSheet {
     
     var bottomSheetDelegate: BottomSheetDelegate?
 	var tableNeedsReload = false
+	var cmdPanelShowingSmall = false
 
 	lazy var fetchedLocationsResultsController: NSFetchedResultsController<Location> = {
 		
@@ -138,14 +139,33 @@ class LocationsTableViewController: UITableViewController, NSFetchedResultsContr
 			tableView.deselectRow(at: indexPath, animated: false)
 		}
     }
-    
+	
+	// MARK: - Custom routines
+	func snapCmdPanel(toSmall small:Bool){
+		let screenHeight = UIScreen.main.bounds.size.height
+		if (small) {
+			tableView.contentInset.top = screenHeight - smallVisibleContentHeight
+			tableView.frame.origin.y = smallVisibleContentHeight
+			tableView.setNeedsDisplay()
+			bottomSheetDelegate?.snapToHeight(self, smallVisibleContentHeight)
+			cmdPanelShowingSmall = true
+		}
+		else {
+			tableView.contentInset.top = screenHeight - initialVisibleContentHeight
+			tableView.frame.origin.y = initialVisibleContentHeight
+			tableView.setNeedsDisplay()
+			bottomSheetDelegate?.snapToHeight(self, initialVisibleContentHeight)
+			cmdPanelShowingSmall = false
+		}
+	}
+	
+	
     // MARK: - Scroll view delegate
     
     override func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         let targetOffset = targetContentOffset.pointee.y
         let pulledUpOffset: CGFloat = 0
-        let pulledDownOffset: CGFloat = -maxVisibleContentHeight
-        
+		let pulledDownOffset: CGFloat = cmdPanelShowingSmall ? -smallVisibleContentHeight : -initialVisibleContentHeight
         if (pulledDownOffset...pulledUpOffset).contains(targetOffset) {
             if velocity.y < 0 {
                 targetContentOffset.pointee.y = pulledDownOffset
@@ -191,6 +211,7 @@ extension LocationsTableViewController {
 	}
 	public func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
 		if (tableNeedsReload) {
+			snapCmdPanel(toSmall: true)
 			tableView.reloadData()
 			tableNeedsReload = false
 		}

@@ -6,6 +6,7 @@ import UIKit
 
 protocol BottomSheetDelegate: AnyObject {
     func bottomSheet(_ bottomSheet: BottomSheet, didScrollTo contentOffset: CGPoint)
+	func snapToHeight(_ bottomSheet: BottomSheet, _ height:CGFloat)
 }
 
 protocol BottomSheet: AnyObject {
@@ -123,10 +124,15 @@ class BottomSheetContainerViewController: UIViewController {
     
 }
 
-// MARK: -
+// MARK: - protocol BottomSheetDelegate
 
 extension BottomSheetContainerViewController: BottomSheetDelegate {
     func bottomSheet(_ bottomSheet: BottomSheet, didScrollTo contentOffset: CGPoint) {
 		bottomSheetContainerView.topDistance = max(0, -contentOffset.y)
     }
+
+	func snapToHeight(_ bottomSheet: BottomSheet, _ height:CGFloat) {
+		bottomSheetContainerView.topDistance = max(0, -height)
+	}
+
 }
