@@ -156,20 +156,20 @@ extension Location  {
 				addressString = placemark.subThoroughfare! + " "
 			}
 			if placemark.thoroughfare != nil {
-				addressString = addressString + placemark.thoroughfare! + "\n"
-			}
-			if placemark.postalCode != nil {
-				addressString = addressString + placemark.postalCode! + " "
+				addressString = addressString + placemark.thoroughfare! + ", "
 			}
 			if placemark.locality != nil {
-				addressString = addressString + placemark.locality! + "\n"
+				addressString = addressString + placemark.locality! + " "
 			}
 			if placemark.administrativeArea != nil {
 				addressString = addressString + placemark.administrativeArea! + " "
 			}
-			if placemark.country != nil {
-				addressString = addressString + placemark.country!
-			}
+//			if placemark.postalCode != nil {
+//				addressString = addressString + placemark.postalCode! + " "
+//			}
+//			if placemark.country != nil {
+//				addressString = addressString + placemark.country!
+//			}
 		}
 		print (addressString)
 		return addressString

@@ -7,10 +7,8 @@ import CoreData
 import MapKit
 
 
-private let maxVisibleContentHeight: CGFloat = 120.0
-
-private let numberOfCountries = 5
-private let countries = Locale.isoRegionCodes.prefix(numberOfCountries).map(Locale.current.localizedString(forRegionCode:))
+private let initialVisibleContentHeight: CGFloat = 160.0
+private let maxVisibleContentHeight: CGFloat = 80.0
 
 class LocationsTableViewController: UITableViewController, NSFetchedResultsControllerDelegate, BottomSheet {
     
@@ -43,7 +41,7 @@ class LocationsTableViewController: UITableViewController, NSFetchedResultsContr
 
 		let screenHeight = UIScreen.main.bounds.size.height
 
-        tableView.contentInset.top = screenHeight - maxVisibleContentHeight
+        tableView.contentInset.top = screenHeight - initialVisibleContentHeight
         tableView.backgroundColor = .clear
         tableView.showsVerticalScrollIndicator = false
 		tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
@@ -79,7 +77,6 @@ class LocationsTableViewController: UITableViewController, NSFetchedResultsContr
 		}
 		else if ( indexPath.row == 2 ) {
 			cell = tableView.dequeueReusableCell(withIdentifier: "RouteSetterCellID")!
-//			cell.textLabel?.text = countries[indexPath.row-1]
 			cell.textLabel?.text = " "
 		}
 		else {
@@ -111,6 +108,9 @@ class LocationsTableViewController: UITableViewController, NSFetchedResultsContr
 		}
 		else if (indexPath.row == 1) {
 			return 90.0
+		}
+		else if (indexPath.row == 2) {
+			return 10.0
 		}
 		else {
 			return super.tableView(tableView, heightForRowAt: indexPath)
