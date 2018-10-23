@@ -12,7 +12,7 @@ private let maxVisibleContentHeight: CGFloat = 120.0
 private let numberOfCountries = 5
 private let countries = Locale.isoRegionCodes.prefix(numberOfCountries).map(Locale.current.localizedString(forRegionCode:))
 
-class CountriesTableViewController: UITableViewController, NSFetchedResultsControllerDelegate, BottomSheet {
+class LocationsTableViewController: UITableViewController, NSFetchedResultsControllerDelegate, BottomSheet {
     
     var bottomSheetDelegate: BottomSheetDelegate?
 	var tableNeedsReload = false
@@ -37,6 +37,7 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
         super.viewDidLoad()
         
 		tableView.register(UINib(nibName: "RoutePickerCmdPanel", bundle: nil), forCellReuseIdentifier: "RoutePickerCmdPanel")
+		tableView.register(UINib(nibName: "RouteSearchCmdPanel", bundle: nil), forCellReuseIdentifier: "RouteSearchCmdPanel")
 		tableView.register(UINib(nibName: "RouteSetterCellID", bundle: nil), forCellReuseIdentifier: "RouteSetterCellID")
 		tableView.register(UINib(nibName: "RouteDetailsCellID", bundle: nil), forCellReuseIdentifier: "RouteDetailsCellID")
 
@@ -45,7 +46,8 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
         tableView.contentInset.top = screenHeight - maxVisibleContentHeight
         tableView.backgroundColor = .clear
         tableView.showsVerticalScrollIndicator = false
-        tableView.decelerationRate = .fast
+		tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
+		tableView.decelerationRate = .fast
     }
     
     override func viewDidLayoutSubviews() {
@@ -73,6 +75,9 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
 			cell = tableView.dequeueReusableCell(withIdentifier: "RoutePickerCmdPanel")!
 		}
 		else if ( indexPath.row == 1 ) {
+			cell = tableView.dequeueReusableCell(withIdentifier: "RouteSearchCmdPanel")!
+		}
+		else if ( indexPath.row == 2 ) {
 			cell = tableView.dequeueReusableCell(withIdentifier: "RouteSetterCellID")!
 //			cell.textLabel?.text = countries[indexPath.row-1]
 			cell.textLabel?.text = " "
@@ -89,9 +94,21 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
         return cell
     }
 	
+	override func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
+		if (isLocationRow(indexPath)) {
+			return true
+		}
+		else {
+			return false
+		}
+	}
+	
 	override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 		if (indexPath.row == 0) {
-			return 120.0
+			return 50.0
+		}
+		else if (indexPath.row == 1) {
+			return 90.0
 		}
 		else {
 			return super.tableView(tableView, heightForRowAt: indexPath)
@@ -101,17 +118,20 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
     // MARK: - Table view delegate
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		let loc = locationAt(indexPath)
-		let stop = MKMapPoint(CLLocationCoordinate2D(latitude: loc.latitude, longitude: loc.longitude))
-		JourneySingleton.sharedInstance.retrieveDrivingJourney(stop:stop, completionHandler: { error in
-			
-			DispatchQueue.main.async {
+
+		if (isLocationRow(indexPath)) {
+			let loc = locationAt(indexPath)
+			let stop = MKMapPoint(CLLocationCoordinate2D(latitude: loc.latitude, longitude: loc.longitude))
+			JourneySingleton.sharedInstance.retrieveDrivingJourney(stop:stop, completionHandler: { error in
 				
-				tableView.deselectRow(at: indexPath, animated: true)
-				
-				// Auto collapse the view???
-			}
-		})
+				DispatchQueue.main.async {
+					
+					tableView.deselectRow(at: indexPath, animated: true)
+					
+					// Auto collapse the view???
+				}
+			})
+		}
     }
     
     // MARK: - Scroll view delegate
@@ -132,6 +152,16 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
 	
 	
 	// MARK: - Private Convenience
+	
+	private func isLocationRow(_ indexPath:IndexPath) -> Bool {
+		if (indexPath.row >= 2) {
+			return true
+		}
+		else {
+			return false
+		}
+	}
+	
 	private func locationAt(_ indexPath:IndexPath) -> Location {
 		// Put state machine in here... right now just have 3 row types
 		
@@ -144,7 +174,7 @@ class CountriesTableViewController: UITableViewController, NSFetchedResultsContr
 
 // MARK: - NSFetchedResultsControllerDelegate
 
-extension CountriesTableViewController {
+extension LocationsTableViewController {
 	
 	public func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
 		

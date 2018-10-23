@@ -18,7 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		let window = UIWindow(frame: UIScreen.main.bounds)
         
         let mapViewController = MapViewController()
-        let shortcutsViewController = CountriesTableViewController()
+        let shortcutsViewController = LocationsTableViewController()
         window.rootViewController = BottomSheetContainerViewController(mainViewController: mapViewController,
                                                                        sheetViewController: shortcutsViewController)
         window.makeKeyAndVisible()
