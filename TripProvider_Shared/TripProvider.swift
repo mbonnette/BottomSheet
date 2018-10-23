@@ -21,7 +21,8 @@ let locationsErrorDomain = "LocationsErrorDomain"
 
 enum TripProviderErrorCode: NSInteger {
     case networkUnavailable = 101
-    case wrongDataFormat = 102
+	case wrongDataFormat = 102
+	case routeToSameLocation = 103
 }
 
 class TripProvider: NSObject {
@@ -120,9 +121,15 @@ class TripProvider: NSObject {
                 return
             }
             
-            // If we get data but can't digest it, alert the user.
+            // If we get data but it has no bytes it looks like errors when looking for address to same address as source.
 			var newData = data
-			guard newData.count > 0 else {return}
+			guard newData.count > 0 else {
+				let description = NSLocalizedString("Looks like getting route from/to same location", comment: "")
+				let fetchError = NSError(domain: locationsErrorDomain, code: TripProviderErrorCode.routeToSameLocation.rawValue,
+										 userInfo: [NSLocalizedDescriptionKey: description, NSUnderlyingErrorKey: error as Any])
+				completionHandler(fetchError)
+				return
+			}
 			
 			if ( !JSONSerialization.isValidJSONObject(data) ) {
 				// Specific data looking at appears to have an enclosing [] which these routines don't like

@@ -84,11 +84,13 @@ class LocationsTableViewController: UITableViewController, NSFetchedResultsContr
 		}
 		else {
 			cell = tableView.dequeueReusableCell(withIdentifier: "RouteDetailsCellID")!
-
-			// cell.configure(withLocation:location)
-			let loc = self.locationAt(indexPath)
-			let locAddress = loc.address ?? ""
-			cell.textLabel?.text = loc.name! + ", " + locAddress
+			let loc = locationAt(indexPath)
+			if (loc.name == "") || (loc.name == "origin") || (loc.name == "destination") && (loc.address != nil) {
+				cell.textLabel?.text = loc.address
+			}
+			else {
+				cell.textLabel?.text = loc.name
+			}
 		}
         cell.backgroundColor = .clear
         return cell
@@ -131,6 +133,9 @@ class LocationsTableViewController: UITableViewController, NSFetchedResultsContr
 					// Auto collapse the view???
 				}
 			})
+		}
+		else {
+			tableView.deselectRow(at: indexPath, animated: false)
 		}
     }
     

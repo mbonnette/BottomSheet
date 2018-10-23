@@ -11,6 +11,5 @@ import MapKit
 
 class RoutePickerCmdPanel : UITableViewCell {
 	
-	
 
 }
