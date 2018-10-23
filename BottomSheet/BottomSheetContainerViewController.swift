@@ -14,6 +14,8 @@ protocol BottomSheet: AnyObject {
 
 typealias BottomSheetViewController = UIViewController & BottomSheet
 
+// MARK: -
+
 class BottomSheetContainerView: UIView {
  
     private let mainView: UIView
@@ -83,6 +85,8 @@ class BottomSheetContainerView: UIView {
 
 }
 
+// MARK: -
+
 class BottomSheetContainerViewController: UIViewController {
 
     private let mainViewController: UIViewController
@@ -119,8 +123,10 @@ class BottomSheetContainerViewController: UIViewController {
     
 }
 
+// MARK: -
+
 extension BottomSheetContainerViewController: BottomSheetDelegate {
     func bottomSheet(_ bottomSheet: BottomSheet, didScrollTo contentOffset: CGPoint) {
-        bottomSheetContainerView.topDistance = max(0, -contentOffset.y)
+		bottomSheetContainerView.topDistance = max(0, -contentOffset.y)
     }
 }

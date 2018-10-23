@@ -15,6 +15,14 @@ class RouteSearchCmdPanel : UITableViewCell {
 	@IBOutlet weak var searchButton: UIButton!
 	@IBOutlet weak var routeButton: UIButton!
 
+	lazy var spinner: UIActivityIndicatorView = {
+		let indicator = UIActivityIndicatorView(style: .whiteLarge)
+		indicator.color = .gray
+		indicator.backgroundColor = .black
+		indicator.hidesWhenStopped = true
+		return indicator
+	}()
+	
 	@IBAction func fetchRoute(_ sender: UIButton) {
 
 		sender.isEnabled = false
@@ -64,21 +72,12 @@ class RouteSearchCmdPanel : UITableViewCell {
 	override func draw(_ rect: CGRect) {
 		super.draw(rect)
 		
-		if spinner.superview == nil, let superView = self.superview {
-			superView.addSubview(spinner)
-			superView.bringSubviewToFront(spinner)
+		if spinner.superview == nil {
+			self.addSubview(spinner)
+			self.bringSubviewToFront(spinner)
 			spinner.center = routeButton.center
 			spinner.isHidden = true
 		}
 	}
-
-	lazy var spinner: UIActivityIndicatorView = {
-		let indicator = UIActivityIndicatorView(style: .whiteLarge)
-		indicator.color = .gray
-		indicator.backgroundColor = .black
-		indicator.hidesWhenStopped = true
-		return indicator
-	}()
-	
 
 }
