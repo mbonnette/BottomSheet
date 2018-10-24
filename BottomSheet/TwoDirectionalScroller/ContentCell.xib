@@ -37,7 +37,7 @@
             <constraints>
                 <constraint firstItem="A5Z-Mq-30C" firstAttribute="top" secondItem="pAO-xH-xJX" secondAttribute="top" id="4c0-ET-jeu"/>
                 <constraint firstItem="A5Z-Mq-30C" firstAttribute="leading" secondItem="pAO-xH-xJX" secondAttribute="leading" id="4ej-67-NuU"/>
-                <constraint firstItem="B5F-HN-2hq" firstAttribute="centerY" secondItem="pAO-xH-xJX" secondAttribute="centerY" id="JH5-0i-ah3"/>
+                <constraint firstAttribute="bottom" secondItem="B5F-HN-2hq" secondAttribute="bottom" constant="1" id="HBs-G4-B0M"/>
                 <constraint firstAttribute="trailing" secondItem="A5Z-Mq-30C" secondAttribute="trailing" id="Jhr-iz-0Fj"/>
                 <constraint firstAttribute="bottom" secondItem="A5Z-Mq-30C" secondAttribute="bottom" id="jwv-df-myu"/>
                 <constraint firstItem="B5F-HN-2hq" firstAttribute="centerX" secondItem="pAO-xH-xJX" secondAttribute="centerX" id="mHc-t6-j8j"/>
