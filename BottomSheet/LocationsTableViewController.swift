@@ -37,7 +37,7 @@ class LocationsTableViewController: UITableViewController, NSFetchedResultsContr
         
 		tableView.register(UINib(nibName: "RoutePickerCmdPanel", bundle: nil), forCellReuseIdentifier: "RoutePickerCmdPanel")
 		tableView.register(UINib(nibName: "RouteSearchCmdPanel", bundle: nil), forCellReuseIdentifier: "RouteSearchCmdPanel")
-		tableView.register(UINib(nibName: "RouteSetterCellID", bundle: nil), forCellReuseIdentifier: "RouteSetterCellID")
+		tableView.register(UINib(nibName: "CategoryRow", bundle: nil), forCellReuseIdentifier: "CategoryRowID")
 		tableView.register(UINib(nibName: "RouteDetailsCellID", bundle: nil), forCellReuseIdentifier: "RouteDetailsCellID")
 
 		let screenHeight = UIScreen.main.bounds.size.height
@@ -77,8 +77,7 @@ class LocationsTableViewController: UITableViewController, NSFetchedResultsContr
 			cell = tableView.dequeueReusableCell(withIdentifier: "RouteSearchCmdPanel")!
 		}
 		else if ( indexPath.row == 2 ) {
-			cell = tableView.dequeueReusableCell(withIdentifier: "RouteSetterCellID")!
-			cell.textLabel?.text = " "
+			cell = tableView.dequeueReusableCell(withIdentifier: "CategoryRowID")!
 		}
 		else {
 			cell = tableView.dequeueReusableCell(withIdentifier: "RouteDetailsCellID")!
@@ -111,7 +110,7 @@ class LocationsTableViewController: UITableViewController, NSFetchedResultsContr
 			return 90.0
 		}
 		else if (indexPath.row == 2) {
-			return 10.0
+			return 80.0
 		}
 		else {
 			return super.tableView(tableView, heightForRowAt: indexPath)
