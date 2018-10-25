@@ -37,7 +37,7 @@ class LocationsTableViewController: UITableViewController, NSFetchedResultsContr
         
 		tableView.register(UINib(nibName: "RoutePickerCmdPanel", bundle: nil), forCellReuseIdentifier: "RoutePickerCmdPanel")
 		tableView.register(UINib(nibName: "RouteSearchCmdPanel", bundle: nil), forCellReuseIdentifier: "RouteSearchCmdPanel")
-		tableView.register(UINib(nibName: "CategoryRow", bundle: nil), forCellReuseIdentifier: "CategoryRowID")
+		tableView.register(UINib(nibName: "ScrollingCommandPicker", bundle: nil), forCellReuseIdentifier: "ScrollingCommandPickerID")
 		tableView.register(UINib(nibName: "RouteDetailsCellID", bundle: nil), forCellReuseIdentifier: "RouteDetailsCellID")
 
 		let screenHeight = UIScreen.main.bounds.size.height
@@ -74,7 +74,7 @@ class LocationsTableViewController: UITableViewController, NSFetchedResultsContr
 			cell = tableView.dequeueReusableCell(withIdentifier: "RoutePickerCmdPanel")!
 		}
 		else if ( indexPath.row == 1 ) {
-			cell = tableView.dequeueReusableCell(withIdentifier: "CategoryRowID")!
+			cell = tableView.dequeueReusableCell(withIdentifier: "ScrollingCommandPickerID")!
 		}
 		else if ( indexPath.row == 2 ) {
 			cell = tableView.dequeueReusableCell(withIdentifier: "RouteSearchCmdPanel")!
