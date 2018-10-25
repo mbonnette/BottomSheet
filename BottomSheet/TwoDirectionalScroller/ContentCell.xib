@@ -21,8 +21,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="109" height="38"/>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                     </imageView>
-                    <textView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" userInteractionEnabled="NO" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" editable="NO" text="Current" textAlignment="center" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="B5F-HN-2hq">
-                        <rect key="frame" x="22.5" y="1.5" width="64.5" height="35.5"/>
+                    <textView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" userInteractionEnabled="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" editable="NO" text="Current" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="B5F-HN-2hq">
+                        <rect key="frame" x="10" y="2" width="99" height="36"/>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <accessibility key="accessibilityConfiguration">
                             <accessibilityTraits key="traits" button="YES"/>
@@ -31,19 +31,30 @@
                         <fontDescription key="fontDescription" type="system" weight="light" pointSize="16"/>
                         <textInputTraits key="textInputTraits"/>
                     </textView>
+                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lIC-eY-R03" customClass="medlBadge" customModule="BottomSheet" customModuleProvider="target">
+                        <rect key="frame" x="2" y="8" width="6" height="6"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="6" id="8Gy-9Y-8EG"/>
+                            <constraint firstAttribute="width" secondItem="lIC-eY-R03" secondAttribute="height" multiplier="1:1" id="Hi9-Bl-KMW"/>
+                            <constraint firstAttribute="width" constant="6" id="amh-Wb-Fak"/>
+                        </constraints>
+                    </view>
                 </subviews>
             </view>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
                 <constraint firstItem="A5Z-Mq-30C" firstAttribute="top" secondItem="pAO-xH-xJX" secondAttribute="top" id="4c0-ET-jeu"/>
                 <constraint firstItem="A5Z-Mq-30C" firstAttribute="leading" secondItem="pAO-xH-xJX" secondAttribute="leading" id="4ej-67-NuU"/>
-                <constraint firstAttribute="bottom" secondItem="B5F-HN-2hq" secondAttribute="bottom" constant="1" id="HBs-G4-B0M"/>
+                <constraint firstItem="B5F-HN-2hq" firstAttribute="leading" secondItem="lIC-eY-R03" secondAttribute="trailing" constant="2" id="73h-wm-zzl"/>
+                <constraint firstItem="lIC-eY-R03" firstAttribute="leading" secondItem="pAO-xH-xJX" secondAttribute="leading" constant="2" id="89j-mv-81i"/>
                 <constraint firstAttribute="trailing" secondItem="A5Z-Mq-30C" secondAttribute="trailing" id="Jhr-iz-0Fj"/>
+                <constraint firstItem="lIC-eY-R03" firstAttribute="top" secondItem="pAO-xH-xJX" secondAttribute="top" constant="8" id="ebR-p2-oTR"/>
                 <constraint firstAttribute="bottom" secondItem="A5Z-Mq-30C" secondAttribute="bottom" id="jwv-df-myu"/>
-                <constraint firstItem="B5F-HN-2hq" firstAttribute="centerX" secondItem="pAO-xH-xJX" secondAttribute="centerX" id="mHc-t6-j8j"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="i8l-qa-zCB"/>
             <connections>
+                <outlet property="badge" destination="lIC-eY-R03" id="c2U-XH-sE3"/>
                 <outlet property="cmdText" destination="B5F-HN-2hq" id="kGO-dX-8cU"/>
                 <outlet property="imageView" destination="A5Z-Mq-30C" id="lsD-JV-h1q"/>
             </connections>

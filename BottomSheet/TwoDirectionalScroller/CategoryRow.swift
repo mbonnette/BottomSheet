@@ -15,7 +15,8 @@ class CategoryRow : UITableViewCell {
 	var nonSelectionColor:UIColor = UIColor.white
 	var nonSelectionFont:UIFont? = nil
 	var selectionFont:UIFont? = UIFont.boldSystemFont(ofSize: 11.0)
-	var calculationFont:UIFont = UIFont.boldSystemFont(ofSize: 20)
+	var shortStrCalcFont:UIFont = UIFont.boldSystemFont(ofSize: 28.0)
+	var longStrCalcFont:UIFont = UIFont.boldSystemFont(ofSize: 20.0)
 
 	private lazy var commands:[String] = {
 		let commands = ["   ", "   ","   ", "   ","   ", "   ","Drive", "Transit","Walk", "Drive / Walk","Transit / Walk", "Drive / Transit / Walk","   ","   ","   ","   ","   ","   "]
@@ -89,9 +90,13 @@ extension CategoryRow : UICollectionViewDelegateFlowLayout {
 	
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 		
-		let itemWidth =	commands[indexPath.row].width(withConstrainedHeight: calculationFont.lineHeight, font:calculationFont)
-		let itemHeight = collectionView.bounds.height
-	
-		return CGSize(width: itemWidth, height: itemHeight)
+		var itemWidth:CGFloat = 0.0
+		if (commands[indexPath.row].lengthOfBytes(using: String.Encoding.ascii) < 8 ) {
+			itemWidth =	commands[indexPath.row].width(withConstrainedHeight: shortStrCalcFont.lineHeight, font:shortStrCalcFont)
+		}
+		else {
+			itemWidth =	commands[indexPath.row].width(withConstrainedHeight: longStrCalcFont.lineHeight, font:longStrCalcFont)
+		}
+		return CGSize(width: itemWidth, height: collectionView.bounds.height)
 	}
 }

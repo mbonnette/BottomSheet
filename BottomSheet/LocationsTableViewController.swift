@@ -7,7 +7,7 @@ import CoreData
 import MapKit
 
 
-private let initialVisibleContentHeight: CGFloat = 166.0
+private let initialVisibleContentHeight: CGFloat = 150.0
 private let smallVisibleContentHeight: CGFloat = 120.0
 
 class LocationsTableViewController: UITableViewController, NSFetchedResultsControllerDelegate, BottomSheet {
@@ -104,13 +104,13 @@ class LocationsTableViewController: UITableViewController, NSFetchedResultsContr
 	
 	override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 		if (indexPath.row == 0) {
-			return 22.0
+			return 16.0
 		}
 		else if (indexPath.row == 1) {
 			return 30.0
 		}
 		else if (indexPath.row == 2) {
-			return 90.0
+			return 80.0
 		}
 		else {
 			return super.tableView(tableView, heightForRowAt: indexPath)

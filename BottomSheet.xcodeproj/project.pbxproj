@@ -21,6 +21,7 @@
 		1265AA9B214C37A300ECD540 /* RouteDetailsCellID.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1265AA98214C37A300ECD540 /* RouteDetailsCellID.xib */; };
 		12ACD0DB2180B4C600A74AC8 /* CategoryRow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 12ACD0DA2180B4C600A74AC8 /* CategoryRow.xib */; };
 		12ACD0DD2180B4E900A74AC8 /* ContentCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 12ACD0DC2180B4E900A74AC8 /* ContentCell.xib */; };
+		12ACD0E72181492B00A74AC8 /* medlBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12F38D7D21759134009E5D8F /* medlBadge.swift */; };
 		12E1DE95217EAC4800D78EFB /* RouteSearchCmdPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12E1DE93217EAC4800D78EFB /* RouteSearchCmdPanel.swift */; };
 		12E1DE96217EAC4800D78EFB /* RouteSearchCmdPanel.xib in Resources */ = {isa = PBXBuildFile; fileRef = 12E1DE94217EAC4800D78EFB /* RouteSearchCmdPanel.xib */; };
 		12E1DE98217FF72C00D78EFB /* String+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12E1DE97217FF72C00D78EFB /* String+.swift */; };
@@ -259,6 +260,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F4EAE15B210FBD4C00487323 /* LocationsTableViewController.swift in Sources */,
+				12ACD0E72181492B00A74AC8 /* medlBadge.swift in Sources */,
 				12E1DE9D217FF78100D78EFB /* ViewController.swift in Sources */,
 				12E1DE9E217FF78100D78EFB /* CategoryRow.swift in Sources */,
 				12188EC12166D47F001B2992 /* RoutePickerCmdPanel.swift in Sources */,
