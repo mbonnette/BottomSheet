@@ -74,10 +74,10 @@ class LocationsTableViewController: UITableViewController, NSFetchedResultsContr
 			cell = tableView.dequeueReusableCell(withIdentifier: "RoutePickerCmdPanel")!
 		}
 		else if ( indexPath.row == 1 ) {
-			cell = tableView.dequeueReusableCell(withIdentifier: "RouteSearchCmdPanel")!
+			cell = tableView.dequeueReusableCell(withIdentifier: "CategoryRowID")!
 		}
 		else if ( indexPath.row == 2 ) {
-			cell = tableView.dequeueReusableCell(withIdentifier: "CategoryRowID")!
+			cell = tableView.dequeueReusableCell(withIdentifier: "RouteSearchCmdPanel")!
 		}
 		else {
 			cell = tableView.dequeueReusableCell(withIdentifier: "RouteDetailsCellID")!
@@ -104,13 +104,13 @@ class LocationsTableViewController: UITableViewController, NSFetchedResultsContr
 	
 	override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 		if (indexPath.row == 0) {
-			return 50.0
+			return 22.0
 		}
 		else if (indexPath.row == 1) {
-			return 90.0
+			return 30.0
 		}
 		else if (indexPath.row == 2) {
-			return 80.0
+			return 90.0
 		}
 		else {
 			return super.tableView(tableView, heightForRowAt: indexPath)

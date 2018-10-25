@@ -10,7 +10,6 @@ import UIKit
 class CategoryRow : UITableViewCell {
 	@IBOutlet weak var collectionView: UICollectionView!
 
-	let commands = ["   ", "   ","   ", "   ","   ", "   ","Drive", "Transit","Walk", "Drive / Walk","Transit / Walk", "Drive / Transit / Walk","   ","   ","   ","   ","   ","   "]
 	var curSelectedCell:ContentCell? = nil
 	var selectionColor:UIColor = UIColor.yellow
 	var nonSelectionColor:UIColor = UIColor.white
@@ -18,6 +17,14 @@ class CategoryRow : UITableViewCell {
 	var selectionFont:UIFont? = UIFont.boldSystemFont(ofSize: 11.0)
 	var calculationFont:UIFont = UIFont.boldSystemFont(ofSize: 20)
 
+	private lazy var commands:[String] = {
+		let commands = ["   ", "   ","   ", "   ","   ", "   ","Drive", "Transit","Walk", "Drive / Walk","Transit / Walk", "Drive / Transit / Walk","   ","   ","   ","   ","   ","   "]
+		var retCmds:[String] = []
+		for aCmd in commands {
+			retCmds.append(aCmd)
+		}
+		return retCmds
+	}()
 	
 	override func awakeFromNib() {
 		collectionView.register(UINib(nibName: "ContentCell", bundle: nil), forCellWithReuseIdentifier: "ContentCellID")
@@ -61,13 +68,13 @@ extension CategoryRow : UICollectionViewDataSource {
 		if (nonSelectionFont == nil) {
 			nonSelectionFont = cell.cmdText.font
 			let ptSize = cell.cmdText.font?.pointSize ?? 11.0
-			selectionFont = UIFont.boldSystemFont(ofSize: ptSize + 2.0)
+			selectionFont = UIFont.boldSystemFont(ofSize: ptSize + 0.0)
 			nonSelectionColor = cell.cmdText.textColor ?? UIColor.white
 			if (nonSelectionColor == UIColor.white) {
 				selectionColor = UIColor.yellow
 			}
 			else {
-				selectionColor = UIColor.blue
+				selectionColor = UIColor(red:0.5, green:0.5, blue:1.0, alpha:1.0)
 			}
 		}
 		else {
