@@ -9,9 +9,10 @@ import MapKit
 
 private let initialVisibleContentHeight: CGFloat = 150.0
 private let smallVisibleContentHeight: CGFloat = 120.0
+private let commands = ["Drive", "Transit","Walk", "Drive / Walk","Transit / Walk", "Drive / Transit / Walk"]
 
-class LocationsTableViewController: UITableViewController, NSFetchedResultsControllerDelegate, BottomSheet {
-    
+class LocationsTableViewController: UITableViewController, NSFetchedResultsControllerDelegate, ScrollingCommandDelegate, BottomSheet {
+	
     var bottomSheetDelegate: BottomSheetDelegate?
 	var tableNeedsReload = false
 	var cmdPanelShowingSmall = false
@@ -60,7 +61,37 @@ class LocationsTableViewController: UITableViewController, NSFetchedResultsContr
             tableView.contentSize.height = tableView.bounds.height
         }
     }
-    
+
+	// MARK: - ScrollingCommandDelegate
+
+	func cmd(at pos: Int) -> String {
+		return commands[pos]
+	}
+	
+	func numCmds() -> Int {
+		return commands.count
+	}
+	
+	func cmdSelected(at pos: Int) {
+		switch pos {
+		case 0:
+			print(pos)
+		case 1:
+			print(pos)
+		case 2:
+			print(pos)
+		case 3:
+			print(pos)
+		case 4:
+			print(pos)
+		case 5:
+			print(pos)
+		default:
+			print(pos)
+		}
+	}
+	
+
     // MARK: - Table view data source
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -75,6 +106,7 @@ class LocationsTableViewController: UITableViewController, NSFetchedResultsContr
 		}
 		else if ( indexPath.row == 1 ) {
 			cell = tableView.dequeueReusableCell(withIdentifier: "ScrollingCommandPickerID")!
+			(cell as? ScrollingCommandPicker)?.config(scrollingCommandDelegate:self)
 		}
 		else if ( indexPath.row == 2 ) {
 			cell = tableView.dequeueReusableCell(withIdentifier: "RouteSearchCmdPanel")!
