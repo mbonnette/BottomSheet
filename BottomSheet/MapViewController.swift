@@ -200,11 +200,6 @@ class MapViewController: UIViewController, NSFetchedResultsControllerDelegate, C
 
 extension MapViewController {
 	
-//	func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-//		mapView.reloadInputViews()
-//		showNewTrip(JourneySingleton.sharedInstance.getTrip(byType: .driving))
-//	}
-
 	func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
 
 		let locTrip = anObject as? Trip

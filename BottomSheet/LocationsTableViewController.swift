@@ -10,6 +10,7 @@ import MapKit
 private let initialVisibleContentHeight: CGFloat = 150.0
 private let smallVisibleContentHeight: CGFloat = 120.0
 private let commands = ["Drive", "Transit","Walk", "Drive / Walk","Transit / Walk", "Drive / Transit / Walk"]
+private var scrollingCmdPicker:ScrollingCommandPicker? = nil
 
 class LocationsTableViewController: UITableViewController, NSFetchedResultsControllerDelegate, ScrollingCommandDelegate, BottomSheet {
 	
@@ -73,6 +74,7 @@ class LocationsTableViewController: UITableViewController, NSFetchedResultsContr
 	}
 	
 	func cmdSelected(at pos: Int) {
+//		scrollingCmdPicker?.mark(cmdAt:pos, hasNewItems:true)
 		switch pos {
 		case 0:
 			print(pos)
@@ -91,6 +93,25 @@ class LocationsTableViewController: UITableViewController, NSFetchedResultsContr
 		}
 	}
 	
+	func cmdHasNewInfo(at pos:Int) -> Bool {
+		switch pos {
+		case 0:
+			return false
+		case 1:
+			return true
+		case 2:
+			return false
+		case 3:
+			return false
+		case 4:
+			return false
+		case 5:
+			return false
+		default:
+			return false
+		}
+	}
+	
 
     // MARK: - Table view data source
 
@@ -106,7 +127,8 @@ class LocationsTableViewController: UITableViewController, NSFetchedResultsContr
 		}
 		else if ( indexPath.row == 1 ) {
 			cell = tableView.dequeueReusableCell(withIdentifier: "ScrollingCommandPickerID")!
-			(cell as? ScrollingCommandPicker)?.config(scrollingCommandDelegate:self)
+			scrollingCmdPicker = cell as?ScrollingCommandPicker
+			scrollingCmdPicker?.config(scrollingCommandDelegate:self)
 		}
 		else if ( indexPath.row == 2 ) {
 			cell = tableView.dequeueReusableCell(withIdentifier: "RouteSearchCmdPanel")!
@@ -210,7 +232,7 @@ class LocationsTableViewController: UITableViewController, NSFetchedResultsContr
 	// MARK: - Private Convenience
 	
 	private func isLocationRow(_ indexPath:IndexPath) -> Bool {
-		if (indexPath.row >= 2) {
+		if (indexPath.row > 2) {
 			return true
 		}
 		else {

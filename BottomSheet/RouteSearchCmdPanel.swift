@@ -27,29 +27,37 @@ class RouteSearchCmdPanel : UITableViewCell {
 
 		sender.isEnabled = false
 		UIApplication.shared.isNetworkActivityIndicatorVisible = true
-		
 		spinner.isHidden = false
 		sender.isHidden = true
 		spinner.startAnimating()
 		
 		JourneySingleton.sharedInstance.retrieveDrivingJourney(completionHandler: { error in
-			
 			DispatchQueue.main.async {
-				
 				sender.isEnabled = true
 				UIApplication.shared.isNetworkActivityIndicatorVisible = false
 				self.spinner.stopAnimating()
 				sender.isHidden = false
-				
+				guard let error = error else {
+					self.fetchWalkingRoute()
+					return
+				}
+				self.showFetchError(error: error)
+			}
+		})
+	}
+
+	func fetchWalkingRoute() {
+		// TODO ... show spinner but do silently and cycle through the different roles
+		UIApplication.shared.isNetworkActivityIndicatorVisible = true
+		spinner.isHidden = false
+		spinner.startAnimating()
+		
+		JourneySingleton.sharedInstance.retrieveWalkingJourney(completionHandler: { error in
+			DispatchQueue.main.async {
+				UIApplication.shared.isNetworkActivityIndicatorVisible = false
+				self.spinner.stopAnimating()
 				guard let error = error else { return }
-				
-				let alert = UIAlertController(title: "Fetch locations error!",
-											  message: error.localizedDescription,
-											  preferredStyle: .alert)
-				
-				alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-				UIApplication.shared.keyWindow?.rootViewController?.present(alert, animated: true, completion: nil)
-				
+				self.showFetchError(error: error)
 			}
 		})
 	}
@@ -78,6 +86,16 @@ class RouteSearchCmdPanel : UITableViewCell {
 			spinner.center = routeButton.center
 			spinner.isHidden = true
 		}
+	}
+	
+	
+	func showFetchError(error:Error) {
+		let alert = UIAlertController(title: "Fetch locations error!",
+									  message: error.localizedDescription,
+									  preferredStyle: .alert)
+		
+		alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+		UIApplication.shared.keyWindow?.rootViewController?.present(alert, animated: true, completion: nil)
 	}
 
 }
