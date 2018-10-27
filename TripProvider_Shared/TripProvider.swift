@@ -55,7 +55,7 @@ class TripProvider: NSObject {
 
 	
 	
-	func fetchTrip(start startLoc:MKMapPoint, stop stopLoc:MKMapPoint, _ type:segmentTypes, completionHandler: @escaping (Error?) -> Void) {
+	func fetchTrip(start startLoc:MKMapPoint, stop stopLoc:MKMapPoint, _ type:TransportTypes, completionHandler: @escaping (Error?) -> Void) {
 	
 		let urlString =
 				"https://api.takemobi.com/intermodal/v1/routes?origin=" +
@@ -65,7 +65,7 @@ class TripProvider: NSObject {
 					String(stopLoc.coordinate.latitude) + "," +
 					String(stopLoc.coordinate.longitude) +
 				"&mode=" +
-					Segment.segmentTypeString(type) +
+					Segment.transportTypeString(type) +
 				"&departure_time=now"
 	
 		print(urlString)

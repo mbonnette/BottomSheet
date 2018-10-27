@@ -7,24 +7,19 @@ import CoreData
 import MapKit
 
 
-private let initialVisibleContentHeight: CGFloat = 150.0
-private let smallVisibleContentHeight: CGFloat = 120.0
-private let commands = ["Drive", "Transit","Walk", "Drive / Walk","Transit / Walk", "Drive / Transit / Walk"]
-private var scrollingCmdPicker:ScrollingCommandPicker? = nil
-
 class LocationsTableViewController: UITableViewController, NSFetchedResultsControllerDelegate, ScrollingCommandDelegate, BottomSheet {
 	
     var bottomSheetDelegate: BottomSheetDelegate?
 	var tableNeedsReload = false
 	var cmdPanelShowingSmall = false
-
+	var newTripsReceived:[Trip] = []
+	var tripsDisplayed:[Trip] = []
 	lazy var fetchedLocationsResultsController: NSFetchedResultsController<Location> = {
 		
 		let controller = NSFetchedResultsController(fetchRequest: Location.sortedFetchRequest,
 													managedObjectContext: PersistentContainerSingleton.shared.persistentContainer.viewContext,
 													sectionNameKeyPath: nil, cacheName: nil)
 		controller.delegate = self
-		
 		do {
 			try controller.performFetch()
 		} catch {
@@ -33,6 +28,19 @@ class LocationsTableViewController: UITableViewController, NSFetchedResultsContr
 		}
 		return controller
 	}()
+	
+	lazy var listenForTripsResultsController: NSFetchedResultsController<Trip> = {
+		let controller = Trip.getAllTripsResultsController()
+		return controller
+	}()
+
+	private let initialVisibleContentHeight: CGFloat = 150.0
+	private let smallVisibleContentHeight: CGFloat = 120.0
+	private let commands = ["Drive","Walk","Transit","Drive / Walk","Transit / Walk","Drive / Transit / Walk"]
+	private var scrollingCmdPicker:ScrollingCommandPicker? = nil
+	private var curTripTypeDisplayed = TransportTypes.driving
+	
+	// MARK: - View overloads
 	
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,6 +57,8 @@ class LocationsTableViewController: UITableViewController, NSFetchedResultsContr
         tableView.showsVerticalScrollIndicator = false
 		tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
 		tableView.decelerationRate = .fast
+		
+		self.listenForTripsResultsController.delegate = self
     }
     
     override func viewDidLayoutSubviews() {
@@ -72,22 +82,27 @@ class LocationsTableViewController: UITableViewController, NSFetchedResultsContr
 	func numCmds() -> Int {
 		return commands.count
 	}
-	
-	func cmdSelected(at pos: Int) {
-//		scrollingCmdPicker?.mark(cmdAt:pos, hasNewItems:true)
+
+	func isCmdSelected(at pos: Int) -> Bool {
 		switch pos {
-		case 0:
-			print(pos)
-		case 1:
-			print(pos)
-		case 2:
-			print(pos)
-		case 3:
-			print(pos)
-		case 4:
-			print(pos)
-		case 5:
-			print(pos)
+		case 0...commands.count:
+			return (curTripTypeDisplayed == cmdPosToTripType(pos))
+		default:
+			return false
+		}
+	}
+
+	func cmdSelected(at pos: Int) {
+		switch pos {
+		case 0...commands.count:
+			curTripTypeDisplayed = cmdPosToTripType(pos)
+			var matchingTrips:[Trip]? = newTripsReceived.filter { $0.tripType == cmdPosToTripType(pos).rawValue }
+			if (matchingTrips?.count ?? 0 > 0) {
+				let trip = matchingTrips?[0]
+				newTripsReceived.removeAll(where: {$0.tripType == cmdPosToTripType(pos).rawValue})
+				tripsDisplayed.append(trip!)
+				JourneySingleton.sharedInstance.curTripDisplayed = trip
+			}
 		default:
 			print(pos)
 		}
@@ -95,18 +110,9 @@ class LocationsTableViewController: UITableViewController, NSFetchedResultsContr
 	
 	func cmdHasNewInfo(at pos:Int) -> Bool {
 		switch pos {
-		case 0:
-			return false
-		case 1:
-			return true
-		case 2:
-			return false
-		case 3:
-			return false
-		case 4:
-			return false
-		case 5:
-			return false
+		case 0...commands.count:
+			let matchingTrips = newTripsReceived.filter { $0.tripType == cmdPosToTripType(pos).rawValue }
+			return (matchingTrips.isEmpty == false)
 		default:
 			return false
 		}
@@ -194,6 +200,7 @@ class LocationsTableViewController: UITableViewController, NSFetchedResultsContr
     }
 	
 	// MARK: - Custom routines
+	
 	func snapCmdPanel(toSmall small:Bool){
 		let screenHeight = UIScreen.main.bounds.size.height
 		if (small) {
@@ -247,8 +254,25 @@ class LocationsTableViewController: UITableViewController, NSFetchedResultsContr
 		return fetchedLocationsResultsController.object(at:newIndex)
 	}
 	
+	private func cmdPosToTripType(_ pos:Int) -> TransportTypes {
+		switch pos {
+		case 0:
+			return TransportTypes.driving
+		case 1:
+			return TransportTypes.walking
+		case 2:
+			return TransportTypes.transit
+		case 3:
+			return TransportTypes.driveWalk
+		case 4:
+			return TransportTypes.transitWalk
+		case 5:
+			return TransportTypes.driveTransitWalk
+		default:
+			return TransportTypes.unknown
+		}
+	}
 }
-
 
 // MARK: - NSFetchedResultsControllerDelegate
 
@@ -256,17 +280,39 @@ extension LocationsTableViewController {
 	
 	public func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
 		
-		if ((type == NSFetchedResultsChangeType.insert) || (type == NSFetchedResultsChangeType.delete)) {
-			tableNeedsReload = true
+		if ( controller is NSFetchedResultsController<Location>) {
+			if ((type == NSFetchedResultsChangeType.insert) || (type == NSFetchedResultsChangeType.delete)) {
+				tableNeedsReload = true
+			}
 		}
-		
-		
+		else if ( controller is NSFetchedResultsController<Trip>) {
+			if (type == NSFetchedResultsChangeType.insert) {
+				let trip = anObject as? Trip
+				if (trip?.tripType != curTripTypeDisplayed.rawValue) {
+					
+					newTripsReceived.removeAll {$0.tripType == trip?.tripType}
+					newTripsReceived.append(trip!)
+					tableView.reloadData()			// just need cmd to change to unread but this will do it
+				}
+				else {
+					newTripsReceived.removeAll {$0.tripType == trip?.tripType}
+					tripsDisplayed.removeAll {$0.tripType == trip?.tripType}
+					tripsDisplayed.append(trip!)
+					JourneySingleton.sharedInstance.curTripDisplayed = trip
+					tableView.reloadData()
+				}
+			}
+		}
 	}
+
 	public func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-		if (tableNeedsReload) {
-			snapCmdPanel(toSmall: true)
-			tableView.reloadData()
-			tableNeedsReload = false
+		
+		if ( controller is NSFetchedResultsController<Location>) {
+			if (tableNeedsReload) {
+				snapCmdPanel(toSmall: true)
+				tableView.reloadData()
+				tableNeedsReload = false
+			}
 		}
 	}
 

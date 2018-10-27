@@ -14,6 +14,16 @@ import MapKit
 //MARK: CLASS routines
 
 
+public enum TransportTypes: Int32 {
+	case driving = 0
+	case walking = 1
+	case transit = 2
+	case driveWalk = 3
+	case transitWalk = 4
+	case driveTransitWalk = 5
+	case unknown = 99
+}
+
 
 extension Trip  {
 
@@ -73,8 +83,20 @@ extension Trip  {
 			return nil
 		}
 	}
-
 	
+	static func getAllTripsResultsController() -> NSFetchedResultsController<Trip> {
+		let controller = NSFetchedResultsController(fetchRequest: Trip.sortedFetchRequest,
+													managedObjectContext: PersistentContainerSingleton.shared.persistentContainer.viewContext,
+													sectionNameKeyPath: nil, cacheName: nil)
+		do {
+			try controller.performFetch()
+		} catch {
+			let nserror = error as NSError
+			fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+		}
+		return controller
+	}
+
 	
 	//MARK:______________________________
 	//MARK: OBJECT routines
@@ -130,7 +152,7 @@ extension Trip  {
 		self.co2				= Int32(truncating: localCo2)
 		self.calories			= Int32(truncating: localCalories)
 		self.responseIdentifier	= localResponseIdentifier
-		self.tripType			= Segment.segmentTypeEnum(localTripType)
+		self.tripType			= Segment.transportTypeEnum(localTripType)
 
 		//??? Not stored
 		//		"mobi_score": 0,

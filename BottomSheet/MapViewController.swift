@@ -12,7 +12,7 @@ class MapViewController: UIViewController, NSFetchedResultsControllerDelegate, C
 	private lazy var locationMgr = CLLocationManager()
 	private lazy var tripProvider: TripProvider = {
 		let provider = TripProvider()
-		provider.fetchedTripResultsControllerDelegate = self
+//		provider.fetchedTripResultsControllerDelegate = self
 		return provider
 	}()
 	private var displayedTrip:Trip? = nil
@@ -43,6 +43,11 @@ class MapViewController: UIViewController, NSFetchedResultsControllerDelegate, C
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 		checkLocationAuthorizationStatus()
+		
+		JourneySingleton.sharedInstance.curTripDisplayedDidChangeClosure = {
+			self.showNewTrip(JourneySingleton.sharedInstance.curTripDisplayed)
+		}
+
 	}
 
 	
@@ -57,8 +62,6 @@ class MapViewController: UIViewController, NSFetchedResultsControllerDelegate, C
 
 		if 	(lat != curLocation.latitude) &&
 			(long != curLocation.longitude) {
-
-			print("Existing number of trips",tripProvider.fetchedTripsResultsController.fetchedObjects?.count as Any)
 
 			if (mapCenteredFirstTime == false) {
 				self.mapCenteredFirstTime = true
@@ -198,15 +201,15 @@ class MapViewController: UIViewController, NSFetchedResultsControllerDelegate, C
 
 // MARK: - NSFetchedResultsControllerDelegate
 
-extension MapViewController {
-	
-	func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-
-		let locTrip = anObject as? Trip
-		if (locTrip != displayedTrip) {
-			mapView.reloadInputViews()
-			showNewTrip(locTrip)
-		}
-	}
-}
+//extension MapViewController {
+//
+//	func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+//
+//		let locTrip = anObject as? Trip
+//		if (locTrip != displayedTrip) {
+//			mapView.reloadInputViews()
+//			showNewTrip(locTrip)
+//		}
+//	}
+//}
 

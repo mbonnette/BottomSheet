@@ -9,13 +9,6 @@ import Foundation
 import CoreData
 import MapKit
 
-
-public enum segmentTypes: Int32 {
-	case driving = 0
-	case walking = 1
-	case something = 2
-}
-
 //MARK:______________________________
 //MARK: CLASS routines
 
@@ -29,7 +22,7 @@ extension Segment  {
 
 		let segment = NSEntityDescription.insertNewObject(forEntityName: "Segment", into:context) as! Segment
 
-		segment.segmentType = segmentTypes.driving.rawValue
+		segment.segmentType = TransportTypes.driving.rawValue
 		return segment
 	}
 	
@@ -37,23 +30,27 @@ extension Segment  {
 		super.awakeFromFetch()
 	}
 
-	static func segmentTypeEnum(_ segmentTypeStr:String) -> Int32 {
-		switch segmentTypeStr {
+	static func transportTypeEnum(_ transportTypeStr:String) -> Int32 {
+		switch transportTypeStr {
 		case "DRIVE","drive","Drive","driving":
-			return segmentTypes.driving.rawValue
+			return TransportTypes.driving.rawValue
 		case "WALK","walk","Walk","walking":
-			return segmentTypes.walking.rawValue
+			return TransportTypes.walking.rawValue
+		case "TRANSIT","transit","Transit":
+			return TransportTypes.walking.rawValue
 		default:
-			return segmentTypes.driving.rawValue
+			return TransportTypes.driving.rawValue
 		}
 	}
 	
-	static func segmentTypeString(_ segmentType:segmentTypes) -> String {
-		switch segmentType {
+	static func transportTypeString(_ transportType:TransportTypes) -> String {
+		switch transportType {
 		case .driving:
 			return "driving"
 		case .walking:
 			return "walking"
+		case .transit:
+			return "transit"
 		default:
 			return "driving"
 		}
@@ -137,15 +134,15 @@ extension Segment  {
 	func segmentTypeEnum(_ segmentTypeStr:String) -> Int32 {
 		switch segmentTypeStr {
 		case "DRIVE","drive","Drive":
-			return segmentTypes.driving.rawValue
+			return TransportTypes.driving.rawValue
 		case "WALK","walk","Walk":
-			return segmentTypes.walking.rawValue
+			return TransportTypes.walking.rawValue
 		default:
-			return segmentTypes.driving.rawValue
+			return TransportTypes.driving.rawValue
 		}
 	}
 	
-	func segmentTypeString(_ segmentType:segmentTypes) -> String {
+	func segmentTypeString(_ segmentType:TransportTypes) -> String {
 		switch segmentType {
 		case .driving:
 			return "driving"
