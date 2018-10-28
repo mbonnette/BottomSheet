@@ -95,13 +95,22 @@ class LocationsTableViewController: UITableViewController, NSFetchedResultsContr
 	func cmdSelected(at pos: Int) {
 		switch pos {
 		case 0...commands.count:
-			curTripTypeDisplayed = cmdPosToTripType(pos)
-			var matchingTrips:[Trip]? = newTripsReceived.filter { $0.tripType == cmdPosToTripType(pos).rawValue }
-			if (matchingTrips?.count ?? 0 > 0) {
-				let trip = matchingTrips?[0]
-				newTripsReceived.removeAll(where: {$0.tripType == cmdPosToTripType(pos).rawValue})
-				tripsDisplayed.append(trip!)
-				JourneySingleton.sharedInstance.curTripDisplayed = trip
+			if (curTripTypeDisplayed != cmdPosToTripType(pos)) {
+				curTripTypeDisplayed = cmdPosToTripType(pos)
+				let newTrips:[Trip]? = newTripsReceived.filter { $0.tripType == cmdPosToTripType(pos).rawValue }
+				if (newTrips?.count ?? 0 > 0) {
+					let trip = newTrips?[0]
+					newTripsReceived.removeAll(where: {$0.tripType == cmdPosToTripType(pos).rawValue})
+					tripsDisplayed.append(trip!)
+					JourneySingleton.sharedInstance.curTripDisplayed = trip
+				}
+				else {
+					let displayedTrips:[Trip]? = tripsDisplayed.filter { $0.tripType == cmdPosToTripType(pos).rawValue }
+					if (displayedTrips?.count ?? 0 > 0) {
+						let trip = displayedTrips?[0]
+						JourneySingleton.sharedInstance.curTripDisplayed = trip
+					}
+				}
 			}
 		default:
 			print(pos)
@@ -275,21 +284,24 @@ class LocationsTableViewController: UITableViewController, NSFetchedResultsContr
 }
 
 // MARK: - NSFetchedResultsControllerDelegate
-
 extension LocationsTableViewController {
 	
-	public func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+	public func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for fetchType: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
 		
-		if ( controller is NSFetchedResultsController<Location>) {
-			if ((type == NSFetchedResultsChangeType.insert) || (type == NSFetchedResultsChangeType.delete)) {
+		// Might be a better way to figure out which kind of controller is calling but...
+		let trip = anObject as? Trip
+		let isTrip = trip?.arrivalTime != nil
+		let location = anObject as? Location
+		let isLocation = location?.latitude != nil
+
+		if (isLocation) {
+			if ((fetchType == NSFetchedResultsChangeType.insert) || (fetchType == NSFetchedResultsChangeType.delete)) {
 				tableNeedsReload = true
 			}
 		}
-		else if ( controller is NSFetchedResultsController<Trip>) {
-			if (type == NSFetchedResultsChangeType.insert) {
-				let trip = anObject as? Trip
+		else if (isTrip) {
+			if (fetchType == NSFetchedResultsChangeType.insert) {
 				if (trip?.tripType != curTripTypeDisplayed.rawValue) {
-					
 					newTripsReceived.removeAll {$0.tripType == trip?.tripType}
 					newTripsReceived.append(trip!)
 					tableView.reloadData()			// just need cmd to change to unread but this will do it

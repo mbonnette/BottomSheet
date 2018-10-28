@@ -90,6 +90,7 @@ extension Trip  {
 													sectionNameKeyPath: nil, cacheName: nil)
 		do {
 			try controller.performFetch()
+			print("Existing number of trips",controller.fetchedObjects!.count as Any)
 		} catch {
 			let nserror = error as NSError
 			fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
