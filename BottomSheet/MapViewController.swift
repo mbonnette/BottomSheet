@@ -32,9 +32,9 @@ class MapViewController: UIViewController, NSFetchedResultsControllerDelegate, C
 		mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
 		mapView.delegate = self
 
-		JourneySingleton.sharedInstance.curTripDisplayedDidChangeClosure = {
+		JourneySingleton.sharedInstance.notifyOnTripChange(with: {
 			self.showNewTrip(JourneySingleton.sharedInstance.curTripDisplayed)
-		}
+		})
 	}
 
 	override func viewDidAppear(_ animated: Bool) {

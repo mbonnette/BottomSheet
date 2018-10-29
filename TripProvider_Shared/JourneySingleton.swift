@@ -36,22 +36,17 @@ class JourneySingleton {
 	var tripProvider = TripProvider()
 
 
-	var curTripDisplayedDidChangeClosure: (()->())?
 	var curTripDisplayed:Trip? {
 		didSet {
-			curTripDisplayedDidChangeClosure?()
-			
 			for listener in listeners {
 				listener?()
 			}
 		}
 	}
-	
-	var listeners:[(()->())?] = []
-	func listenForTripChange(with closure: (()->())? ) {
+	func notifyOnTripChange(with closure: (()->())? ) {
 		listeners.append(closure)
 	}
-	
+	private var listeners:[(()->())?] = []
 	
 	func retrieveDrivingJourney(completionHandler: @escaping (Error?) -> Void) {
 		if (stopPoint == nil) {

@@ -22,6 +22,16 @@ class RouteSearchCmdPanel : UITableViewCell {
 		indicator.hidesWhenStopped = true
 		return indicator
 	}()
+	lazy var tripChangedListener = {
+		DispatchQueue.main.async {
+			if (JourneySingleton.sharedInstance.curTripDisplayed == nil) {
+				self.routeButton.isHidden = false
+			}
+			else {
+				self.routeButton.isHidden = true
+			}
+		}
+	}
 	
 	@IBAction func fetchRoute(_ sender: UIButton) {
 
@@ -44,10 +54,10 @@ class RouteSearchCmdPanel : UITableViewCell {
 				self.showFetchError(error: error)
 			}
 		})
+		JourneySingleton.sharedInstance.notifyOnTripChange(with: self.tripChangedListener)
 	}
 
 	func fetchWalkingRoute() {
-		// TODO ... show spinner but do silently and cycle through the different roles
 		UIApplication.shared.isNetworkActivityIndicatorVisible = true
 		spinner.isHidden = false
 		spinner.startAnimating()
