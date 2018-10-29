@@ -102,6 +102,7 @@ class LocationsTableViewController: UITableViewController, NSFetchedResultsContr
 				if (newTrips?.count ?? 0 > 0) {
 					let trip = newTrips?[0]
 					newTripsReceived.removeAll(where: {$0.tripType == cmdPosToTripType(pos).rawValue})
+					tripsDisplayed.removeAll(where: {$0.tripType == cmdPosToTripType(pos).rawValue})
 					tripsDisplayed.append(trip!)
 					JourneySingleton.sharedInstance.curTripDisplayed = trip
 				}
@@ -308,26 +309,24 @@ extension LocationsTableViewController {
 				if (trip?.tripType != curTripTypeDisplayed.rawValue) {
 					newTripsReceived.removeAll {$0.tripType == trip?.tripType}
 					newTripsReceived.append(trip!)
-					tableView.reloadData()			// just need cmd to change to unread but this will do it
 				}
 				else {
 					newTripsReceived.removeAll {$0.tripType == trip?.tripType}
 					tripsDisplayed.removeAll {$0.tripType == trip?.tripType}
 					tripsDisplayed.append(trip!)
 					JourneySingleton.sharedInstance.curTripDisplayed = trip
-					tableView.reloadData()
 				}
+				tableNeedsReload = true
 			}
 		}
 	}
 
 	public func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-		
-		if ( controller is NSFetchedResultsController<Location>) {
-			if (tableNeedsReload) {
-				snapCmdPanel(toSmall: true)
-				tableView.reloadData()
-				tableNeedsReload = false
+		if (tableNeedsReload) {
+			DispatchQueue.main.async {
+				self.snapCmdPanel(toSmall: true)
+				self.tableView.reloadData()
+				self.tableNeedsReload = false
 			}
 		}
 	}
