@@ -34,10 +34,11 @@ class LocationsTableViewController: UITableViewController, NSFetchedResultsContr
 		return controller
 	}()
 
+	private var scrollingCmdPicker:ScrollingCommandPicker? = nil
 	private let initialVisibleContentHeight: CGFloat = 150.0
 	private let smallVisibleContentHeight: CGFloat = 120.0
+
 	private let commands = ["Drive","Walk","Transit","Drive / Walk","Transit / Walk","Drive / Transit / Walk"]
-	private var scrollingCmdPicker:ScrollingCommandPicker? = nil
 	private var curTripTypeDisplayed = TransportTypes.driving
 	
 	// MARK: - View overloads
@@ -109,6 +110,9 @@ class LocationsTableViewController: UITableViewController, NSFetchedResultsContr
 					if (displayedTrips?.count ?? 0 > 0) {
 						let trip = displayedTrips?[0]
 						JourneySingleton.sharedInstance.curTripDisplayed = trip
+					}
+					else {
+						JourneySingleton.sharedInstance.curTripDisplayed = nil
 					}
 				}
 			}

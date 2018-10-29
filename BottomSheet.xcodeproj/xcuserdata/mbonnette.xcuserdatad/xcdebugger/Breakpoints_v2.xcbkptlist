@@ -43,29 +43,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "TripProvider_Shared/JourneySingleton.swift"
-            timestampString = "562458305.5254149"
+            filePath = "BottomSheet/LocationsTableViewController.swift"
+            timestampString = "562459740.198614"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "54"
-            endingLineNumber = "54"
-            landmarkName = "retrieveDrivingJourney(start:stop:completionHandler:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "TripProvider_Shared/JourneySingleton.swift"
-            timestampString = "562458305.5254771"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "60"
-            endingLineNumber = "60"
-            landmarkName = "retrieveWalkingJourney(start:stop:completionHandler:)"
+            startingLineNumber = "128"
+            endingLineNumber = "128"
+            landmarkName = "cmdHasNewInfo(at:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

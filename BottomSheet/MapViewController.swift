@@ -19,7 +19,6 @@ class MapViewController: UIViewController, NSFetchedResultsControllerDelegate, C
 	private var displayedOverlay:MKOverlay? = nil
 	private var mapCenteredFirstTime = false
 	private var curLocation:CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: 0, longitude: 0)
-
 	private let regionRadius: CLLocationDistance = 100000
 
 	
@@ -32,26 +31,20 @@ class MapViewController: UIViewController, NSFetchedResultsControllerDelegate, C
 		view.addSubview(mapView)
 		mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
 		mapView.delegate = self
-		
-		// If not showing a trip on start, need to initiate fetch so will be listening
-		print("Existing number of trips",tripProvider.fetchedTripsResultsController.fetchedObjects?.count as Any)
 
-//		let initialLocation = CLLocation(latitude: 42.377806, longitude: -71.111969)
-//		centerMapOnLocation(location: initialLocation)
+		JourneySingleton.sharedInstance.curTripDisplayedDidChangeClosure = {
+			self.showNewTrip(JourneySingleton.sharedInstance.curTripDisplayed)
+		}
 	}
 
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 		checkLocationAuthorizationStatus()
-		
-		JourneySingleton.sharedInstance.curTripDisplayedDidChangeClosure = {
-			self.showNewTrip(JourneySingleton.sharedInstance.curTripDisplayed)
-		}
-
 	}
 
 	
 	// MARK: - MKMapViewDelegate
+
 	func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
 		
 		let lat = userLocation.coordinate.latitude.rounded(toPlaces: 5)
@@ -102,12 +95,11 @@ class MapViewController: UIViewController, NSFetchedResultsControllerDelegate, C
 	
 	// MARK: - Internal Route UI
 	func showNewTrip(_ trip:Trip?) {
-		guard (trip != nil) else {return}
-		
+
 		hideLastTrip()
+		guard (trip != nil) else {return}
 		displayedTrip = trip
-		print(displayedTrip as Any)
-		
+
 		// 1.
 		let sourcePlacemark = MKPlacemark(coordinate: (JourneySingleton.sharedInstance.startPoint?.coordinate)!, addressDictionary: nil)
 		let destinationPlacemark = MKPlacemark(coordinate: (JourneySingleton.sharedInstance.stopPoint?.coordinate)!, addressDictionary: nil)
