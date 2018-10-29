@@ -36,6 +36,7 @@ class LocationsTableViewController: UITableViewController, NSFetchedResultsContr
 
 	private let initialVisibleContentHeight: CGFloat = 180.0
 	private let smallVisibleContentHeight: CGFloat = 140.0
+	private let numCommandRows: Int = 3			// 4th one used right now for the locations so counted by number of locations
 	private var scrollingCmdPicker:ScrollingCommandPicker? = nil
 
 	private let commands = ["Drive","Walk","Transit","Drive / Walk","Transit / Walk","Drive / Transit / Walk"]
@@ -136,7 +137,7 @@ class LocationsTableViewController: UITableViewController, NSFetchedResultsContr
     // MARK: - Table view data source
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return (self.fetchedLocationsResultsController.fetchedObjects?.count)! + 2
+		return (self.fetchedLocationsResultsController.fetchedObjects?.count)! + numCommandRows
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -253,7 +254,7 @@ class LocationsTableViewController: UITableViewController, NSFetchedResultsContr
 	// MARK: - Private Convenience
 	
 	private func isLocationRow(_ indexPath:IndexPath) -> Bool {
-		if (indexPath.row > 2) {
+		if (indexPath.row >= numCommandRows) {
 			return true
 		}
 		else {
@@ -264,7 +265,7 @@ class LocationsTableViewController: UITableViewController, NSFetchedResultsContr
 	private func locationAt(_ indexPath:IndexPath) -> Location {
 		// Put state machine in here... right now just have 3 row types
 		
-		let newIndex = IndexPath(row:indexPath.row-2, section:indexPath.section)
+		let newIndex = IndexPath(row:indexPath.row-numCommandRows, section:indexPath.section)
 		return fetchedLocationsResultsController.object(at:newIndex)
 	}
 	
