@@ -305,7 +305,7 @@ extension LocationsTableViewController {
 			}
 		}
 		else if (isTrip) {
-			if (fetchType == NSFetchedResultsChangeType.insert) {
+			if (fetchType == NSFetchedResultsChangeType.insert) || (fetchType == NSFetchedResultsChangeType.delete) {
 				if (trip?.tripType != curTripTypeDisplayed.rawValue) {
 					newTripsReceived.removeAll {$0.tripType == trip?.tripType}
 					newTripsReceived.append(trip!)
@@ -326,8 +326,9 @@ extension LocationsTableViewController {
 			DispatchQueue.main.async {
 				self.snapCmdPanel(toSmall: true)
 				self.tableView.reloadData()
-				self.tableNeedsReload = false
+				self.scrollingCmdPicker?.collectionView.reloadData()		// hack but it won't refresh the unread properly
 			}
+			self.tableNeedsReload = false
 		}
 	}
 
