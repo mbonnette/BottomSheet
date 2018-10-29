@@ -34,9 +34,9 @@ class LocationsTableViewController: UITableViewController, NSFetchedResultsContr
 		return controller
 	}()
 
+	private let initialVisibleContentHeight: CGFloat = 180.0
+	private let smallVisibleContentHeight: CGFloat = 140.0
 	private var scrollingCmdPicker:ScrollingCommandPicker? = nil
-	private let initialVisibleContentHeight: CGFloat = 162.0
-	private let smallVisibleContentHeight: CGFloat = 130.0
 
 	private let commands = ["Drive","Walk","Transit","Drive / Walk","Transit / Walk","Drive / Transit / Walk"]
 	private var curTripTypeDisplayed = TransportTypes.driving
@@ -178,7 +178,7 @@ class LocationsTableViewController: UITableViewController, NSFetchedResultsContr
 	
 	override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 		if (indexPath.row == 0) {
-			return 16.0
+			return 26.0
 		}
 		else if (indexPath.row == 1) {
 			return 30.0
