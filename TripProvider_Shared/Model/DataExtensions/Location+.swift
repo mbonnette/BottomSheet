@@ -75,10 +75,11 @@ extension Location  {
 		return locations
 	}
 	
-	static func findLocations(withRequest request:NSFetchRequest<Location>) -> [Location]? {
+	static func findLocations(withRequest request:NSFetchRequest<Location>, inContext context:NSManagedObjectContext? = nil) -> [Location]? {
 		var locations:[Location]? = nil
+		let locContext = context ?? PersistentContainerSingleton.shared.persistentContainer.viewContext
 		do {
-			locations = try PersistentContainerSingleton.shared.persistentContainer.viewContext.fetch(request)
+			locations = try locContext.fetch(request)
 		}
 		catch {
 			print("!!!!!!!!!!!!!!No location received and throw hit .. errno = : \(error)")
@@ -87,8 +88,8 @@ extension Location  {
 	}
 
 	
-	static func findLocation(withRequest request:NSFetchRequest<Location>) -> Location? {
-		let locations:[Location]? = findLocations(withRequest: request)
+	static func findLocation(withRequest request:NSFetchRequest<Location>, inContext context:NSManagedObjectContext? = nil) -> Location? {
+		let locations:[Location]? = findLocations(withRequest: request, inContext:context)
 		if (locations!.count >= 1) {
 			return locations![0]
 		}
@@ -97,23 +98,23 @@ extension Location  {
 		}
 	}
 
-	static func findLocation(named name:String?) -> Location? {
+	static func findLocation(named name:String?, inContext context:NSManagedObjectContext? = nil) -> Location? {
 		guard (name != nil) else { return nil }
 
 		let request = Location.sortedFetchRequest
 		request.predicate = NSPredicate(format: "name = %@", name!)
-		return self.findLocation(withRequest:request)
+		return self.findLocation(withRequest:request, inContext:context)
 	}
 
-	static func findLocation(atAddress address:String?) -> Location? {
+	static func findLocation(atAddress address:String?, inContext context:NSManagedObjectContext? = nil) -> Location? {
 		guard (address != nil) else { return nil }
 
 		let request = Location.sortedFetchRequest
 		request.predicate = NSPredicate(format: "address = %@", address!)
-		return self.findLocation(withRequest:request)
+		return self.findLocation(withRequest:request, inContext:context)
 	}
 	
-	static func findLocation(at loc:CLLocationCoordinate2D, thatHasValidAddress:Bool = false) -> Location? {
+	static func findLocation(at loc:CLLocationCoordinate2D, thatHasValidAddress:Bool = false, inContext context:NSManagedObjectContext? = nil) -> Location? {
 		let request = sortedFetchRequest
 		if (thatHasValidAddress) {
 			request.predicate = NSPredicate(format: "abs(loc.latitude)-%f < 0.01 AND abs(loc.longitude)-%f < 0.01 AND address != nil ",abs(loc.latitude), abs(loc.longitude))
@@ -121,7 +122,7 @@ extension Location  {
 		else {
 			request.predicate = NSPredicate(format: "abs(loc.latitude)-%f < 0.01 AND abs(loc.longitude)-%f < 0.01 ",abs(loc.latitude), abs(loc.longitude))
 		}
-		return self.findLocation(withRequest:request)
+		return self.findLocation(withRequest:request, inContext:context)
 	}
 	
 	static func missingAddressPredicate() -> NSPredicate {
@@ -136,11 +137,11 @@ extension Location  {
 	/// 		Retrieve locations that have a missing address and a name that appears to be well defined
 	/// - Oct 21, 2018 at 9:51:53 PM
 	/// - returns: Array of locations that are either missing an address or have a realistic name... e.g. user named the location
-	static func findMissingAddressLocations() -> [Location]?  {
+	static func findMissingAddressLocations(inContext context:NSManagedObjectContext? = nil) -> [Location]?  {
 		let request = sortedFetchRequest
 		request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates:[missingAddressPredicate(),
 																			   missingNamePredicate()])
-		return self.findLocations(withRequest:request)
+		return self.findLocations(withRequest:request, inContext:context)
 	}
 	
 	
@@ -200,24 +201,33 @@ extension Location  {
 	
 	static func updateMissingAddresses() {
 		
-		let potentialLocations = Location.findMissingAddressLocations()
-		for loc in potentialLocations! {
-			let userCoordinates = CLLocation(latitude: loc.latitude, longitude: loc.longitude)
-			CLGeocoder().reverseGeocodeLocation(userCoordinates, completionHandler: {(placemarks, error)->Void in
-				var addressString = ""
-				if error == nil && (placemarks?.count)! > 0 {
-					let placemark = placemarks![0] as CLPlacemark
-					addressString = Location.getAddress(fromPlacemark: placemark)
-					loc.address = addressString
-					do {
-						try PersistentContainerSingleton.shared.persistentContainer.viewContext.save()
+		PersistentContainerSingleton.shared.persistentContainer.performBackgroundTask( {_ in
+			let taskContext = PersistentContainerSingleton.shared.persistentContainer.newBackgroundContext()
+			taskContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+			taskContext.undoManager = nil // We don't need undo so set it to nil.
+
+			let potentialLocations = Location.findMissingAddressLocations(inContext: taskContext)
+			for loc in potentialLocations! {
+				let userCoordinates = CLLocation(latitude: loc.latitude, longitude: loc.longitude)
+				CLGeocoder().reverseGeocodeLocation(userCoordinates, completionHandler: {(placemarks, error)->Void in
+					var addressString = ""
+					if error == nil && (placemarks?.count)! > 0 {
+						let placemark = placemarks![0] as CLPlacemark
+						addressString = Location.getAddress(fromPlacemark: placemark)
+						loc.address = addressString
+						do {
+							if (taskContext.hasChanges) {
+								try taskContext.save()
+								Location.removeDuplicateLocations()
+							}
+						}
+						catch {
+							print("!!!!!!!!!!!!!!Error received saving context during updateMissingAddresses errno = : \(error)")
+						}
 					}
-					catch {
-						print("!!!!!!!!!!!!!!Error received saving context during updateMissingAddresses errno = : \(error)")
-					}
-				}
-			})
-		}
+				})
+			}
+		})
 	}
 
 	

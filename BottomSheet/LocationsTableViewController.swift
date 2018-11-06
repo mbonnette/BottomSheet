@@ -301,9 +301,7 @@ extension LocationsTableViewController {
 		let isLocation = location?.latitude != nil
 
 		if (isLocation) {
-			if ((fetchType == NSFetchedResultsChangeType.insert) || (fetchType == NSFetchedResultsChangeType.delete)) {
-				tableNeedsReload = true
-			}
+			tableNeedsReload = true
 		}
 		else if (isTrip) {
 			if (fetchType == NSFetchedResultsChangeType.insert) || (fetchType == NSFetchedResultsChangeType.delete) {
