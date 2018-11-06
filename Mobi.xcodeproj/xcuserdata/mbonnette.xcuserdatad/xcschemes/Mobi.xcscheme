@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "F4EAE142210FBCFE00487323"
-               BuildableName = "BottomSheet.app"
-               BlueprintName = "BottomSheet"
-               ReferencedContainer = "container:BottomSheet.xcodeproj">
+               BuildableName = "Mobi.app"
+               BlueprintName = "Mobi"
+               ReferencedContainer = "container:Mobi.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "F4EAE142210FBCFE00487323"
-            BuildableName = "BottomSheet.app"
-            BlueprintName = "BottomSheet"
-            ReferencedContainer = "container:BottomSheet.xcodeproj">
+            BuildableName = "Mobi.app"
+            BlueprintName = "Mobi"
+            ReferencedContainer = "container:Mobi.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -56,9 +56,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "F4EAE142210FBCFE00487323"
-            BuildableName = "BottomSheet.app"
-            BlueprintName = "BottomSheet"
-            ReferencedContainer = "container:BottomSheet.xcodeproj">
+            BuildableName = "Mobi.app"
+            BlueprintName = "Mobi"
+            ReferencedContainer = "container:Mobi.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <CommandLineArguments>
@@ -81,9 +81,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "F4EAE142210FBCFE00487323"
-            BuildableName = "BottomSheet.app"
-            BlueprintName = "BottomSheet"
-            ReferencedContainer = "container:BottomSheet.xcodeproj">
+            BuildableName = "Mobi.app"
+            BlueprintName = "Mobi"
+            ReferencedContainer = "container:Mobi.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

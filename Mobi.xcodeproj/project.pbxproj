@@ -73,7 +73,7 @@
 		12F38D72216EED32009E5D8F /* PersistentContainerSingleton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersistentContainerSingleton.swift; sourceTree = "<group>"; };
 		12F38D7D21759134009E5D8F /* medlBadge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = medlBadge.swift; sourceTree = "<group>"; };
 		12F38D7E21759134009E5D8F /* medlDouble+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "medlDouble+.swift"; sourceTree = "<group>"; };
-		F4EAE143210FBCFE00487323 /* BottomSheet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BottomSheet.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F4EAE143210FBCFE00487323 /* Mobi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mobi.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F4EAE146210FBCFE00487323 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F4EAE150210FBD0100487323 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F4EAE152210FBD0100487323 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -183,7 +183,7 @@
 		F4EAE144210FBCFE00487323 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				F4EAE143210FBCFE00487323 /* BottomSheet.app */,
+				F4EAE143210FBCFE00487323 /* Mobi.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -212,9 +212,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		F4EAE142210FBCFE00487323 /* BottomSheet */ = {
+		F4EAE142210FBCFE00487323 /* Mobi */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = F4EAE155210FBD0100487323 /* Build configuration list for PBXNativeTarget "BottomSheet" */;
+			buildConfigurationList = F4EAE155210FBD0100487323 /* Build configuration list for PBXNativeTarget "Mobi" */;
 			buildPhases = (
 				F4EAE13F210FBCFE00487323 /* Sources */,
 				F4EAE140210FBCFE00487323 /* Frameworks */,
@@ -224,9 +224,9 @@
 			);
 			dependencies = (
 			);
-			name = BottomSheet;
+			name = Mobi;
 			productName = BottomSheet;
-			productReference = F4EAE143210FBCFE00487323 /* BottomSheet.app */;
+			productReference = F4EAE143210FBCFE00487323 /* Mobi.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -244,7 +244,7 @@
 					};
 				};
 			};
-			buildConfigurationList = F4EAE13E210FBCFE00487323 /* Build configuration list for PBXProject "BottomSheet" */;
+			buildConfigurationList = F4EAE13E210FBCFE00487323 /* Build configuration list for PBXProject "Mobi" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -257,7 +257,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				F4EAE142210FBCFE00487323 /* BottomSheet */,
+				F4EAE142210FBCFE00487323 /* Mobi */,
 			);
 		};
 /* End PBXProject section */
@@ -480,7 +480,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		F4EAE13E210FBCFE00487323 /* Build configuration list for PBXProject "BottomSheet" */ = {
+		F4EAE13E210FBCFE00487323 /* Build configuration list for PBXProject "Mobi" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F4EAE153210FBD0100487323 /* Debug */,
@@ -489,7 +489,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		F4EAE155210FBD0100487323 /* Build configuration list for PBXNativeTarget "BottomSheet" */ = {
+		F4EAE155210FBD0100487323 /* Build configuration list for PBXNativeTarget "Mobi" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F4EAE156210FBD0100487323 /* Debug */,
