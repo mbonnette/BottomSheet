@@ -16,6 +16,7 @@
 		1205F55E21645B52001F3CED /* TripProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1205F55721645B52001F3CED /* TripProvider.swift */; };
 		1205F56A2165B328001F3CED /* JourneySingleton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1205F5692165B328001F3CED /* JourneySingleton.swift */; };
 		12188EC12166D47F001B2992 /* RoutePickerCmdPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12188EC02166D47F001B2992 /* RoutePickerCmdPanel.swift */; };
+		12397497219254D7001266CA /* DummyResults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 12397496219254D7001266CA /* DummyResults.plist */; };
 		1265AA95214C305F00ECD540 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1265AA94214C305F00ECD540 /* Images.xcassets */; };
 		1265AA9A214C37A300ECD540 /* RouteSetterCellID.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1265AA97214C37A300ECD540 /* RouteSetterCellID.xib */; };
 		1265AA9B214C37A300ECD540 /* RouteDetailsCellID.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1265AA98214C37A300ECD540 /* RouteDetailsCellID.xib */; };
@@ -59,6 +60,7 @@
 		12328020218FF51C001372A3 /* Path+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Path+CoreDataClass.swift"; path = "../../../../Library/Developer/Xcode/DerivedData/BottomSheet-cbnwiqrcvrejsbhfaefilvnldfhz/Build/Intermediates.noindex/BottomSheet.build/Debug-iphoneos/BottomSheet.build/DerivedSources/CoreDataGenerated/TripProvider/Path+CoreDataClass.swift"; sourceTree = "<group>"; };
 		12328021218FF51C001372A3 /* Coordinate+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Coordinate+CoreDataProperties.swift"; path = "../../../../Library/Developer/Xcode/DerivedData/BottomSheet-cbnwiqrcvrejsbhfaefilvnldfhz/Build/Intermediates.noindex/BottomSheet.build/Debug-iphoneos/BottomSheet.build/DerivedSources/CoreDataGenerated/TripProvider/Coordinate+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		12328022218FF51C001372A3 /* Trip+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Trip+CoreDataProperties.swift"; path = "../../../../Library/Developer/Xcode/DerivedData/BottomSheet-cbnwiqrcvrejsbhfaefilvnldfhz/Build/Intermediates.noindex/BottomSheet.build/Debug-iphoneos/BottomSheet.build/DerivedSources/CoreDataGenerated/TripProvider/Trip+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		12397496219254D7001266CA /* DummyResults.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = DummyResults.plist; sourceTree = "<group>"; };
 		1265AA94214C305F00ECD540 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		1265AA97214C37A300ECD540 /* RouteSetterCellID.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RouteSetterCellID.xib; sourceTree = "<group>"; };
 		1265AA98214C37A300ECD540 /* RouteDetailsCellID.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RouteDetailsCellID.xib; sourceTree = "<group>"; };
@@ -205,6 +207,7 @@
 				12E1DE94217EAC4800D78EFB /* RouteSearchCmdPanel.xib */,
 				1265AA97214C37A300ECD540 /* RouteSetterCellID.xib */,
 				1265AA98214C37A300ECD540 /* RouteDetailsCellID.xib */,
+				12397496219254D7001266CA /* DummyResults.plist */,
 			);
 			path = BottomSheet;
 			sourceTree = "<group>";
@@ -267,6 +270,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				12397497219254D7001266CA /* DummyResults.plist in Resources */,
 				1265AA9A214C37A300ECD540 /* RouteSetterCellID.xib in Resources */,
 				12EF7D412166F3DE00C894D6 /* RoutePickerCmdPanel.xib in Resources */,
 				1265AA95214C305F00ECD540 /* Images.xcassets in Resources */,
@@ -367,6 +371,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
+					"USE_LOCAL_DATA=1",
 				);
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
@@ -379,7 +384,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG USE_LOCAL_DATA";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.2;
 			};

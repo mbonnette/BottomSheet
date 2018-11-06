@@ -69,7 +69,32 @@ class TripProvider: NSObject {
 				"&departure_time=now"
 	
 		print(urlString)
+		
+#if USE_LOCAL_DATA
+		var data:Data? = nil
+		var dict:NSDictionary? = nil
+		if let path = Bundle.main.path(forResource: "DummyResults", ofType: "plist") {
+			let dictRoot = NSDictionary(contentsOfFile: path)
+			if let targetDict = dictRoot {
+				print("Reading from plist to get server values")
+				dict = targetDict
+			}
+		}
+		switch type {
+		case TransportTypes.driving:
+			data = (dict?["DrivingResultDummyData"] as! String).data(using: .ascii)
+		case TransportTypes.walking:
+			data = (dict?["WalkingResultDummyData"] as! String).data(using: .ascii)
+		case TransportTypes.bicycling:
+			data = (dict?["BicyclingResultDummyData"] as! String).data(using: .ascii)
+		default:
+			data = (dict?["BicyclingResultDummyData"] as! String).data(using: .ascii)
+		}
+		self.processTripData(withData: data!, completionHandler: completionHandler)
+#else
 		fetchTrip(withURLString: urlString, completionHandler: completionHandler)
+#endif
+		
 	}
 	
 	
@@ -130,43 +155,50 @@ class TripProvider: NSObject {
 				completionHandler(fetchError)
 				return
 			}
-			
-			if ( !JSONSerialization.isValidJSONObject(data) ) {
-				// Specific data looking at appears to have an enclosing [] which these routines don't like
-				print("Format of JSON not being read properly")
-				var c = newData.first!
-				print("first char - ",c," buffer size= ", newData.count)
-				while (c == 91) {	// 91 == '['
-					newData = newData.dropFirst()
-					if ( JSONSerialization.isValidJSONObject(newData) ) {
-						print("Looks okay now")
-					}
-					c = newData.first!
-					print("new first char - ",c," buffer size= ", newData.count)
-				}
-				newData = newData.dropLast()
-			}
-
-            do {
-                let jsonObject = try JSONSerialization.jsonObject(with: newData, options: [])
-                
-                if let jsonDictionary = jsonObject as? [AnyHashable: Any] {
-                    try self.importTrip(from: jsonDictionary)
-                }
-            } catch {
-                let description = NSLocalizedString("Could not digest fetched data", comment: "")
-                let fetchError = NSError(domain: locationsErrorDomain, code: TripProviderErrorCode.wrongDataFormat.rawValue,
-                                         userInfo: [NSLocalizedDescriptionKey: description, NSUnderlyingErrorKey: error as Any])
-                completionHandler(fetchError)
-                return
-            }
-            
-            completionHandler(nil)
-
-        }
+			self.processTripData(withData: newData, completionHandler: completionHandler)
+		}
         task.resume() // If the task is created, start it by calling resume.
     }
-    
+	
+
+	private func processTripData(withData data:Data, completionHandler: @escaping (Error?) -> Void) {
+
+		var newData = data
+		if ( !JSONSerialization.isValidJSONObject(newData) ) {
+			// Specific data looking at appears to have an enclosing [] which these routines don't like
+			print("Format of JSON not being read properly")
+			var c = newData.first!
+			print("first char - ",c," buffer size= ", newData.count)
+			while (c == 91) {	// 91 == '['
+				newData = newData.dropFirst()
+				if ( JSONSerialization.isValidJSONObject(newData) ) {
+					print("Looks okay now")
+				}
+				c = newData.first!
+				print("new first char - ",c," buffer size= ", newData.count)
+			}
+			newData = newData.dropLast()
+		}
+		
+		do {
+			let jsonObject = try JSONSerialization.jsonObject(with: newData, options: [])
+			
+			if let jsonDictionary = jsonObject as? [AnyHashable: Any] {
+				try self.importTrip(from: jsonDictionary)
+			}
+		} catch {
+			let description = NSLocalizedString("Could not digest fetched data", comment: "")
+			let fetchError = NSError(domain: locationsErrorDomain, code: TripProviderErrorCode.wrongDataFormat.rawValue,
+									 userInfo: [NSLocalizedDescriptionKey: description, NSUnderlyingErrorKey: error as Any])
+			completionHandler(fetchError)
+			return
+		}
+		
+		completionHandler(nil)
+	}
+
+	
+	
     /**
      Private functions for saving JSON to the Core Data store.
      Import a json dictionary into the Core Data store.
