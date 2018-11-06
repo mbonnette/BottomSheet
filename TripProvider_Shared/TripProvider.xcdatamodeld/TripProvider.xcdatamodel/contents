@@ -16,6 +16,8 @@
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="place" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="time" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <relationship name="segments" optional="YES" toMany="YES" deletionRule="No Action" destinationEntity="Segment" syncable="YES"/>
+        <relationship name="trips" optional="YES" toMany="YES" deletionRule="No Action" destinationEntity="Trip" syncable="YES"/>
     </entity>
     <entity name="Path" representedClassName=".Path" syncable="YES" codeGenerationType="class">
         <attribute name="distance" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
@@ -38,8 +40,8 @@
         <attribute name="startTime" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="weight" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <relationship name="path" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Path" inverseName="segment" inverseEntity="Path" syncable="YES"/>
-        <relationship name="startLocation" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Location" syncable="YES"/>
-        <relationship name="stopLocation" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Location" syncable="YES"/>
+        <relationship name="startLocation" optional="YES" maxCount="1" deletionRule="No Action" destinationEntity="Location" syncable="YES"/>
+        <relationship name="stopLocation" optional="YES" maxCount="1" deletionRule="No Action" destinationEntity="Location" syncable="YES"/>
         <relationship name="trip" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Trip" inverseName="segments" inverseEntity="Trip" syncable="YES"/>
     </entity>
     <entity name="Trip" representedClassName=".Trip" syncable="YES" codeGenerationType="class">
@@ -62,12 +64,12 @@
         <attribute name="walkingDistance" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="walkingTime" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <relationship name="segments" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Segment" inverseName="trip" inverseEntity="Segment" syncable="YES"/>
-        <relationship name="startLocation" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Location" syncable="YES"/>
-        <relationship name="stopLocation" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Location" syncable="YES"/>
+        <relationship name="startLocation" optional="YES" maxCount="1" deletionRule="No Action" destinationEntity="Location" syncable="YES"/>
+        <relationship name="stopLocation" optional="YES" maxCount="1" deletionRule="No Action" destinationEntity="Location" syncable="YES"/>
     </entity>
     <elements>
         <element name="Coordinate" positionX="11.0078125" positionY="107.4453125" width="128" height="90"/>
-        <element name="Location" positionX="-272.58984375" positionY="-206.5" width="128" height="195"/>
+        <element name="Location" positionX="-272.58984375" positionY="-206.5" width="128" height="225"/>
         <element name="Path" positionX="-183.51953125" positionY="132.25390625" width="128" height="150"/>
         <element name="Segment" positionX="-456.29296875" positionY="56.96875" width="128" height="255"/>
         <element name="Trip" positionX="-697.0625" positionY="-305.21875" width="128" height="360"/>

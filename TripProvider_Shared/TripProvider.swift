@@ -237,6 +237,9 @@ class TripProvider: NSObject {
 		if (numSegs! >= 1) {
 			trip?.startLocation = (trip?.segments![0] as! Segment).startLocation
 			trip?.stopLocation = (trip?.segments![numSegs!-1] as! Segment).stopLocation
+			
+			trip?.startLocation?.addToTrips(trip!)
+			trip?.stopLocation?.addToTrips(trip!)
 		}
 		
 		// Save all the changes just made and reset the taskContext to free the cache.

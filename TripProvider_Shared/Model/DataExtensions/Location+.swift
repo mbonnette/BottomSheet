@@ -19,8 +19,13 @@ public enum locationTypes: Int32 {
 
 extension Location  {
 
-	//MARK:______________________________
-	//MARK: CLASS routines
+	//MARK: - Equatable
+//	public static func ==(lhs: Location, rhs: Location) -> Bool {
+//		return lhs.address == rhs.address
+//	}
+//
+	
+	//MARK: - CLASS routines
 	
 	static func newLocation(inContext context:NSManagedObjectContext) -> Location {
 		let location = NSEntityDescription.insertNewObject(forEntityName: "Location", into:context) as! Location
@@ -49,10 +54,20 @@ extension Location  {
 	}
 	
 	
-	static var allLocations: [Location]? {
-		var locations:[Location]? = nil
+	static var allLocations: [Location] {
+		var locations:[Location] = []
 		do {
 			locations = try PersistentContainerSingleton.shared.persistentContainer.viewContext.fetch(Location.sortedFetchRequest)
+		}
+		catch {
+			print("!!!!!!!!!!!!!!No locations received and a throw was hit: \(error)")
+		}
+		return locations
+	}
+	static func allLocations(onContext:NSManagedObjectContext) -> [Location] {
+		var locations:[Location] = []
+		do {
+			locations = try onContext.fetch(Location.sortedFetchRequest)
 		}
 		catch {
 			print("!!!!!!!!!!!!!!No locations received and a throw was hit: \(error)")
@@ -186,11 +201,8 @@ extension Location  {
 	static func updateMissingAddresses() {
 		
 		let potentialLocations = Location.findMissingAddressLocations()
-		
 		for loc in potentialLocations! {
-			
 			let userCoordinates = CLLocation(latitude: loc.latitude, longitude: loc.longitude)
-			
 			CLGeocoder().reverseGeocodeLocation(userCoordinates, completionHandler: {(placemarks, error)->Void in
 				var addressString = ""
 				if error == nil && (placemarks?.count)! > 0 {
@@ -208,12 +220,97 @@ extension Location  {
 		}
 	}
 
+	
+	/// **removeDuplicateLocations**
+	/// 		Go through all locations and get rid of duplicates.  Not depending on core data to have a tight relationship as we want
+	///			 the trips to go away but not get rid of all the locations
+	/// - parameter n/a:
+	/// - Nov 3, 2018 at 2:45:25 PM
+	/// - returns: n/a
+	static func removeDuplicateLocations () {
+		
+		PersistentContainerSingleton.shared.persistentContainer.performBackgroundTask( {_ in
+			let taskContext = PersistentContainerSingleton.shared.persistentContainer.newBackgroundContext()
+			taskContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+			taskContext.undoManager = nil // We don't need undo so set it to nil.
+			
+			var locsToDelete:[Location] = []
+			let locations = Location.allLocations(onContext:taskContext) as [Location]
+			var innerLocations = Location.allLocations(onContext:taskContext) as [Location]
+			var compareLoc:Location? = nil
+			
+			for outerLoc in locations {
+				compareLoc = outerLoc
+				let index = innerLocations.index(where: { $0 == outerLoc } )
+				innerLocations.remove(at: index!)
+				for innerLoc in innerLocations {
+					if (compareLoc!.equalAddress(rhs:innerLoc) && !locsToDelete.contains(innerLoc)) {
+						locsToDelete.append(innerLoc)
+						for case let segment as Segment in innerLoc.segments! {
+							if (segment.startLocation?.equalAddress(rhs:innerLoc) ?? false) {
+								segment.startLocation = compareLoc
+								compareLoc?.addToSegments(segment)
+								innerLoc.removeFromSegments(segment)
+							}
+							if (segment.stopLocation?.equalAddress(rhs:innerLoc) ?? false) {
+								segment.stopLocation = compareLoc
+								compareLoc?.addToSegments(segment)
+								innerLoc.removeFromSegments(segment)
+							}
+						}
+						for case let trip as Trip in innerLoc.trips! {
+							if (trip.startLocation?.equalAddress(rhs:innerLoc) ?? false) {
+								trip.startLocation = compareLoc
+								compareLoc?.addToTrips(trip)
+								innerLoc.removeFromTrips(trip)
+							}
+							if (trip.stopLocation?.equalAddress(rhs:innerLoc) ?? false) {
+								trip.stopLocation = compareLoc
+								compareLoc?.addToTrips(trip)
+								innerLoc.removeFromTrips(trip)
+							}
+						}
+					}
+				}
+			}
+			
+			for locToDelete in locsToDelete {
+				assert(locToDelete.trips?.count == 0, "Deleting a location that still refers to trips")
+				assert(locToDelete.segments?.count == 0, "Deleting a location that still refers to segments")
+				taskContext.delete(locToDelete)
+			}
+			do {
+				if (taskContext.hasChanges) {
+					try taskContext.save()
+				}
+			}
+			catch {
+				print("!!!!!!!!!!!!!!Error received deleting duplicate locations errno = : \(error)")
+			}
+		})
+	}
+
+	
+
 	//MARK:______________________________
 	//MARK: OBJECT routines
 	public override func awakeFromFetch() {
 		super.awakeFromFetch()
 	}
 
+	func equalAddress(rhs: Location?) -> Bool {
+		guard (rhs != nil) && (rhs?.address != nil) else {return false}
+		print (self.address as Any)
+		print (rhs?.address as Any)
+		if (self.address == rhs?.address) {
+			return true
+		}
+		else {
+			return false
+		}
+	}
+	
+	
 	//	A convenience method to update a location object with a dictionary.
 	func update(with locationDictionary: [AnyHashable: Any], inContext context:NSManagedObjectContext) throws {
 		

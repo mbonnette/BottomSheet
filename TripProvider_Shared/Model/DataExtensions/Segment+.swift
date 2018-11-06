@@ -118,6 +118,9 @@ extension Segment  {
 			self.stopLocation = Location.newLocation(inContext:context)
 			try self.stopLocation?.update(with:toDictionary, inContext:context)
 
+			self.startLocation?.addToSegments(self)
+			self.stopLocation?.addToSegments(self)
+			
 			let segmentPath = Path.newPath(inContext:context)
 			try segmentPath.update(with:pathDictionary, inContext:context)
 			self.path = segmentPath

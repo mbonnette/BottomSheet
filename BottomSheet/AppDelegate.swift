@@ -26,6 +26,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         return true
     }
-    
+	
+	func applicationDidEnterBackground(_ application: UIApplication) {
+		Location.removeDuplicateLocations()
+	}
+	
+	func applicationDidFinishLaunching(_ application: UIApplication) {
+		Location.removeDuplicateLocations()
+	}
 }
 

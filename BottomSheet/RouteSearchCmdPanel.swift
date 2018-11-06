@@ -54,7 +54,6 @@ class RouteSearchCmdPanel : UITableViewCell {
 				self.showFetchError(error: error)
 			}
 		})
-		JourneySingleton.sharedInstance.notifyOnTripChange(with: self.tripChangedListener)
 	}
 
 	func fetchWalkingRoute() {

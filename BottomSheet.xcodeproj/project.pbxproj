@@ -48,6 +48,17 @@
 		1205F55721645B52001F3CED /* TripProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TripProvider.swift; sourceTree = "<group>"; };
 		1205F5692165B328001F3CED /* JourneySingleton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JourneySingleton.swift; sourceTree = "<group>"; };
 		12188EC02166D47F001B2992 /* RoutePickerCmdPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutePickerCmdPanel.swift; sourceTree = "<group>"; };
+		12328018218FF51C001372A3 /* TripProvider+CoreDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "TripProvider+CoreDataModel.swift"; path = "../../../../Library/Developer/Xcode/DerivedData/BottomSheet-cbnwiqrcvrejsbhfaefilvnldfhz/Build/Intermediates.noindex/BottomSheet.build/Debug-iphoneos/BottomSheet.build/DerivedSources/CoreDataGenerated/TripProvider/TripProvider+CoreDataModel.swift"; sourceTree = "<group>"; };
+		12328019218FF51C001372A3 /* Segment+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Segment+CoreDataProperties.swift"; path = "../../../../Library/Developer/Xcode/DerivedData/BottomSheet-cbnwiqrcvrejsbhfaefilvnldfhz/Build/Intermediates.noindex/BottomSheet.build/Debug-iphoneos/BottomSheet.build/DerivedSources/CoreDataGenerated/TripProvider/Segment+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		1232801A218FF51C001372A3 /* Segment+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Segment+CoreDataClass.swift"; path = "../../../../Library/Developer/Xcode/DerivedData/BottomSheet-cbnwiqrcvrejsbhfaefilvnldfhz/Build/Intermediates.noindex/BottomSheet.build/Debug-iphoneos/BottomSheet.build/DerivedSources/CoreDataGenerated/TripProvider/Segment+CoreDataClass.swift"; sourceTree = "<group>"; };
+		1232801B218FF51C001372A3 /* Location+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Location+CoreDataProperties.swift"; path = "../../../../Library/Developer/Xcode/DerivedData/BottomSheet-cbnwiqrcvrejsbhfaefilvnldfhz/Build/Intermediates.noindex/BottomSheet.build/Debug-iphoneos/BottomSheet.build/DerivedSources/CoreDataGenerated/TripProvider/Location+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		1232801C218FF51C001372A3 /* Path+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Path+CoreDataProperties.swift"; path = "../../../../Library/Developer/Xcode/DerivedData/BottomSheet-cbnwiqrcvrejsbhfaefilvnldfhz/Build/Intermediates.noindex/BottomSheet.build/Debug-iphoneos/BottomSheet.build/DerivedSources/CoreDataGenerated/TripProvider/Path+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		1232801D218FF51C001372A3 /* Coordinate+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Coordinate+CoreDataClass.swift"; path = "../../../../Library/Developer/Xcode/DerivedData/BottomSheet-cbnwiqrcvrejsbhfaefilvnldfhz/Build/Intermediates.noindex/BottomSheet.build/Debug-iphoneos/BottomSheet.build/DerivedSources/CoreDataGenerated/TripProvider/Coordinate+CoreDataClass.swift"; sourceTree = "<group>"; };
+		1232801E218FF51C001372A3 /* Location+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Location+CoreDataClass.swift"; path = "../../../../Library/Developer/Xcode/DerivedData/BottomSheet-cbnwiqrcvrejsbhfaefilvnldfhz/Build/Intermediates.noindex/BottomSheet.build/Debug-iphoneos/BottomSheet.build/DerivedSources/CoreDataGenerated/TripProvider/Location+CoreDataClass.swift"; sourceTree = "<group>"; };
+		1232801F218FF51C001372A3 /* Trip+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Trip+CoreDataClass.swift"; path = "../../../../Library/Developer/Xcode/DerivedData/BottomSheet-cbnwiqrcvrejsbhfaefilvnldfhz/Build/Intermediates.noindex/BottomSheet.build/Debug-iphoneos/BottomSheet.build/DerivedSources/CoreDataGenerated/TripProvider/Trip+CoreDataClass.swift"; sourceTree = "<group>"; };
+		12328020218FF51C001372A3 /* Path+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Path+CoreDataClass.swift"; path = "../../../../Library/Developer/Xcode/DerivedData/BottomSheet-cbnwiqrcvrejsbhfaefilvnldfhz/Build/Intermediates.noindex/BottomSheet.build/Debug-iphoneos/BottomSheet.build/DerivedSources/CoreDataGenerated/TripProvider/Path+CoreDataClass.swift"; sourceTree = "<group>"; };
+		12328021218FF51C001372A3 /* Coordinate+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Coordinate+CoreDataProperties.swift"; path = "../../../../Library/Developer/Xcode/DerivedData/BottomSheet-cbnwiqrcvrejsbhfaefilvnldfhz/Build/Intermediates.noindex/BottomSheet.build/Debug-iphoneos/BottomSheet.build/DerivedSources/CoreDataGenerated/TripProvider/Coordinate+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		12328022218FF51C001372A3 /* Trip+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Trip+CoreDataProperties.swift"; path = "../../../../Library/Developer/Xcode/DerivedData/BottomSheet-cbnwiqrcvrejsbhfaefilvnldfhz/Build/Intermediates.noindex/BottomSheet.build/Debug-iphoneos/BottomSheet.build/DerivedSources/CoreDataGenerated/TripProvider/Trip+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		1265AA94214C305F00ECD540 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		1265AA97214C37A300ECD540 /* RouteSetterCellID.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RouteSetterCellID.xib; sourceTree = "<group>"; };
 		1265AA98214C37A300ECD540 /* RouteDetailsCellID.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RouteDetailsCellID.xib; sourceTree = "<group>"; };
@@ -116,6 +127,24 @@
 			path = DataExtensions;
 			sourceTree = "<group>";
 		};
+		12328017218FF504001372A3 /* Generated */ = {
+			isa = PBXGroup;
+			children = (
+				1232801D218FF51C001372A3 /* Coordinate+CoreDataClass.swift */,
+				12328021218FF51C001372A3 /* Coordinate+CoreDataProperties.swift */,
+				1232801E218FF51C001372A3 /* Location+CoreDataClass.swift */,
+				1232801B218FF51C001372A3 /* Location+CoreDataProperties.swift */,
+				12328020218FF51C001372A3 /* Path+CoreDataClass.swift */,
+				1232801C218FF51C001372A3 /* Path+CoreDataProperties.swift */,
+				1232801A218FF51C001372A3 /* Segment+CoreDataClass.swift */,
+				12328019218FF51C001372A3 /* Segment+CoreDataProperties.swift */,
+				1232801F218FF51C001372A3 /* Trip+CoreDataClass.swift */,
+				12328022218FF51C001372A3 /* Trip+CoreDataProperties.swift */,
+				12328018218FF51C001372A3 /* TripProvider+CoreDataModel.swift */,
+			);
+			path = Generated;
+			sourceTree = "<group>";
+		};
 		12ACD0FD2182339100A74AC8 /* ScrollingCommandPicker */ = {
 			isa = PBXGroup;
 			children = (
@@ -147,6 +176,7 @@
 				F4EAE145210FBCFE00487323 /* BottomSheet */,
 				12F38D7C21759134009E5D8F /* medlCommon */,
 				F4EAE144210FBCFE00487323 /* Products */,
+				12328017218FF504001372A3 /* Generated */,
 			);
 			sourceTree = "<group>";
 		};
