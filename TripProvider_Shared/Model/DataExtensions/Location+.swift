@@ -252,7 +252,9 @@ extension Location  {
 			for outerLoc in locations {
 				compareLoc = outerLoc
 				let index = innerLocations.index(where: { $0 == outerLoc } )
-				innerLocations.remove(at: index!)
+				if (index != nil) {
+					innerLocations.remove(at: index!)
+				}
 				for innerLoc in innerLocations {
 					if (compareLoc!.equalAddress(rhs:innerLoc) && !locsToDelete.contains(innerLoc)) {
 						locsToDelete.append(innerLoc)

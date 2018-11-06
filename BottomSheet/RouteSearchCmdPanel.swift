@@ -65,12 +65,31 @@ class RouteSearchCmdPanel : UITableViewCell {
 			DispatchQueue.main.async {
 				UIApplication.shared.isNetworkActivityIndicatorVisible = false
 				self.spinner.stopAnimating()
+				guard let error = error else {
+					self.fetchBikingRoute()
+					return
+				}
+				self.showFetchError(error: error)
+			}
+		})
+	}
+	
+
+	func fetchBikingRoute() {
+		UIApplication.shared.isNetworkActivityIndicatorVisible = true
+		spinner.isHidden = false
+		spinner.startAnimating()
+		
+		JourneySingleton.sharedInstance.retrieveBikingJourney(completionHandler: { error in
+			DispatchQueue.main.async {
+				UIApplication.shared.isNetworkActivityIndicatorVisible = false
+				self.spinner.stopAnimating()
 				guard let error = error else { return }
 				self.showFetchError(error: error)
 			}
 		})
 	}
-
+	
 	@IBAction func findLocation(_ sender: Any) {
 		searchLocationTextField.isHidden = !searchLocationTextField.isHidden
 		if ( searchLocationTextField.isHidden ) {

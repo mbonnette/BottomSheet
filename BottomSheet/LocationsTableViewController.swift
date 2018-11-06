@@ -39,7 +39,7 @@ class LocationsTableViewController: UITableViewController, NSFetchedResultsContr
 	private let numCommandRows: Int = 3			// 4th one used right now for the locations so counted by number of locations
 	private var scrollingCmdPicker:ScrollingCommandPicker? = nil
 
-	private let commands = ["Drive","Walk","Transit","Drive / Walk","Transit / Walk","Drive / Transit / Walk"]
+	private let commands = ["Drive","Walk","Bike","Transit","Drive / Walk","Transit / Walk","Drive / Transit / Walk"]
 	private var curTripTypeDisplayed = TransportTypes.driving
 	
 	// MARK: - View overloads
@@ -276,12 +276,14 @@ class LocationsTableViewController: UITableViewController, NSFetchedResultsContr
 		case 1:
 			return TransportTypes.walking
 		case 2:
-			return TransportTypes.transit
+			return TransportTypes.bicycling
 		case 3:
-			return TransportTypes.driveWalk
+			return TransportTypes.transit
 		case 4:
-			return TransportTypes.transitWalk
+			return TransportTypes.driveWalk
 		case 5:
+			return TransportTypes.transitWalk
+		case 6:
 			return TransportTypes.driveTransitWalk
 		default:
 			return TransportTypes.unknown

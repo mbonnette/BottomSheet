@@ -17,10 +17,11 @@ import MapKit
 public enum TransportTypes: Int32 {
 	case driving = 0
 	case walking = 1
-	case transit = 2
-	case driveWalk = 3
-	case transitWalk = 4
-	case driveTransitWalk = 5
+	case bicycling = 2
+	case transit = 3
+	case driveWalk = 4
+	case transitWalk = 5
+	case driveTransitWalk = 6
 	case unknown = 99
 }
 

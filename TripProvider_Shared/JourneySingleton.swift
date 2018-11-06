@@ -68,6 +68,12 @@ class JourneySingleton {
 		stopPoint = stop ?? stopPoint
 		tripProvider.fetchTrip(start: startPoint!, stop: stopPoint!, TransportTypes.walking, completionHandler: completionHandler)
 	}
+	
+	func retrieveBikingJourney(start:MKMapPoint? = nil, stop:MKMapPoint? = nil, completionHandler: @escaping (Error?) -> Void) {
+		startPoint = start ?? startPoint
+		stopPoint = stop ?? stopPoint
+		tripProvider.fetchTrip(start: startPoint!, stop: stopPoint!, TransportTypes.bicycling, completionHandler: completionHandler)
+	}
 
 	func getTrip(byType type:TransportTypes) -> Trip? {
 		let matchingTrips = Trip.findTrips(from: (startPoint?.coordinate)!, to: (stopPoint?.coordinate)!)

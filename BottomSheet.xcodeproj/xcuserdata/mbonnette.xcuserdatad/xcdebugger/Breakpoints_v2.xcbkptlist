@@ -28,11 +28,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "TripProvider_Shared/Model/DataExtensions/Segment+.swift"
-            timestampString = "563085118.702472"
+            timestampString = "563176782.012908"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "161"
-            endingLineNumber = "161">
+            startingLineNumber = "165"
+            endingLineNumber = "165">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -42,7 +42,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "BottomSheet/AppDelegate.swift"
-            timestampString = "563164461.253974"
+            timestampString = "563175035.129499"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "31"
@@ -58,7 +58,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "BottomSheet/AppDelegate.swift"
-            timestampString = "563164461.254294"
+            timestampString = "563175035.129555"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "35"
@@ -73,14 +73,46 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "TripProvider_Shared/Model/DataExtensions/Location+.swift"
-            timestampString = "563164461.254506"
+            filePath = "BottomSheet/RouteSearchCmdPanel.swift"
+            timestampString = "563175161.908478"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "294"
-            endingLineNumber = "294"
-            landmarkName = "removeDuplicateLocations()"
+            startingLineNumber = "83"
+            endingLineNumber = "83"
+            landmarkName = "fetchBikingRoute()"
             landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "BottomSheet.RouteSearchCmdPanel.fetchBikingRoute() -&gt; ()"
+                  moduleName = "BottomSheet"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mbonnette/git/gitHub/BottomSheet/BottomSheet/RouteSearchCmdPanel.swift"
+                  timestampString = "563175318.615844"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "83"
+                  endingLineNumber = "83"
+                  offsetFromSymbolStart = "220">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;Swift.Error&gt;) -&gt; () in BottomSheet.RouteSearchCmdPanel.fetchBikingRoute() -&gt; ()"
+                  moduleName = "BottomSheet"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mbonnette/git/gitHub/BottomSheet/BottomSheet/RouteSearchCmdPanel.swift"
+                  timestampString = "563175318.617363"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "84"
+                  endingLineNumber = "84"
+                  offsetFromSymbolStart = "36">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -89,13 +121,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "TripProvider_Shared/Model/DataExtensions/Location+.swift"
-            timestampString = "563164461.254773"
+            filePath = "TripProvider_Shared/TripProvider.swift"
+            timestampString = "563175217.370452"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "290"
-            endingLineNumber = "290"
-            landmarkName = "removeDuplicateLocations()"
+            startingLineNumber = "72"
+            endingLineNumber = "72"
+            landmarkName = "fetchTrip(start:stop:_:completionHandler:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
