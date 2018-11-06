@@ -144,6 +144,8 @@ extension Segment  {
 			return TransportTypes.driving.rawValue
 		case "WALK","walk","Walk":
 			return TransportTypes.walking.rawValue
+		case "BIKE","bike","Bicycling","Biking","biking":
+			return TransportTypes.bicycling.rawValue
 		default:
 			return TransportTypes.driving.rawValue
 		}
@@ -155,6 +157,8 @@ extension Segment  {
 			return "driving"
 		case .walking:
 			return "walking"
+		case .bicycling:
+			return "bicycling"
 		default:
 			return "driving"
 		}
