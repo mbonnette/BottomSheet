@@ -48,7 +48,7 @@ class RouteSearchCmdPanel : UITableViewCell {
 				self.spinner.stopAnimating()
 				sender.isHidden = false
 				guard let error = error else {
-					self.fetchWalkingRoute()
+					self.fetchBikingRoute()
 					return
 				}
 				self.showFetchError(error: error)
@@ -56,17 +56,17 @@ class RouteSearchCmdPanel : UITableViewCell {
 		})
 	}
 
-	func fetchWalkingRoute() {
+	func fetchBikingRoute() {
 		UIApplication.shared.isNetworkActivityIndicatorVisible = true
 		spinner.isHidden = false
 		spinner.startAnimating()
 		
-		JourneySingleton.sharedInstance.retrieveWalkingJourney(completionHandler: { error in
+		JourneySingleton.sharedInstance.retrieveBikingJourney(completionHandler: { error in
 			DispatchQueue.main.async {
 				UIApplication.shared.isNetworkActivityIndicatorVisible = false
 				self.spinner.stopAnimating()
 				guard let error = error else {
-					self.fetchBikingRoute()
+					self.fetchWalkingRoute()
 					return
 				}
 				self.showFetchError(error: error)
@@ -75,12 +75,12 @@ class RouteSearchCmdPanel : UITableViewCell {
 	}
 	
 
-	func fetchBikingRoute() {
+	func fetchWalkingRoute() {
 		UIApplication.shared.isNetworkActivityIndicatorVisible = true
 		spinner.isHidden = false
 		spinner.startAnimating()
 		
-		JourneySingleton.sharedInstance.retrieveBikingJourney(completionHandler: { error in
+		JourneySingleton.sharedInstance.retrieveWalkingJourney(completionHandler: { error in
 			DispatchQueue.main.async {
 				UIApplication.shared.isNetworkActivityIndicatorVisible = false
 				self.spinner.stopAnimating()

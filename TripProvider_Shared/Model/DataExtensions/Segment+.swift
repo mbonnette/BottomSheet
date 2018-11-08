@@ -21,8 +21,6 @@ extension Segment  {
 	static func newSegment(inContext context:NSManagedObjectContext) -> Segment {
 
 		let segment = NSEntityDescription.insertNewObject(forEntityName: "Segment", into:context) as! Segment
-
-		segment.segmentType = TransportTypes.driving.rawValue
 		return segment
 	}
 	
@@ -100,6 +98,7 @@ extension Segment  {
 		}
 		self.desc			= localDescription
 		self.segmentType	= segmentTypeEnum(localType)
+		print(self.segmentType)
 		self.cost			= Float(truncating: localCost)
 		self.distance		= Int64(truncating: localDistance)
 		self.calories		= Int64(truncating: localCalories)
@@ -142,10 +141,10 @@ extension Segment  {
 		switch segmentTypeStr {
 		case "DRIVE","drive","Drive":
 			return TransportTypes.driving.rawValue
-		case "WALK","walk","Walk":
-			return TransportTypes.walking.rawValue
 		case "BIKE","bike","Bicycling","Biking","biking":
 			return TransportTypes.bicycling.rawValue
+		case "WALK","walk","Walk":
+			return TransportTypes.walking.rawValue
 		default:
 			return TransportTypes.driving.rawValue
 		}
@@ -155,10 +154,10 @@ extension Segment  {
 		switch segmentType {
 		case .driving:
 			return "driving"
-		case .walking:
-			return "walking"
 		case .bicycling:
 			return "bicycling"
+		case .walking:
+			return "walking"
 		default:
 			return "driving"
 		}

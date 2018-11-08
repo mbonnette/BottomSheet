@@ -79,18 +79,40 @@ class MapViewController: UIViewController, NSFetchedResultsControllerDelegate, C
 			let route: MKPolyline = overlay as! MKPolyline
 			let routeRenderer = MKPolylineRenderer(polyline:route)
 			routeRenderer.lineWidth = 3.0
-			if overlay.title == "one"
-			{
-				routeRenderer.strokeColor = UIColor(red: 240.0/255.0, green: 68.0/255.0, blue: 0.0/255.0, alpha: 1);
-			}
-			else
-			{
-				routeRenderer.strokeColor = UIColor(red: 45.0/255.0, green: 200.0/255.0, blue: 0.0/255.0, alpha: 1);
+//			TransportTypes basic types as strings
+//			case driving = 0
+//			case bicycling = 1
+//			case walking = 2
+//			case transit = 3
+			switch overlay.title {
+			case "0":
+				routeRenderer.strokeColor = UIColor(red: 80.0/255.0, green: 200.0/255.0, blue: 0.0/255.0, alpha: 1);
+			case "1":
+				routeRenderer.strokeColor = UIColor(red: 0.0/255.0, green: 200.0/255.0, blue: 200.0/255.0, alpha: 1);
+			case "2":
+				routeRenderer.strokeColor = UIColor(red: 240.0/255.0, green: 80.0/255.0, blue: 0.0/255.0, alpha: 1);
+			default:
+				routeRenderer.strokeColor = UIColor(red: 200.0/255.0, green: 200.0/255.0, blue: 0.0/255.0, alpha: 1);
 			}
 			displayedOverlay = overlay
 			return routeRenderer
 		}
 		return MKPolylineRenderer()
+	}
+	
+	func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+
+		if annotation is MKPointAnnotation {
+			let pinAnnotationView = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: "myPin")
+			pinAnnotationView.isDraggable = true
+			pinAnnotationView.canShowCallout = true
+			
+//			if (annotation.title == displayedTrip?.stopLocation?.name) {
+//				pinAnnotationView.setSelected(true, animated: false)
+//			}
+			return pinAnnotationView
+		}
+		return nil
 	}
 	
 	// MARK: - Internal Route UI
@@ -101,18 +123,15 @@ class MapViewController: UIViewController, NSFetchedResultsControllerDelegate, C
 		displayedTrip = trip
 
 		// 1.
-		let sourcePlacemark = MKPlacemark(coordinate: (JourneySingleton.sharedInstance.startPoint?.coordinate)!, addressDictionary: nil)
-		let destinationPlacemark = MKPlacemark(coordinate: (JourneySingleton.sharedInstance.stopPoint?.coordinate)!, addressDictionary: nil)
+		let sourceAnnotation = MKPointAnnotation()
+		sourceAnnotation.title = trip?.startLocation?.displayString()
+		sourceAnnotation.coordinate = (JourneySingleton.sharedInstance.startPoint?.coordinate)!
+		let destinationAnnotation = MKPointAnnotation()
+		destinationAnnotation.title = trip?.stopLocation?.name
+		destinationAnnotation.subtitle = trip?.stopLocation?.address
+		destinationAnnotation.coordinate = (JourneySingleton.sharedInstance.stopPoint?.coordinate)!
 		
 		// 2.
-		let sourceAnnotation = MKPointAnnotation()
-		sourceAnnotation.title = "Current Location"
-		sourceAnnotation.coordinate = (sourcePlacemark.location?.coordinate)!
-		let destinationAnnotation = MKPointAnnotation()
-		destinationAnnotation.title = trip?.stopLocation?.displayString()
-		destinationAnnotation.coordinate = (destinationPlacemark.location?.coordinate)!
-		
-		// 3.
 		self.mapView.showAnnotations([sourceAnnotation,destinationAnnotation], animated: true )
 		
 		// Pull the polyline from the trip and have it lazily build the polyline I'm expecting
@@ -139,6 +158,7 @@ class MapViewController: UIViewController, NSFetchedResultsControllerDelegate, C
 		guard (displayedTrip != nil) && (displayedOverlay != nil) else {return}
 			
 		self.mapView.removeOverlay(displayedOverlay!)
+		self.mapView.removeAnnotations(self.mapView.annotations)
 		displayedTrip = nil
 		displayedOverlay = nil
 	}
@@ -183,9 +203,11 @@ class MapViewController: UIViewController, NSFetchedResultsControllerDelegate, C
 			let newCoordinate = CLLocationCoordinate2D(latitude: coord.latitude, longitude: coord.longitude)
 			coordinateArray.append(newCoordinate)
 		}
-		let polyLine = MKPolyline(coordinates:coordinateArray, count:coordinateArray.count)
-		print(polyLine as Any)
-		return polyLine
+		let polyline = MKPolyline(coordinates:coordinateArray, count:coordinateArray.count)
+		polyline.title = String(seg.segmentType)
+		print(polyline.title!)
+		print(polyline as Any)
+		return polyline
 	}
 
 }

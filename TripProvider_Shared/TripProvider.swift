@@ -84,10 +84,10 @@ class TripProvider: NSObject {
 		switch type {
 		case TransportTypes.driving:
 			data = (dict?["DrivingResultDummyData"] as! String).data(using: .ascii)
-		case TransportTypes.walking:
-			data = (dict?["WalkingResultDummyData"] as! String).data(using: .ascii)
 		case TransportTypes.bicycling:
 			data = (dict?["BicyclingResultDummyData"] as! String).data(using: .ascii)
+		case TransportTypes.walking:
+			data = (dict?["WalkingResultDummyData"] as! String).data(using: .ascii)
 		default:
 			data = (dict?["BicyclingResultDummyData"] as! String).data(using: .ascii)
 		}
