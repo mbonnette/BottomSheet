@@ -71,6 +71,7 @@ class TripProvider: NSObject {
 		print(urlString)
 		
 #if USE_LOCAL_DATA
+		print("--------------- USE_LOCAL_DATA DEFINED -------------------")
 		var data:Data? = nil
 		var dict:NSDictionary? = nil
 		if let path = Bundle.main.path(forResource: "DummyResults", ofType: "plist") {

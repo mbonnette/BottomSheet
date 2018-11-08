@@ -30,8 +30,8 @@
                 </subviews>
                 <color key="backgroundColor" red="0.96862745098039216" green="0.96862745098039216" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                 <constraints>
-                    <constraint firstAttribute="bottom" secondItem="Hwj-M6-Ohk" secondAttribute="bottom" id="5DT-Wp-PbS"/>
-                    <constraint firstAttribute="trailing" secondItem="Hwj-M6-Ohk" secondAttribute="trailing" id="b3s-dw-K0i"/>
+                    <constraint firstItem="Hwj-M6-Ohk" firstAttribute="bottom" secondItem="iw8-Oc-Uri" secondAttribute="bottom" id="5DT-Wp-PbS"/>
+                    <constraint firstItem="Hwj-M6-Ohk" firstAttribute="trailing" secondItem="iw8-Oc-Uri" secondAttribute="trailing" id="b3s-dw-K0i"/>
                     <constraint firstItem="Hwj-M6-Ohk" firstAttribute="leading" secondItem="iw8-Oc-Uri" secondAttribute="leadingMargin" id="l9S-gJ-j63"/>
                 </constraints>
             </tableViewCellContentView>
