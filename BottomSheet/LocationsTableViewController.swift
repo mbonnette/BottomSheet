@@ -42,6 +42,7 @@ class LocationsTableViewController: UITableViewController, NSFetchedResultsContr
 	private let commands = ["Drive","Walk","Bike","Transit","Drive / Walk","Transit / Walk","Drive / Transit / Walk"]
 	private var curTripTypeDisplayed = TransportTypes.driving
 	
+
 	// MARK: - View overloads
 	
     override func viewDidLoad() {
@@ -157,12 +158,7 @@ class LocationsTableViewController: UITableViewController, NSFetchedResultsContr
 		else {
 			cell = tableView.dequeueReusableCell(withIdentifier: "RouteDetailsCellID")!
 			let loc = locationAt(indexPath)
-			if (loc.name == "") || (loc.name == "origin") || (loc.name == "destination") && (loc.address != nil) {
-				cell.textLabel?.text = loc.address
-			}
-			else {
-				cell.textLabel?.text = loc.name
-			}
+			cell.textLabel?.text = 	loc.displayString()
 		}
         cell.backgroundColor = .clear
         return cell
@@ -233,7 +229,6 @@ class LocationsTableViewController: UITableViewController, NSFetchedResultsContr
 			cmdPanelShowingSmall = false
 		}
 	}
-	
 	
     // MARK: - Scroll view delegate
     

@@ -27,6 +27,16 @@ extension Location  {
 	
 	//MARK: - CLASS routines
 	
+	static func displayString(withName name:String?, andAddress address:String?) -> String? {
+		guard (name != nil) else {return " n/a "}
+		if (name! == "") || (name! == "origin") || (name! == "destination") && (address != nil) {
+			return address
+		}
+		else {
+			return name
+		}
+	}
+	
 	static func newLocation(inContext context:NSManagedObjectContext) -> Location {
 		let location = NSEntityDescription.insertNewObject(forEntityName: "Location", into:context) as! Location
 		location.locationType = locationTypes.temporary.rawValue
@@ -352,4 +362,10 @@ extension Location  {
 		// self.address	= Using internal CLGeocoder().reverseGeocodeLocation when location saved
 		self.altitude	= Int32( truncating: localAltitude )
 	}
+	
+	
+	func displayString() -> String? {
+		return Location.displayString(withName:self.name, andAddress:self.address)
+	}
+
 }

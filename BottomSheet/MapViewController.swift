@@ -109,7 +109,7 @@ class MapViewController: UIViewController, NSFetchedResultsControllerDelegate, C
 		sourceAnnotation.title = "Current Location"
 		sourceAnnotation.coordinate = (sourcePlacemark.location?.coordinate)!
 		let destinationAnnotation = MKPointAnnotation()
-		destinationAnnotation.title = "Destination"
+		destinationAnnotation.title = trip?.stopLocation?.displayString()
 		destinationAnnotation.coordinate = (destinationPlacemark.location?.coordinate)!
 		
 		// 3.
