@@ -79,18 +79,13 @@ class MapViewController: UIViewController, NSFetchedResultsControllerDelegate, C
 			let route: MKPolyline = overlay as! MKPolyline
 			let routeRenderer = MKPolylineRenderer(polyline:route)
 			routeRenderer.lineWidth = 3.0
-//			TransportTypes basic types as strings
-//			case driving = 0
-//			case bicycling = 1
-//			case walking = 2
-//			case transit = 3
 			switch overlay.title {
-			case "0":
+			case String(TransportTypes.driving.rawValue):
 				routeRenderer.strokeColor = UIColor(red: 80.0/255.0, green: 200.0/255.0, blue: 0.0/255.0, alpha: 1);
-			case "1":
-				routeRenderer.strokeColor = UIColor(red: 0.0/255.0, green: 200.0/255.0, blue: 200.0/255.0, alpha: 1);
-			case "2":
-				routeRenderer.strokeColor = UIColor(red: 240.0/255.0, green: 80.0/255.0, blue: 0.0/255.0, alpha: 1);
+			case String(TransportTypes.bicycling.rawValue):
+				routeRenderer.strokeColor = UIColor(red: 0.0/255.0, green: 80.0/255.0, blue: 200.0/255.0, alpha: 1);
+			case String(TransportTypes.walking.rawValue):
+				routeRenderer.strokeColor = UIColor(red: 200.0/255.0, green: 80.0/255.0, blue: 0.0/255.0, alpha: 1);
 			default:
 				routeRenderer.strokeColor = UIColor(red: 200.0/255.0, green: 200.0/255.0, blue: 0.0/255.0, alpha: 1);
 			}
@@ -205,8 +200,6 @@ class MapViewController: UIViewController, NSFetchedResultsControllerDelegate, C
 		}
 		let polyline = MKPolyline(coordinates:coordinateArray, count:coordinateArray.count)
 		polyline.title = String(seg.segmentType)
-		print(polyline.title!)
-		print(polyline as Any)
 		return polyline
 	}
 

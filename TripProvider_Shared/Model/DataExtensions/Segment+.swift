@@ -98,7 +98,6 @@ extension Segment  {
 		}
 		self.desc			= localDescription
 		self.segmentType	= segmentTypeEnum(localType)
-		print(self.segmentType)
 		self.cost			= Float(truncating: localCost)
 		self.distance		= Int64(truncating: localDistance)
 		self.calories		= Int64(truncating: localCalories)

@@ -265,6 +265,15 @@ class LocationsTableViewController: UITableViewController, NSFetchedResultsContr
 	}
 	
 	private func cmdPosToTripType(_ pos:Int) -> TransportTypes {
+		assert(
+			(TransportTypes.driving.rawValue==0) &&
+			(TransportTypes.bicycling.rawValue==1) &&
+			(TransportTypes.walking.rawValue==2) &&
+			(TransportTypes.transit.rawValue==3) &&
+			(TransportTypes.driveWalk.rawValue==4) &&
+			(TransportTypes.transitWalk.rawValue==5) &&
+			(TransportTypes.driveTransitWalk.rawValue==6) &&
+			(TransportTypes.unknown.rawValue==99))
 		switch pos {
 		case 0:
 			return TransportTypes.driving
