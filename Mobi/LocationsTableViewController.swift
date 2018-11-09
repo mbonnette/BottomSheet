@@ -1,19 +1,27 @@
 //
-//  Copyright © 2018 Simon Kågedal Reimer. All rights reserved.
+//  LocationsTableViewController.swift
 //
+//  Created by Michael Bonnette on Nov 9, 2018
+//  Copyright © 2018 BlueMedl Inc. All rights reserved.
+//
+
 
 import UIKit
 import CoreData
 import MapKit
 
-
-class LocationsTableViewController: UITableViewController, NSFetchedResultsControllerDelegate, ScrollingCommandDelegate, BottomSheet {
+class LocationsTableViewController: BottomSheetMgr, NSFetchedResultsControllerDelegate, ScrollingCommandDelegate {
 	
-    var bottomSheetDelegate: BottomSheetDelegate?
-	var tableNeedsReload = false
-	var cmdPanelShowingSmall = false
-	var newTripsReceived:[Trip] = []
-	var tripsDisplayed:[Trip] = []
+	private let commands = ["Drive","Bike","Walk","Transit","Drive / Walk","Transit / Walk","Drive / Transit / Walk"]
+	private var curTripTypeDisplayed = TransportTypes.driving
+
+	private var newTripsReceived:[Trip] = []
+	private var tripsDisplayed:[Trip] = []
+	private let numCommandRows: Int = 3			// 4th one used right now for the locations so counted by number of locations
+	private var scrollingCmdPicker:ScrollingCommandPicker? = nil
+	private var tableNeedsReload = false
+
+	
 	lazy var fetchedLocationsResultsController: NSFetchedResultsController<Location> = {
 		
 		let controller = NSFetchedResultsController(fetchRequest: Location.sortedFetchRequest,
@@ -34,13 +42,6 @@ class LocationsTableViewController: UITableViewController, NSFetchedResultsContr
 		return controller
 	}()
 
-	private let initialVisibleContentHeight: CGFloat = 180.0
-	private let smallVisibleContentHeight: CGFloat = 140.0
-	private let numCommandRows: Int = 3			// 4th one used right now for the locations so counted by number of locations
-	private var scrollingCmdPicker:ScrollingCommandPicker? = nil
-
-	private let commands = ["Drive","Bike","Walk","Transit","Drive / Walk","Transit / Walk","Drive / Transit / Walk"]
-	private var curTripTypeDisplayed = TransportTypes.driving
 	
 
 	// MARK: - View overloads
@@ -53,14 +54,6 @@ class LocationsTableViewController: UITableViewController, NSFetchedResultsContr
 		tableView.register(UINib(nibName: "ScrollingCommandPicker", bundle: nil), forCellReuseIdentifier: "ScrollingCommandPickerID")
 		tableView.register(UINib(nibName: "RouteDetailsCellID", bundle: nil), forCellReuseIdentifier: "RouteDetailsCellID")
 
-		let screenHeight = UIScreen.main.bounds.size.height
-
-        tableView.contentInset.top = screenHeight - initialVisibleContentHeight
-        tableView.backgroundColor = .clear
-        tableView.showsVerticalScrollIndicator = false
-		tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
-		tableView.decelerationRate = .fast
-		
 		self.listenForTripsResultsController.delegate = self
     }
     
@@ -208,41 +201,6 @@ class LocationsTableViewController: UITableViewController, NSFetchedResultsContr
 		else {
 			tableView.deselectRow(at: indexPath, animated: false)
 		}
-    }
-	
-	// MARK: - Custom routines
-	
-	func snapCmdPanel(toSmall small:Bool){
-		let screenHeight = UIScreen.main.bounds.size.height
-		if (small) {
-			tableView.contentInset.top = screenHeight - smallVisibleContentHeight
-			tableView.frame.origin.y = smallVisibleContentHeight
-			tableView.setNeedsDisplay()
-			bottomSheetDelegate?.snapToHeight(self, smallVisibleContentHeight)
-			cmdPanelShowingSmall = true
-		}
-		else {
-			tableView.contentInset.top = screenHeight - initialVisibleContentHeight
-			tableView.frame.origin.y = initialVisibleContentHeight
-			tableView.setNeedsDisplay()
-			bottomSheetDelegate?.snapToHeight(self, initialVisibleContentHeight)
-			cmdPanelShowingSmall = false
-		}
-	}
-	
-    // MARK: - Scroll view delegate
-    
-    override func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
-        let targetOffset = targetContentOffset.pointee.y
-        let pulledUpOffset: CGFloat = 0
-		let pulledDownOffset: CGFloat = cmdPanelShowingSmall ? -smallVisibleContentHeight : -initialVisibleContentHeight
-        if (pulledDownOffset...pulledUpOffset).contains(targetOffset) {
-            if velocity.y < 0 {
-                targetContentOffset.pointee.y = pulledDownOffset
-            } else {
-                targetContentOffset.pointee.y = pulledUpOffset
-            }
-        }
     }
 	
 	
