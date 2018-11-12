@@ -34,44 +34,38 @@ class JourneySingleton {
 	var startPoint:MKMapPoint? = nil
 	var stopPoint:MKMapPoint? = MKMapPoint(CLLocationCoordinate2D(latitude: 42.481285, longitude: -71.214729))
 	var tripProvider = TripProvider()
-
-
+	var curSelectedTransportType:TransportTypes = TransportTypes.driving
+		
 	var curTripDisplayed:Trip? {
 		didSet {
-			for listener in listeners {
+			for listener in curTripListeners {
 				listener?()
 			}
 			Location.removeDuplicateLocations()
 		}
 	}
 	func notifyOnTripChange(with closure: (()->())? ) {
-		listeners.append(closure)
+		curTripListeners.append(closure)
 	}
-	private var listeners:[(()->())?] = []
+	private var curTripListeners:[(()->())?] = []
 	
-	func retrieveDrivingJourney(completionHandler: @escaping (Error?) -> Void) {
+	func retrieve(journeyType:TransportTypes, completionHandler: @escaping (Error?) -> Void) {
 		if (stopPoint == nil) {
 			stopPoint = MKMapPoint(CLLocationCoordinate2D(latitude: 42.481285, longitude: -71.214729))
 		}
-		tripProvider.fetchTrip(start: startPoint!, stop: stopPoint!, TransportTypes.driving, completionHandler: completionHandler)
+		tripProvider.fetchTrip(start: startPoint!, stop: stopPoint!, journeyType, completionHandler: completionHandler)
+	}
+
+	func retrieveDrivingJourney(completionHandler: @escaping (Error?) -> Void) {
+		retrieve(journeyType: TransportTypes.driving, completionHandler: completionHandler)
 	}
 	
-	func retrieveDrivingJourney(start:MKMapPoint? = nil, stop:MKMapPoint? = nil, completionHandler: @escaping (Error?) -> Void) {
-		startPoint = start ?? startPoint
-		stopPoint = stop ?? stopPoint
-		tripProvider.fetchTrip(start: startPoint!, stop: stopPoint!, TransportTypes.driving, completionHandler: completionHandler)
+	func retrieveWalkingJourney(completionHandler: @escaping (Error?) -> Void) {
+		retrieve(journeyType: TransportTypes.walking, completionHandler: completionHandler)
 	}
 	
-	func retrieveWalkingJourney(start:MKMapPoint? = nil, stop:MKMapPoint? = nil, completionHandler: @escaping (Error?) -> Void) {
-		startPoint = start ?? startPoint
-		stopPoint = stop ?? stopPoint
-		tripProvider.fetchTrip(start: startPoint!, stop: stopPoint!, TransportTypes.walking, completionHandler: completionHandler)
-	}
-	
-	func retrieveBikingJourney(start:MKMapPoint? = nil, stop:MKMapPoint? = nil, completionHandler: @escaping (Error?) -> Void) {
-		startPoint = start ?? startPoint
-		stopPoint = stop ?? stopPoint
-		tripProvider.fetchTrip(start: startPoint!, stop: stopPoint!, TransportTypes.bicycling, completionHandler: completionHandler)
+	func retrieveBikingJourney(completionHandler: @escaping (Error?) -> Void) {
+		retrieve(journeyType: TransportTypes.bicycling, completionHandler: completionHandler)
 	}
 
 	func getTrip(byType type:TransportTypes) -> Trip? {

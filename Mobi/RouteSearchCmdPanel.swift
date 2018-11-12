@@ -36,26 +36,59 @@ class RouteSearchCmdPanel : UITableViewCell {
 	
 	@IBAction func fetchRoute(_ sender: UIButton) {
 
+		// For now have driving grab 3 main forms of transportation
 		sender.isEnabled = false
 		UIApplication.shared.isNetworkActivityIndicatorVisible = true
 		spinner.isHidden = false
 		sender.isHidden = true
 		spinner.startAnimating()
-		
-		JourneySingleton.sharedInstance.retrieveDrivingJourney(completionHandler: { error in
-			DispatchQueue.main.async {
-				sender.isEnabled = true
-				UIApplication.shared.isNetworkActivityIndicatorVisible = false
-				self.spinner.stopAnimating()
-				sender.isHidden = false
-				guard let error = error else {
-					self.fetchBikingRoute()
-					return
+		switch JourneySingleton.sharedInstance.curSelectedTransportType {
+		case .driving:
+			JourneySingleton.sharedInstance.retrieveDrivingJourney(completionHandler: { error in
+				DispatchQueue.main.async {
+					UIApplication.shared.isNetworkActivityIndicatorVisible = false
+					self.spinner.stopAnimating()
+					sender.isEnabled = true
+					guard let error = error else {
+						self.fetchBikingRoute()
+						return
+					}
+					sender.isHidden = false
+					self.showFetchError(error: error)
 				}
-				self.showFetchError(error: error)
-			}
-		})
-	}
+			})
+		case .bicycling:
+			JourneySingleton.sharedInstance.retrieveBikingJourney(completionHandler: { error in
+				DispatchQueue.main.async {
+					UIApplication.shared.isNetworkActivityIndicatorVisible = false
+					self.spinner.stopAnimating()
+					sender.isEnabled = true
+					guard let error = error else { return }
+					sender.isHidden = false
+					self.showFetchError(error: error)
+				}
+			})
+		case .walking,
+			 .transit:
+			JourneySingleton.sharedInstance.retrieve(journeyType: JourneySingleton.sharedInstance.curSelectedTransportType, completionHandler: { error in
+				DispatchQueue.main.async {
+					UIApplication.shared.isNetworkActivityIndicatorVisible = false
+					self.spinner.stopAnimating()
+					sender.isEnabled = true
+					guard let error = error else { return }
+					sender.isHidden = false
+					self.showFetchError(error: error)
+				}
+			})
+		default:
+			print("--- Unknown journey type -----")
+			UIApplication.shared.isNetworkActivityIndicatorVisible = false
+			sender.isEnabled = true
+			sender.isHidden = false
+			spinner.isHidden = true
+			spinner.stopAnimating()
+		}
+}
 
 	func fetchBikingRoute() {
 		UIApplication.shared.isNetworkActivityIndicatorVisible = true
@@ -74,7 +107,6 @@ class RouteSearchCmdPanel : UITableViewCell {
 			}
 		})
 	}
-	
 
 	func fetchWalkingRoute() {
 		UIApplication.shared.isNetworkActivityIndicatorVisible = true
@@ -90,7 +122,7 @@ class RouteSearchCmdPanel : UITableViewCell {
 			}
 		})
 	}
-	
+
 	@IBAction func findLocation(_ sender: Any) {
 		searchLocationTextField.isHidden = !searchLocationTextField.isHidden
 		if ( searchLocationTextField.isHidden ) {
@@ -123,7 +155,7 @@ class RouteSearchCmdPanel : UITableViewCell {
 	
 	
 	func showFetchError(error:Error) {
-		let alert = UIAlertController(title: "Fetch locations error!",
+		let alert = UIAlertController(title: "Mobi Result",
 									  message: error.localizedDescription,
 									  preferredStyle: .alert)
 		

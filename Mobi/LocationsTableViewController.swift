@@ -13,7 +13,6 @@ import MapKit
 class LocationsTableViewController: BottomSheetMgr, NSFetchedResultsControllerDelegate, ScrollingCommandDelegate {
 	
 	private let commands = ["Drive","Bike","Walk","Transit","Drive / Walk","Transit / Walk","Drive / Transit / Walk"]
-	private var curTripTypeDisplayed = TransportTypes.driving
 
 	private var newTripsReceived:[Trip] = []
 	private var tripsDisplayed:[Trip] = []
@@ -81,7 +80,7 @@ class LocationsTableViewController: BottomSheetMgr, NSFetchedResultsControllerDe
 	func isCmdSelected(at pos: Int) -> Bool {
 		switch pos {
 		case 0...commands.count:
-			return (curTripTypeDisplayed == cmdPosToTripType(pos))
+			return (JourneySingleton.sharedInstance.curSelectedTransportType == cmdPosToTripType(pos))
 		default:
 			return false
 		}
@@ -90,8 +89,8 @@ class LocationsTableViewController: BottomSheetMgr, NSFetchedResultsControllerDe
 	func cmdSelected(at pos: Int) {
 		switch pos {
 		case 0...commands.count:
-			if (curTripTypeDisplayed != cmdPosToTripType(pos)) {
-				curTripTypeDisplayed = cmdPosToTripType(pos)
+			if (JourneySingleton.sharedInstance.curSelectedTransportType != cmdPosToTripType(pos)) {
+				JourneySingleton.sharedInstance.curSelectedTransportType = cmdPosToTripType(pos)
 				let newTrips:[Trip]? = newTripsReceived.filter { $0.tripType == cmdPosToTripType(pos).rawValue }
 				if (newTrips?.count ?? 0 > 0) {
 					let trip = newTrips?[0]
@@ -191,12 +190,11 @@ class LocationsTableViewController: BottomSheetMgr, NSFetchedResultsControllerDe
 		if (isLocationRow(indexPath)) {
 			let loc = locationAt(indexPath)
 			let stop = MKMapPoint(CLLocationCoordinate2D(latitude: loc.latitude, longitude: loc.longitude))
-			JourneySingleton.sharedInstance.retrieveDrivingJourney(stop:stop, completionHandler: { error in
-				
+			JourneySingleton.sharedInstance.stopPoint = stop
+			JourneySingleton.sharedInstance.retrieve(journeyType: TransportTypes.driving, completionHandler: { error in
+
 				DispatchQueue.main.async {
-					
 					tableView.deselectRow(at: indexPath, animated: true)
-					
 					// Auto collapse the view???
 				}
 			})
@@ -272,7 +270,7 @@ extension LocationsTableViewController {
 		}
 		else if (isTrip) {
 			if (fetchType == NSFetchedResultsChangeType.insert) || (fetchType == NSFetchedResultsChangeType.delete) {
-				if (trip?.tripType != curTripTypeDisplayed.rawValue) {
+				if (trip?.tripType != JourneySingleton.sharedInstance.curSelectedTransportType.rawValue) {
 					newTripsReceived.removeAll {$0.tripType == trip?.tripType}
 					newTripsReceived.append(trip!)
 				}

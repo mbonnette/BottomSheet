@@ -69,7 +69,7 @@ class TripProvider: NSObject {
 				"&departure_time=now"
 	
 		print(urlString)
-		
+
 #if USE_LOCAL_DATA
 		print("--------------- USE_LOCAL_DATA DEFINED -------------------")
 		var data:Data? = nil
@@ -89,14 +89,17 @@ class TripProvider: NSObject {
 		case TransportTypes.walking:
 			data = (dict?["WalkingResultDummyData"] as! String).data(using: .ascii)
 		default:
-			data = (dict?["BicyclingResultDummyData"] as! String).data(using: .ascii)
+			let description = NSLocalizedString("No trip available with selected transportation mode", comment: "")
+			let fetchError = NSError(domain: locationsErrorDomain, code: TripProviderErrorCode.routeToSameLocation.rawValue,
+									 userInfo: [NSLocalizedDescriptionKey: description, NSUnderlyingErrorKey: "Fake error"])
+			completionHandler(fetchError)
+			return
 		}
 		self.processTripData(withData: data!, completionHandler: completionHandler)
 #else
 		fetchTrip(withURLString: urlString, completionHandler: completionHandler)
 #endif
-		
-	}
+}
 	
 	
     /**
@@ -150,7 +153,7 @@ class TripProvider: NSObject {
             // If we get data but it has no bytes it looks like errors when looking for address to same address as source.
 			var newData = data
 			guard newData.count > 0 else {
-				let description = NSLocalizedString("Looks like getting route from/to same location", comment: "")
+				let description = NSLocalizedString("No trip available with selected transportation mode", comment: "")
 				let fetchError = NSError(domain: locationsErrorDomain, code: TripProviderErrorCode.routeToSameLocation.rawValue,
 										 userInfo: [NSLocalizedDescriptionKey: description, NSUnderlyingErrorKey: error as Any])
 				completionHandler(fetchError)
