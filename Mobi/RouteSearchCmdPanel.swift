@@ -32,6 +32,7 @@ class RouteSearchCmdPanel : UITableViewCell {
 			}
 		}
 	}
+	var listeningOnTrips:Bool = false
 	
 	@IBAction func fetchRoute(_ sender: UIButton) {
 
@@ -107,7 +108,11 @@ class RouteSearchCmdPanel : UITableViewCell {
 	
 	override func draw(_ rect: CGRect) {
 		super.draw(rect)
-		
+		if (!listeningOnTrips) {
+			JourneySingleton.sharedInstance.notifyOnTripChange(with: tripChangedListener)
+			listeningOnTrips = true
+		}
+
 		if spinner.superview == nil {
 			self.addSubview(spinner)
 			self.bringSubviewToFront(spinner)

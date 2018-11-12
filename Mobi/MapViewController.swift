@@ -10,13 +10,10 @@ class MapViewController: UIViewController, NSFetchedResultsControllerDelegate, C
 
     private lazy var mapView = MKMapView(frame: view.bounds)
 	private lazy var locationMgr = CLLocationManager()
-	private lazy var tripProvider: TripProvider = {
-		let provider = TripProvider()
-//		provider.fetchedTripResultsControllerDelegate = self
-		return provider
-	}()
 	private var displayedTrip:Trip? = nil
 	private var displayedOverlay:MKOverlay? = nil
+	private var originAnnotation:MKPointAnnotation? = nil
+	private var destinationAnnotation:MKPointAnnotation? = nil
 	private var mapCenteredFirstTime = false
 	private var curLocation:CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: 0, longitude: 0)
 	private let regionRadius: CLLocationDistance = 100000
@@ -110,7 +107,36 @@ class MapViewController: UIViewController, NSFetchedResultsControllerDelegate, C
 		return nil
 	}
 	
+	func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, didChange newState: MKAnnotationView.DragState, fromOldState oldState: MKAnnotationView.DragState) {
+		switch newState {
+		case .starting:
+			view.dragState = .dragging
+			if (view.annotation?.title == originAnnotation?.title) {
+				if (view.annotation?.coordinate.latitude == originAnnotation?.coordinate.latitude) && (view.annotation?.coordinate.longitude == originAnnotation?.coordinate.longitude) {
+					hideLastTrip(keepOriginAnnotation: true, keepDestinationAnnotation: true)
+				}
+			}
+			if (view.annotation?.title == destinationAnnotation?.title) {
+				if (view.annotation?.coordinate.latitude == destinationAnnotation?.coordinate.latitude) && (view.annotation?.coordinate.longitude == destinationAnnotation?.coordinate.longitude) {
+					hideLastTrip(keepOriginAnnotation: true, keepDestinationAnnotation: true)
+				}
+			}
+		case .ending, .canceling:
+			//New cordinates
+			print(view.annotation?.coordinate as Any)
+			if (view.annotation?.title == originAnnotation?.title) {
+				JourneySingleton.sharedInstance.startPoint = MKMapPoint(CLLocationCoordinate2D(latitude: (view.annotation?.coordinate.latitude)!, longitude: (view.annotation?.coordinate.longitude)!))
+			}
+			if (view.annotation?.title == destinationAnnotation?.title) {
+				JourneySingleton.sharedInstance.stopPoint = MKMapPoint(CLLocationCoordinate2D(latitude: (view.annotation?.coordinate.latitude)!, longitude: (view.annotation?.coordinate.longitude)!))
+			}
+			view.dragState = .none
+		default: break
+		}
+	}
+	
 	// MARK: - Internal Route UI
+	
 	func showNewTrip(_ trip:Trip?) {
 
 		hideLastTrip()
@@ -118,16 +144,17 @@ class MapViewController: UIViewController, NSFetchedResultsControllerDelegate, C
 		displayedTrip = trip
 
 		// 1.
-		let sourceAnnotation = MKPointAnnotation()
-		sourceAnnotation.title = trip?.startLocation?.displayString()
-		sourceAnnotation.coordinate = (JourneySingleton.sharedInstance.startPoint?.coordinate)!
-		let destinationAnnotation = MKPointAnnotation()
-		destinationAnnotation.title = trip?.stopLocation?.name
-		destinationAnnotation.subtitle = trip?.stopLocation?.address
-		destinationAnnotation.coordinate = (JourneySingleton.sharedInstance.stopPoint?.coordinate)!
+		originAnnotation = MKPointAnnotation()
+		originAnnotation?.title = trip?.startLocation?.displayString()
+		originAnnotation?.coordinate = (JourneySingleton.sharedInstance.startPoint?.coordinate)!
+		
+		destinationAnnotation = MKPointAnnotation()
+		destinationAnnotation?.title = trip?.stopLocation?.name
+		destinationAnnotation?.subtitle = trip?.stopLocation?.address
+		destinationAnnotation?.coordinate = (JourneySingleton.sharedInstance.stopPoint?.coordinate)!
 		
 		// 2.
-		self.mapView.showAnnotations([sourceAnnotation,destinationAnnotation], animated: true )
+		self.mapView.showAnnotations([originAnnotation!,destinationAnnotation!], animated: true )
 		
 		// Pull the polyline from the trip and have it lazily build the polyline I'm expecting
 		let segs:NSOrderedSet = trip?.segments ?? []
@@ -149,17 +176,23 @@ class MapViewController: UIViewController, NSFetchedResultsControllerDelegate, C
 		}
 	}
 
-	func hideLastTrip() {
+	func hideLastTrip(keepOriginAnnotation:Bool = false, keepDestinationAnnotation:Bool = false) {
 		guard (displayedTrip != nil) && (displayedOverlay != nil) else {return}
 			
 		self.mapView.removeOverlay(displayedOverlay!)
-		self.mapView.removeAnnotations(self.mapView.annotations)
+		if (!keepOriginAnnotation) {
+			self.mapView.removeAnnotation(originAnnotation!)
+			originAnnotation = nil
+		}
+		if (!keepDestinationAnnotation) {
+			self.mapView.removeAnnotation(destinationAnnotation!)
+			destinationAnnotation = nil
+		}
 		displayedTrip = nil
 		displayedOverlay = nil
 	}
 	
 
-	
 	
 	
 	// MARK: - CLLocationManager

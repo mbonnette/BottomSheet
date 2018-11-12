@@ -40,13 +40,12 @@ class JourneySingleton {
 		didSet {
 			for listener in listeners {
 				listener?()
-				Location.removeDuplicateLocations()
 			}
+			Location.removeDuplicateLocations()
 		}
 	}
 	func notifyOnTripChange(with closure: (()->())? ) {
 		listeners.append(closure)
-		Location.removeDuplicateLocations()
 	}
 	private var listeners:[(()->())?] = []
 	
