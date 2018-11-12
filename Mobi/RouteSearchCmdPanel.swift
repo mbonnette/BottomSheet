@@ -58,12 +58,15 @@ class RouteSearchCmdPanel : UITableViewCell {
 				}
 			})
 		case .bicycling:
-			JourneySingleton.sharedInstance.retrieveBikingJourney(completionHandler: { error in
+			JourneySingleton.sharedInstance.retrieve(journeyType: JourneySingleton.sharedInstance.curSelectedTransportType, completionHandler: { error in
 				DispatchQueue.main.async {
 					UIApplication.shared.isNetworkActivityIndicatorVisible = false
 					self.spinner.stopAnimating()
 					sender.isEnabled = true
-					guard let error = error else { return }
+					guard let error = error else {
+						self.fetchWalkingRoute()
+						return
+					}
 					sender.isHidden = false
 					self.showFetchError(error: error)
 				}
