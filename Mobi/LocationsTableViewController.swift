@@ -49,7 +49,6 @@ class LocationsTableViewController: BottomSheetMgr, NSFetchedResultsControllerDe
     override func viewDidLoad() {
         super.viewDidLoad()
         
-		tableView.register(UINib(nibName: "RoutePickerCmdPanel", bundle: nil), forCellReuseIdentifier: "RoutePickerCmdPanel")
 		tableView.register(UINib(nibName: "RouteSearchCmdPanel", bundle: nil), forCellReuseIdentifier: "RouteSearchCmdPanel")
 		tableView.register(UINib(nibName: "ScrollingCommandPicker", bundle: nil), forCellReuseIdentifier: "ScrollingCommandPickerID")
 		tableView.register(UINib(nibName: "RouteDetailsCellID", bundle: nil), forCellReuseIdentifier: "RouteDetailsCellID")
@@ -134,27 +133,31 @@ class LocationsTableViewController: BottomSheetMgr, NSFetchedResultsControllerDe
 		return (self.fetchedLocationsResultsController.fetchedObjects?.count)! + numCommandRows
     }
 
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		
-		var cell:UITableViewCell
-		if ( indexPath.row == 0 ) {
-			cell = tableView.dequeueReusableCell(withIdentifier: "RoutePickerCmdPanel")!
+	
+	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+
+		var cell:UITableViewCell?
+
+		// Handles cell 0
+		cell = super.tableView(tableView, cellForRowAt: indexPath)
+
+		if (cell == nil) {
+			if ( indexPath.row == 1 ) {
+				cell = tableView.dequeueReusableCell(withIdentifier: "ScrollingCommandPickerID")!
+				scrollingCmdPicker = cell as?ScrollingCommandPicker
+				scrollingCmdPicker?.config(scrollingCommandDelegate:self)
+			}
+			else if ( indexPath.row == 2 ) {
+				cell = tableView.dequeueReusableCell(withIdentifier: "RouteSearchCmdPanel")!
+			}
+			else {
+				cell = tableView.dequeueReusableCell(withIdentifier: "RouteDetailsCellID")!
+				let loc = locationAt(indexPath)
+				cell?.textLabel?.text = 	loc.displayString()
+			}
 		}
-		else if ( indexPath.row == 1 ) {
-			cell = tableView.dequeueReusableCell(withIdentifier: "ScrollingCommandPickerID")!
-			scrollingCmdPicker = cell as?ScrollingCommandPicker
-			scrollingCmdPicker?.config(scrollingCommandDelegate:self)
-		}
-		else if ( indexPath.row == 2 ) {
-			cell = tableView.dequeueReusableCell(withIdentifier: "RouteSearchCmdPanel")!
-		}
-		else {
-			cell = tableView.dequeueReusableCell(withIdentifier: "RouteDetailsCellID")!
-			let loc = locationAt(indexPath)
-			cell.textLabel?.text = 	loc.displayString()
-		}
-        cell.backgroundColor = .clear
-        return cell
+        cell?.backgroundColor = .clear
+		return cell!
     }
 	
 	override func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
