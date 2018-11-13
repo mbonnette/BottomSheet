@@ -19,9 +19,17 @@ public enum TransportTypes: Int32 {
 	case bicycling = 1
 	case walking = 2
 	case transit = 3
-	case driveWalk = 4
-	case transitWalk = 5
-	case driveTransitWalk = 6
+	case carshare = 4
+	case bikeshare = 5
+	case rideshare = 6
+	case parkandwalk = 7
+	case parkandride = 8
+	case parkandbikeshare = 9
+	case parkandrideshare = 10
+	case transitandbikeshare = 11
+	case transitandrideshare = 12
+	case transitandcarshare = 13
+	case bikeshareandcarshare = 14
 	case unknown = 99
 }
 

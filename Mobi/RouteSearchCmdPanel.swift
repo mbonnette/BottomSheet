@@ -72,7 +72,19 @@ class RouteSearchCmdPanel : UITableViewCell {
 				}
 			})
 		case .walking,
-			 .transit:
+			 .transit,
+			 .carshare,
+			 .bikeshare,
+			 .rideshare,
+			 .parkandwalk,
+			 .parkandride,
+			 .parkandbikeshare,
+			 .parkandrideshare,
+			 .transitandbikeshare,
+			 .transitandrideshare,
+			 .transitandcarshare,
+			 .bikeshareandcarshare:
+
 			JourneySingleton.sharedInstance.retrieve(journeyType: JourneySingleton.sharedInstance.curSelectedTransportType, completionHandler: { error in
 				DispatchQueue.main.async {
 					UIApplication.shared.isNetworkActivityIndicatorVisible = false

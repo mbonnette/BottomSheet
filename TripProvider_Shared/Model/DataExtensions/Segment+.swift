@@ -39,6 +39,7 @@ extension Segment  {
 		case "TRANSIT","transit","Transit":
 			return TransportTypes.transit.rawValue
 		default:
+			print("---- INSIDE transportTypeEnum No value for ---",transportTypeStr)
 			return TransportTypes.driving.rawValue
 		}
 	}
@@ -47,14 +48,36 @@ extension Segment  {
 		switch transportType {
 		case .driving:
 			return "driving"
-		case .walking:
-			return "walking"
 		case .bicycling:
 			return "bicycling"
+		case .walking:
+			return "walking"
 		case .transit:
 			return "transit"
-		default:
-			return "driving"
+		case .carshare:
+			return "carshare"
+		case .bikeshare:
+			return "bikeshare"
+		case .rideshare:
+			return "rideshare"
+		case .parkandwalk:
+			return "parkandwalk"
+		case .parkandride:
+			return "parkandride"
+		case .parkandbikeshare:
+			return "parkandbikeshare"
+		case .parkandrideshare:
+			return "parkandrideshare"
+		case .transitandbikeshare:
+			return "transitandbikeshare"
+		case .transitandrideshare:
+			return "transitandrideshare"
+		case .transitandcarshare:
+			return "transitandcarshare"
+		case .bikeshareandcarshare:
+			return "bikeshareandcarshare"
+		case .unknown:
+			return "unknown"
 		}
 	}
 	

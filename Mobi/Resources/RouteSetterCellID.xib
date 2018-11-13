@@ -10,11 +10,11 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="RouteSetterCellID" rowHeight="89" id="Eko-bw-alh" userLabel="RouteSetterCellID">
-            <rect key="frame" x="0.0" y="0.0" width="375" height="89"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="RouteSetterCellID" rowHeight="50" id="Eko-bw-alh" userLabel="RouteSetterCellID">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="50"/>
             <autoresizingMask key="autoresizingMask"/>
             <tableViewCellContentView key="contentView" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Eko-bw-alh" id="iw8-Oc-Uri">
-                <rect key="frame" x="0.0" y="0.0" width="375" height="88.5"/>
+                <rect key="frame" x="0.0" y="0.0" width="375" height="49.5"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" misplaced="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hwj-M6-Ohk" userLabel="Lt Gray Line">
@@ -35,7 +35,7 @@
                     <constraint firstItem="Hwj-M6-Ohk" firstAttribute="leading" secondItem="iw8-Oc-Uri" secondAttribute="leadingMargin" id="l9S-gJ-j63"/>
                 </constraints>
             </tableViewCellContentView>
-            <point key="canvasLocation" x="33.5" y="-225.5"/>
+            <point key="canvasLocation" x="32.799999999999997" y="-243.77811094452775"/>
         </tableViewCell>
     </objects>
 </document>

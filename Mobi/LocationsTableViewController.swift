@@ -12,8 +12,21 @@ import MapKit
 
 class LocationsTableViewController: BottomSheetMgr, NSFetchedResultsControllerDelegate, ScrollingCommandDelegate {
 	
-	private let commands = ["Drive","Bike","Walk","Transit","Drive / Walk","Transit / Walk","Drive / Transit / Walk"]
-
+	private let commands = ["Drive",
+							"Bike",
+							"Walk",
+							"Transit",
+							"Car Share",
+							"Bike Share",
+							"Ride Share",
+							"Park & Walk",
+							"Park & Bike Share",
+							"Park & Ride Share",
+							"Transit & Bike Share",
+							"Transit & Ride Share",
+							"Transit & Car Share",
+							"Bike Share & Car Share"
+							]
 	private var newTripsReceived:[Trip] = []
 	private var tripsDisplayed:[Trip] = []
 	private let numCommandRows: Int = 3			// 4th one used right now for the locations so counted by number of locations
@@ -224,15 +237,25 @@ class LocationsTableViewController: BottomSheetMgr, NSFetchedResultsControllerDe
 	}
 	
 	private func cmdPosToTripType(_ pos:Int) -> TransportTypes {
+#if DEBUG
 		assert(
 			(TransportTypes.driving.rawValue==0) &&
-			(TransportTypes.bicycling.rawValue==1) &&
-			(TransportTypes.walking.rawValue==2) &&
-			(TransportTypes.transit.rawValue==3) &&
-			(TransportTypes.driveWalk.rawValue==4) &&
-			(TransportTypes.transitWalk.rawValue==5) &&
-			(TransportTypes.driveTransitWalk.rawValue==6) &&
-			(TransportTypes.unknown.rawValue==99))
+				(TransportTypes.bicycling.rawValue==1) &&
+				(TransportTypes.walking.rawValue==2) &&
+				(TransportTypes.transit.rawValue==3) &&
+				(TransportTypes.carshare.rawValue==4) &&
+				(TransportTypes.bikeshare.rawValue==5) &&
+				(TransportTypes.rideshare.rawValue==6) &&
+				(TransportTypes.parkandwalk.rawValue==7) &&
+				(TransportTypes.parkandride.rawValue==8) &&
+				(TransportTypes.parkandbikeshare.rawValue==9) &&
+				(TransportTypes.parkandrideshare.rawValue==10) &&
+				(TransportTypes.transitandbikeshare.rawValue==11) &&
+				(TransportTypes.transitandrideshare.rawValue==12) &&
+				(TransportTypes.transitandcarshare.rawValue==13) &&
+				(TransportTypes.bikeshareandcarshare.rawValue==14) &&
+				(TransportTypes.unknown.rawValue==99))
+#endif
 		switch pos {
 		case 0:
 			return TransportTypes.driving
@@ -243,11 +266,27 @@ class LocationsTableViewController: BottomSheetMgr, NSFetchedResultsControllerDe
 		case 3:
 			return TransportTypes.transit
 		case 4:
-			return TransportTypes.driveWalk
+			return TransportTypes.carshare
 		case 5:
-			return TransportTypes.transitWalk
+			return TransportTypes.bikeshare
 		case 6:
-			return TransportTypes.driveTransitWalk
+			return TransportTypes.rideshare
+		case 7:
+			return TransportTypes.parkandwalk
+		case 8:
+			return TransportTypes.parkandride
+		case 9:
+			return TransportTypes.parkandbikeshare
+		case 10:
+			return TransportTypes.parkandrideshare
+		case 11:
+			return TransportTypes.transitandbikeshare
+		case 12:
+			return TransportTypes.transitandrideshare
+		case 13:
+			return TransportTypes.transitandcarshare
+		case 14:
+			return TransportTypes.bikeshareandcarshare
 		default:
 			return TransportTypes.unknown
 		}
