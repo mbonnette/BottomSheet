@@ -271,6 +271,7 @@ class LocationsTableViewController: BottomSheetMgr, NSFetchedResultsControllerDe
 				(TransportTypes.transitandrideshare.rawValue==12) &&
 				(TransportTypes.transitandcarshare.rawValue==13) &&
 				(TransportTypes.bikeshareandcarshare.rawValue==14) &&
+				(TransportTypes.park.rawValue==15) &&
 				(TransportTypes.unknown.rawValue==99))
 #endif
 		switch pos {
@@ -304,6 +305,8 @@ class LocationsTableViewController: BottomSheetMgr, NSFetchedResultsControllerDe
 			return TransportTypes.transitandcarshare
 		case 14:
 			return TransportTypes.bikeshareandcarshare
+		case 15:
+			return TransportTypes.park
 		default:
 			return TransportTypes.unknown
 		}

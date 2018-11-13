@@ -88,6 +88,8 @@ class TripProvider: NSObject {
 			data = (dict?["BicyclingResultDummyData"] as! String).data(using: .ascii)
 		case TransportTypes.walking:
 			data = (dict?["WalkingResultDummyData"] as! String).data(using: .ascii)
+		case TransportTypes.parkandwalk:
+			data = (dict?["ParkAndWalkResultDummyData"] as! String).data(using: .ascii)
 		default:
 			let description = NSLocalizedString("No trip available with selected transportation mode", comment: "")
 			let fetchError = NSError(domain: locationsErrorDomain, code: TripProviderErrorCode.routeToSameLocation.rawValue,
@@ -240,8 +242,8 @@ class TripProvider: NSObject {
         }
         
         let sortedSegmentDictionaries = try segmentDictionaries.sorted { lhs, rhs in
-            
-			guard let lhsResult = lhs["id"] as? String, let rhsResult = rhs["id"] as? String else {
+            print("lhs =",lhs["id"] as Any, "  rhs=",rhs["id"] as Any)
+			guard let lhsResult = lhs["id"] as? Int, let rhsResult = rhs["id"] as? Int else {
 
                 let description = NSLocalizedString("Segments do not have right id type!", comment: "")
                 throw NSError(domain: locationsErrorDomain, code: TripProviderErrorCode.wrongDataFormat.rawValue,

@@ -30,6 +30,7 @@ public enum TransportTypes: Int32 {
 	case transitandrideshare = 12
 	case transitandcarshare = 13
 	case bikeshareandcarshare = 14
+	case park = 15
 	case unknown = 99
 }
 

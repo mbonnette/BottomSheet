@@ -169,13 +169,18 @@ class MapViewController: UIViewController, NSFetchedResultsControllerDelegate, C
 		var polyline:MKPolyline? = nil
 		var locRect:MKMapRect? = nil
 		for segment in segs.array as! [Segment] {
-			polyline = createPolyline(using:segment)
-			self.mapView.addOverlay((polyline ?? nil)!)
-			if (locRect == nil) {
-				locRect = polyline?.boundingMapRect
+			if (segment.path == nil) {
+				print("Some kind of parking location without a path")
 			}
 			else {
-				locRect = locRect!.union(polyline?.boundingMapRect ?? locRect!)
+				polyline = createPolyline(using:segment)
+				self.mapView.addOverlay((polyline ?? nil)!)
+				if (locRect == nil) {
+					locRect = polyline?.boundingMapRect
+				}
+				else {
+					locRect = locRect!.union(polyline?.boundingMapRect ?? locRect!)
+				}
 			}
 		}
 		if (locRect?.isEmpty ?? false) {

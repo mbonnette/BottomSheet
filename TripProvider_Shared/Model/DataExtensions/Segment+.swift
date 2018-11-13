@@ -30,7 +30,7 @@ extension Segment  {
 
 	static func transportTypeEnum(_ transportTypeStr:String) -> Int32 {
 		switch transportTypeStr {
-		case "DRIVE","drive","Drive","driving":
+		case "DRIVE","drive","Drive","driving","DUMMY":			// saw dummy as drive buffer with no path data?
 			return TransportTypes.driving.rawValue
 		case "WALK","walk","Walk","walking":
 			return TransportTypes.walking.rawValue
@@ -38,6 +38,8 @@ extension Segment  {
 			return TransportTypes.bicycling.rawValue
 		case "TRANSIT","transit","Transit":
 			return TransportTypes.transit.rawValue
+		case "PARKANDWALK","parkandwalk","Parkandwalk":
+			return TransportTypes.parkandwalk.rawValue
 		default:
 			print("---- INSIDE transportTypeEnum No value for ---",transportTypeStr)
 			return TransportTypes.driving.rawValue
@@ -76,6 +78,8 @@ extension Segment  {
 			return "transitandcarshare"
 		case .bikeshareandcarshare:
 			return "bikeshareandcarshare"
+		case .park:
+			return "park"
 		case .unknown:
 			return "unknown"
 		}
@@ -111,8 +115,7 @@ extension Segment  {
 			let localWeight 		= segmentDictionary["lb"] as? NSNumber,
 			let localIdentifier 	= segmentDictionary["id"] as? NSNumber,
 			let localStartTime 		= segmentDictionary["start_time"] as? NSNumber,
-			let localEndTime 		= segmentDictionary["end_time"] as? NSNumber,
-			let pathDictionary 		= segmentDictionary["path"] as? [String: AnyObject]
+			let localEndTime 		= segmentDictionary["end_time"] as? NSNumber
 
 		else {
 			let description = NSLocalizedString("Could not interpret data from the direction server.", comment: "")
@@ -146,9 +149,12 @@ extension Segment  {
 			self.startLocation?.addToSegments(self)
 			self.stopLocation?.addToSegments(self)
 			
-			let segmentPath = Path.newPath(inContext:context)
-			try segmentPath.update(with:pathDictionary, inContext:context)
-			self.path = segmentPath
+			let pathDictionary 	= segmentDictionary["path"] as? [String: AnyObject]
+			if (pathDictionary != nil) {
+				let segmentPath = Path.newPath(inContext:context)
+				try segmentPath.update(with:pathDictionary!, inContext:context)
+				self.path = segmentPath
+			}
 			
 		} catch {
 			let nserror = error as NSError
@@ -159,7 +165,7 @@ extension Segment  {
 	//MARK:______________________________
 	//MARK: PRIVATE routines
 	
-	func segmentTypeEnum(_ segmentTypeStr:String) -> Int32 {
+	private func segmentTypeEnum(_ segmentTypeStr:String) -> Int32 {
 		switch segmentTypeStr {
 		case "DRIVE","drive","Drive":
 			return TransportTypes.driving.rawValue
@@ -167,12 +173,14 @@ extension Segment  {
 			return TransportTypes.bicycling.rawValue
 		case "WALK","walk","Walk":
 			return TransportTypes.walking.rawValue
+		case "PARK":
+			return TransportTypes.park.rawValue
 		default:
 			return TransportTypes.driving.rawValue
 		}
 	}
 	
-	func segmentTypeString(_ segmentType:TransportTypes) -> String {
+	private func segmentTypeString(_ segmentType:TransportTypes) -> String {
 		switch segmentType {
 		case .driving:
 			return "driving"
