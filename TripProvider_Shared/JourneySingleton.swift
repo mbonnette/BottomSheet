@@ -29,13 +29,36 @@ class JourneySingleton {
 	
 	
 	//MARK:______________________________
-	//MARK: OBJECT routines
+	//MARK: Variables
 	
-	var startPoint:MKMapPoint? = nil
-	var stopPoint:MKMapPoint? = MKMapPoint(CLLocationCoordinate2D(latitude: 42.481285, longitude: -71.214729))
 	var tripProvider = TripProvider()
 	var curSelectedTransportType:TransportTypes = TransportTypes.driving
-		
+
+
+	//--- endPoints and listeners
+	private var curEndPointListeners:[(()->())?] = []
+	var startPoint:MKMapPoint? = nil {
+		didSet {
+			//current location is constantly changing right now so don't do source
+//			for listener in curEndPointListeners {
+//				listener?()
+//			}
+		}
+	}
+	var stopPoint:MKMapPoint? = MKMapPoint(CLLocationCoordinate2D(latitude: 42.481285, longitude: -71.214729)) {
+		didSet {
+			for listener in curEndPointListeners {
+				listener?()
+			}
+		}
+	}
+	func notifyOnEndPointChanges(with closure: (()->())? ) {
+		curEndPointListeners.append(closure)
+	}
+
+	
+	//---- curTrip and listeners
+	private var curTripListeners:[(()->())?] = []
 	var curTripDisplayed:Trip? {
 		didSet {
 			for listener in curTripListeners {
@@ -47,7 +70,9 @@ class JourneySingleton {
 	func notifyOnTripChange(with closure: (()->())? ) {
 		curTripListeners.append(closure)
 	}
-	private var curTripListeners:[(()->())?] = []
+
+	
+	// MARK:- Object Routines
 	
 	func retrieve(journeyType:TransportTypes, completionHandler: @escaping (Error?) -> Void) {
 		if (stopPoint == nil) {

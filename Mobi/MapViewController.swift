@@ -84,7 +84,7 @@ class MapViewController: UIViewController, NSFetchedResultsControllerDelegate, C
 			case String(TransportTypes.walking.rawValue):
 				routeRenderer.strokeColor = UIColor(red: 200.0/255.0, green: 80.0/255.0, blue: 0.0/255.0, alpha: 1);
 			default:
-				routeRenderer.strokeColor = UIColor(red: 200.0/255.0, green: 200.0/255.0, blue: 0.0/255.0, alpha: 1);
+				routeRenderer.strokeColor = UIColor(red: 50.0/255.0, green: 200.0/255.0, blue: 200.0/255.0, alpha: 1);
 			}
 			displayedOverlay = overlay
 			return routeRenderer
@@ -137,22 +137,30 @@ class MapViewController: UIViewController, NSFetchedResultsControllerDelegate, C
 	
 	// MARK: - Internal Route UI
 	
-	func showNewTrip(_ trip:Trip?) {
-
-		hideLastTrip()
+	private func showTripEndpoints(_ trip:Trip?) {
+		// 1.
+		if (originAnnotation == nil) {
+			originAnnotation = MKPointAnnotation()
+			originAnnotation?.title = trip?.startLocation?.displayString()
+			originAnnotation?.coordinate = (JourneySingleton.sharedInstance.startPoint?.coordinate)!
+		}
+		
+		if (destinationAnnotation == nil) {
+			destinationAnnotation = MKPointAnnotation()
+			destinationAnnotation?.title = trip?.stopLocation?.name
+			destinationAnnotation?.subtitle = trip?.stopLocation?.address
+			destinationAnnotation?.coordinate = (JourneySingleton.sharedInstance.stopPoint?.coordinate)!
+		}
+	}
+	
+	
+	private func showNewTrip(_ trip:Trip?) {
+		hideLastTrip(keepOriginAnnotation: true, keepDestinationAnnotation: true)
+		showTripEndpoints(trip)
+		
 		guard (trip != nil) else {return}
 		displayedTrip = trip
 
-		// 1.
-		originAnnotation = MKPointAnnotation()
-		originAnnotation?.title = trip?.startLocation?.displayString()
-		originAnnotation?.coordinate = (JourneySingleton.sharedInstance.startPoint?.coordinate)!
-		
-		destinationAnnotation = MKPointAnnotation()
-		destinationAnnotation?.title = trip?.stopLocation?.name
-		destinationAnnotation?.subtitle = trip?.stopLocation?.address
-		destinationAnnotation?.coordinate = (JourneySingleton.sharedInstance.stopPoint?.coordinate)!
-		
 		// 2.
 		self.mapView.showAnnotations([originAnnotation!,destinationAnnotation!], animated: true )
 		
@@ -176,10 +184,8 @@ class MapViewController: UIViewController, NSFetchedResultsControllerDelegate, C
 		}
 	}
 
-	func hideLastTrip(keepOriginAnnotation:Bool = false, keepDestinationAnnotation:Bool = false) {
-		guard (displayedTrip != nil) && (displayedOverlay != nil) else {return}
-			
-		self.mapView.removeOverlay(displayedOverlay!)
+	func hideLastTrip(keepOriginAnnotation:Bool = true, keepDestinationAnnotation:Bool = true) {
+		guard (originAnnotation != nil) && (destinationAnnotation != nil) else {return}
 		if (!keepOriginAnnotation) {
 			self.mapView.removeAnnotation(originAnnotation!)
 			originAnnotation = nil
@@ -188,6 +194,9 @@ class MapViewController: UIViewController, NSFetchedResultsControllerDelegate, C
 			self.mapView.removeAnnotation(destinationAnnotation!)
 			destinationAnnotation = nil
 		}
+
+		guard (displayedTrip != nil) && (displayedOverlay != nil) else {return}
+		self.mapView.removeOverlay(displayedOverlay!)
 		displayedTrip = nil
 		displayedOverlay = nil
 	}
@@ -237,19 +246,3 @@ class MapViewController: UIViewController, NSFetchedResultsControllerDelegate, C
 	}
 
 }
-
-
-// MARK: - NSFetchedResultsControllerDelegate
-
-//extension MapViewController {
-//
-//	func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-//
-//		let locTrip = anObject as? Trip
-//		if (locTrip != displayedTrip) {
-//			mapView.reloadInputViews()
-//			showNewTrip(locTrip)
-//		}
-//	}
-//}
-

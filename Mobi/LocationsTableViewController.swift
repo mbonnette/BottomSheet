@@ -27,8 +27,8 @@ class LocationsTableViewController: BottomSheetMgr, NSFetchedResultsControllerDe
 							"Transit & Car Share",
 							"Bike Share & Car Share"
 							]
-	private var newTripsReceived:[Trip] = []
-	private var tripsDisplayed:[Trip] = []
+	private var newTripsCache:[Trip] = []
+	private var tripsDisplayedCache:[Trip] = []
 	private let numCommandRows: Int = 3			// 4th one used right now for the locations so counted by number of locations
 	private var scrollingCmdPicker:ScrollingCommandPicker? = nil
 	private var tableNeedsReload = false
@@ -66,7 +66,10 @@ class LocationsTableViewController: BottomSheetMgr, NSFetchedResultsControllerDe
 		tableView.register(UINib(nibName: "RouteDetailsCellID", bundle: nil), forCellReuseIdentifier: "RouteDetailsCellID")
 
 		self.listenForTripsResultsController.delegate = self
-    }
+		JourneySingleton.sharedInstance.notifyOnEndPointChanges(with: {
+			self.clearTripsFromCache()
+		})
+  }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -104,16 +107,16 @@ class LocationsTableViewController: BottomSheetMgr, NSFetchedResultsControllerDe
 		case 0...commands.count:
 			if (JourneySingleton.sharedInstance.curSelectedTransportType != cmdPosToTripType(pos)) {
 				JourneySingleton.sharedInstance.curSelectedTransportType = cmdPosToTripType(pos)
-				let newTrips:[Trip]? = newTripsReceived.filter { $0.tripType == cmdPosToTripType(pos).rawValue }
+				let newTrips:[Trip]? = newTripsCache.filter { $0.tripType == cmdPosToTripType(pos).rawValue }
 				if (newTrips?.count ?? 0 > 0) {
 					let trip = newTrips?[0]
-					newTripsReceived.removeAll(where: {$0.tripType == cmdPosToTripType(pos).rawValue})
-					tripsDisplayed.removeAll(where: {$0.tripType == cmdPosToTripType(pos).rawValue})
-					tripsDisplayed.append(trip!)
+					newTripsCache.removeAll(where: {$0.tripType == cmdPosToTripType(pos).rawValue})
+					tripsDisplayedCache.removeAll(where: {$0.tripType == cmdPosToTripType(pos).rawValue})
+					tripsDisplayedCache.append(trip!)
 					JourneySingleton.sharedInstance.curTripDisplayed = trip
 				}
 				else {
-					let displayedTrips:[Trip]? = tripsDisplayed.filter { $0.tripType == cmdPosToTripType(pos).rawValue }
+					let displayedTrips:[Trip]? = tripsDisplayedCache.filter { $0.tripType == cmdPosToTripType(pos).rawValue }
 					if (displayedTrips?.count ?? 0 > 0) {
 						let trip = displayedTrips?[0]
 						JourneySingleton.sharedInstance.curTripDisplayed = trip
@@ -131,7 +134,7 @@ class LocationsTableViewController: BottomSheetMgr, NSFetchedResultsControllerDe
 	func cmdHasNewInfo(at pos:Int) -> Bool {
 		switch pos {
 		case 0...commands.count:
-			let matchingTrips = newTripsReceived.filter { $0.tripType == cmdPosToTripType(pos).rawValue }
+			let matchingTrips = newTripsCache.filter { $0.tripType == cmdPosToTripType(pos).rawValue }
 			return (matchingTrips.isEmpty == false)
 		default:
 			return false
@@ -203,8 +206,9 @@ class LocationsTableViewController: BottomSheetMgr, NSFetchedResultsControllerDe
 		if (isLocationRow(indexPath)) {
 			let loc = locationAt(indexPath)
 			let stop = MKMapPoint(CLLocationCoordinate2D(latitude: loc.latitude, longitude: loc.longitude))
+			JourneySingleton.sharedInstance.curTripDisplayed = nil
 			JourneySingleton.sharedInstance.stopPoint = stop
-			JourneySingleton.sharedInstance.retrieve(journeyType: TransportTypes.driving, completionHandler: { error in
+			JourneySingleton.sharedInstance.retrieve(journeyType: JourneySingleton.sharedInstance.curSelectedTransportType, completionHandler: { error in
 
 				DispatchQueue.main.async {
 					tableView.deselectRow(at: indexPath, animated: true)
@@ -235,6 +239,19 @@ class LocationsTableViewController: BottomSheetMgr, NSFetchedResultsControllerDe
 		let newIndex = IndexPath(row:indexPath.row-numCommandRows, section:indexPath.section)
 		return fetchedLocationsResultsController.object(at:newIndex)
 	}
+	
+	private func removeTripFromCache() {
+		newTripsCache.removeAll(where: {$0.tripType == JourneySingleton.sharedInstance.curSelectedTransportType.rawValue})
+		tripsDisplayedCache.removeAll(where: {$0.tripType == JourneySingleton.sharedInstance.curSelectedTransportType.rawValue})
+		JourneySingleton.sharedInstance.curTripDisplayed = nil
+	}
+	
+	private func clearTripsFromCache() {
+		newTripsCache = []
+		tripsDisplayedCache = []
+		JourneySingleton.sharedInstance.curTripDisplayed = nil
+	}
+
 	
 	private func cmdPosToTripType(_ pos:Int) -> TransportTypes {
 #if DEBUG
@@ -310,13 +327,13 @@ extension LocationsTableViewController {
 		else if (isTrip) {
 			if (fetchType == NSFetchedResultsChangeType.insert) || (fetchType == NSFetchedResultsChangeType.delete) {
 				if (trip?.tripType != JourneySingleton.sharedInstance.curSelectedTransportType.rawValue) {
-					newTripsReceived.removeAll {$0.tripType == trip?.tripType}
-					newTripsReceived.append(trip!)
+					newTripsCache.removeAll {$0.tripType == trip?.tripType}
+					newTripsCache.append(trip!)
 				}
 				else {
-					newTripsReceived.removeAll {$0.tripType == trip?.tripType}
-					tripsDisplayed.removeAll {$0.tripType == trip?.tripType}
-					tripsDisplayed.append(trip!)
+					newTripsCache.removeAll {$0.tripType == trip?.tripType}
+					tripsDisplayedCache.removeAll {$0.tripType == trip?.tripType}
+					tripsDisplayedCache.append(trip!)
 					JourneySingleton.sharedInstance.curTripDisplayed = trip
 				}
 				tableNeedsReload = true
