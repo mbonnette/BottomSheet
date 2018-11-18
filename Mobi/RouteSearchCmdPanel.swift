@@ -57,21 +57,8 @@ class RouteSearchCmdPanel : UITableViewCell {
 					self.showFetchError(error: error)
 				}
 			})
-		case .bicycling:
-			JourneySingleton.sharedInstance.retrieve(journeyType: JourneySingleton.sharedInstance.curSelectedTransportType, completionHandler: { error in
-				DispatchQueue.main.async {
-					UIApplication.shared.isNetworkActivityIndicatorVisible = false
-					self.spinner.stopAnimating()
-					sender.isEnabled = true
-					guard let error = error else {
-						self.fetchWalkingRoute()
-						return
-					}
-					sender.isHidden = false
-					self.showFetchError(error: error)
-				}
-			})
-		case .walking,
+		case .bicycling,
+			 .walking,
 			 .transit,
 			 .carshare,
 			 .bikeshare,

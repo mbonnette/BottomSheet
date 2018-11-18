@@ -32,6 +32,8 @@ class MapViewController: UIViewController, NSFetchedResultsControllerDelegate, C
 		JourneySingleton.sharedInstance.notifyOnTripChange(with: {
 			self.showNewTrip(JourneySingleton.sharedInstance.curTripDisplayed)
 		})
+		self.buildTripEndpoints(nil)
+		self.mapView.showAnnotations([destinationAnnotation!], animated: true )
 	}
 
 	override func viewDidAppear(_ animated: Bool) {
@@ -137,15 +139,15 @@ class MapViewController: UIViewController, NSFetchedResultsControllerDelegate, C
 	
 	// MARK: - Internal Route UI
 	
-	private func showTripEndpoints(_ trip:Trip?) {
+	private func buildTripEndpoints(_ trip:Trip?) {
 		// 1.
-		if (originAnnotation == nil) {
+		if (originAnnotation == nil) && (JourneySingleton.sharedInstance.startPoint?.coordinate != nil) {
 			originAnnotation = MKPointAnnotation()
 			originAnnotation?.title = trip?.startLocation?.displayString()
 			originAnnotation?.coordinate = (JourneySingleton.sharedInstance.startPoint?.coordinate)!
 		}
 		
-		if (destinationAnnotation == nil) {
+		if (destinationAnnotation == nil) && (JourneySingleton.sharedInstance.stopPoint?.coordinate != nil) {
 			destinationAnnotation = MKPointAnnotation()
 			destinationAnnotation?.title = trip?.stopLocation?.name
 			destinationAnnotation?.subtitle = trip?.stopLocation?.address
@@ -155,13 +157,12 @@ class MapViewController: UIViewController, NSFetchedResultsControllerDelegate, C
 	
 	
 	private func showNewTrip(_ trip:Trip?) {
-		hideLastTrip(keepOriginAnnotation: true, keepDestinationAnnotation: true)
-		showTripEndpoints(trip)
+		hideLastTrip(keepOriginAnnotation: (trip == nil), keepDestinationAnnotation: (trip == nil))
 		
 		guard (trip != nil) else {return}
-		displayedTrip = trip
 
-		// 2.
+		buildTripEndpoints(trip)
+		displayedTrip = trip
 		self.mapView.showAnnotations([originAnnotation!,destinationAnnotation!], animated: true )
 		
 		// Pull the polyline from the trip and have it lazily build the polyline I'm expecting
@@ -190,12 +191,11 @@ class MapViewController: UIViewController, NSFetchedResultsControllerDelegate, C
 	}
 
 	func hideLastTrip(keepOriginAnnotation:Bool = true, keepDestinationAnnotation:Bool = true) {
-		guard (originAnnotation != nil) && (destinationAnnotation != nil) else {return}
-		if (!keepOriginAnnotation) {
+		if (!keepOriginAnnotation && (originAnnotation != nil))  {
 			self.mapView.removeAnnotation(originAnnotation!)
 			originAnnotation = nil
 		}
-		if (!keepDestinationAnnotation) {
+		if (!keepDestinationAnnotation && (destinationAnnotation != nil)) {
 			self.mapView.removeAnnotation(destinationAnnotation!)
 			destinationAnnotation = nil
 		}

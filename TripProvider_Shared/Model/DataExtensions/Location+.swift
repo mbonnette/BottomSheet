@@ -266,27 +266,27 @@ extension Location  {
 					innerLocations.remove(at: index!)
 				}
 				for innerLoc in innerLocations {
-					if (compareLoc!.equalAddress(rhs:innerLoc) && !locsToDelete.contains(innerLoc)) {
+					if (compareLoc!.equalNameOrAddress(rhs:innerLoc) && !locsToDelete.contains(innerLoc)) {
 						locsToDelete.append(innerLoc)
 						for case let segment as Segment in innerLoc.segments! {
-							if (segment.startLocation?.equalAddress(rhs:innerLoc) ?? false) {
+							if (segment.startLocation?.equalNameOrAddress(rhs:innerLoc) ?? false) {
 								segment.startLocation = compareLoc
 								compareLoc?.addToSegments(segment)
 								innerLoc.removeFromSegments(segment)
 							}
-							if (segment.stopLocation?.equalAddress(rhs:innerLoc) ?? false) {
+							if (segment.stopLocation?.equalNameOrAddress(rhs:innerLoc) ?? false) {
 								segment.stopLocation = compareLoc
 								compareLoc?.addToSegments(segment)
 								innerLoc.removeFromSegments(segment)
 							}
 						}
 						for case let trip as Trip in innerLoc.trips! {
-							if (trip.startLocation?.equalAddress(rhs:innerLoc) ?? false) {
+							if (trip.startLocation?.equalNameOrAddress(rhs:innerLoc) ?? false) {
 								trip.startLocation = compareLoc
 								compareLoc?.addToTrips(trip)
 								innerLoc.removeFromTrips(trip)
 							}
-							if (trip.stopLocation?.equalAddress(rhs:innerLoc) ?? false) {
+							if (trip.stopLocation?.equalNameOrAddress(rhs:innerLoc) ?? false) {
 								trip.stopLocation = compareLoc
 								compareLoc?.addToTrips(trip)
 								innerLoc.removeFromTrips(trip)
@@ -320,10 +320,18 @@ extension Location  {
 		super.awakeFromFetch()
 	}
 
+	func equalName(rhs: Location?) -> Bool {
+		guard (rhs != nil) && (rhs?.name != nil) else {return false}
+		if (self.name == rhs?.name) {
+			return true
+		}
+		else {
+			return false
+		}
+	}
+
 	func equalAddress(rhs: Location?) -> Bool {
 		guard (rhs != nil) && (rhs?.address != nil) else {return false}
-		print (self.address as Any)
-		print (rhs?.address as Any)
 		if (self.address == rhs?.address) {
 			return true
 		}
@@ -331,7 +339,10 @@ extension Location  {
 			return false
 		}
 	}
-	
+
+	func equalNameOrAddress(rhs: Location?) -> Bool {
+		return equalName(rhs:rhs) || equalAddress(rhs:rhs)
+	}
 	
 	//	A convenience method to update a location object with a dictionary.
 	func update(with locationDictionary: [AnyHashable: Any], inContext context:NSManagedObjectContext) throws {
