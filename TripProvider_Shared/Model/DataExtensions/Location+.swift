@@ -321,7 +321,7 @@ extension Location  {
 	}
 
 	func equalName(rhs: Location?) -> Bool {
-		guard (rhs != nil) && (rhs?.name != nil) else {return false}
+		guard (rhs != nil) && (rhs?.name != nil) && (rhs?.name != "origin") && (rhs?.name != "destination") else {return false}
 		if (self.name == rhs?.name) {
 			return true
 		}
