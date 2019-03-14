@@ -346,12 +346,12 @@ extension LocationsTableViewController {
 
 	public func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
 		if (tableNeedsReload) {
+			self.tableNeedsReload = false
 			DispatchQueue.main.async {
 				self.snapCmdPanel(toSmall: true)
 				self.tableView.reloadData()
 				self.scrollingCmdPicker?.collectionView.reloadData()		// hack but it won't refresh the unread properly
 			}
-			self.tableNeedsReload = false
 		}
 	}
 

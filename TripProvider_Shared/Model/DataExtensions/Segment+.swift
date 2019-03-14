@@ -103,6 +103,17 @@ extension Segment  {
 		Do both the from/to locations
 		*/
 
+		// Identifier is string based by sometimes comes in as number inside json parsing...probably better way of doing check
+		//	so it doesn't get this far
+		var localIdentifier:String = ""
+		let numberBased = segmentDictionary["id"] as? NSNumber
+		if (numberBased != nil) {
+			localIdentifier = (numberBased?.stringValue)!
+		}
+		else {
+			localIdentifier 	= segmentDictionary["id"] as! String
+		}
+
 		guard let fromDictionary = segmentDictionary["from_location"] as? [String: AnyObject],
 
 			let toDictionary 		= segmentDictionary["to_location"] as? [String: AnyObject],
@@ -113,7 +124,6 @@ extension Segment  {
 			let localCalories 		= segmentDictionary["calories"] as? NSNumber,
 			let localCo2 			= segmentDictionary["co2"] as? NSNumber,
 			let localWeight 		= segmentDictionary["lb"] as? NSNumber,
-			let localIdentifier 	= segmentDictionary["id"] as? NSNumber,
 			let localStartTime 		= segmentDictionary["start_time"] as? NSNumber,
 			let localEndTime 		= segmentDictionary["end_time"] as? NSNumber
 
@@ -129,7 +139,7 @@ extension Segment  {
 		self.calories		= Int64(truncating: localCalories)
 		self.co2			= Int64(truncating: localCo2)
 		self.weight			= Int64(truncating: localWeight)
-		self.identifier		= Int64(truncating: localIdentifier)
+		self.identifier		= localIdentifier
 		self.startTime		= Int64(truncating: localStartTime)
 		self.endTime		= Int64(truncating: localEndTime)
 		// not saved

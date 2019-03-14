@@ -312,16 +312,22 @@ class TripProvider: NSObject {
             let matchingSegmentRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Segment")
             
             let codesOrNil: [NSNumber?] = segmentsBatch.map { dictionary in
-				//                return dictionary["properties"]?["code"] as? String
-				// print (dictionary["id"] as? NSNumber as Any)
 				return dictionary["id"] as? NSNumber
             }
-            guard let codes = codesOrNil as? [NSNumber] else {
-                print("Error: Properties or code doesn't have the right type!")
-                return
-            }
-
-			matchingSegmentRequest.predicate = NSPredicate(format: "identifier in %@", argumentArray: [codes])
+			let codes = codesOrNil as? [NSNumber]
+			if (codes == nil) {
+				let codesOrNil: [String?] = segmentsBatch.map { dictionary in
+					return dictionary["id"] as? String
+				}
+				guard let codes = codesOrNil as? [String] else {
+					print("Error: Properties or code doesn't have the right type!")
+					return
+				}
+				matchingSegmentRequest.predicate = NSPredicate(format: "identifier in %@", argumentArray: [codes])
+			}
+			else {
+				matchingSegmentRequest.predicate = NSPredicate(format: "identifier in %@", argumentArray: [codes!])
+			}
 
             // Create batch delete request and set the result type to .resultTypeObjectIDs so that we can merge the changes
             let batchDeleteRequest = NSBatchDeleteRequest(fetchRequest: matchingSegmentRequest)
