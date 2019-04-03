@@ -1,5 +1,5 @@
 //
-//  Copyright © 2018 Simon Kågedal Reimer. All rights reserved.
+//  Copyright © 2018 BlueMEDL. All rights reserved.
 //
 
 import UIKit

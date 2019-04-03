@@ -16,8 +16,6 @@ class PersistentContainerSingleton {
 
 		// setup code
 
-		
-		
 		return instance
 	}()
 
@@ -62,6 +60,4 @@ class PersistentContainerSingleton {
 	//MARK: OBJECT routines
 	
 	
-	
-
 }

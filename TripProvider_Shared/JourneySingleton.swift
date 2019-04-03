@@ -16,8 +16,6 @@ class JourneySingleton {
 
 		// setup code
 
-		
-		
 		return instance
 	}()
 

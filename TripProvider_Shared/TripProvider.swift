@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2018 Apple Inc. All Rights Reserved.
+ Copyright (C) 2018 BlueMEDL. All Rights Reserved.
  See LICENSE.txt for this sample’s licensing information
  
  Abstract:
@@ -125,24 +125,10 @@ class TripProvider: NSObject {
          the NSAppTransportSecurity entry of info.plist because this server is out of our control
          and does not offer a https version.
         */
-//				let jsonURL = URL(string: "http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson")!
-//				let task = session.dataTask(with: jsonURL) { data, _, error in
-
-//		let jsonURL = URL(string: "https://api.takemobi.com/intermodal/v1/routes?origin=42.377806,-71.111969&destination=42.481285,-71.214729&mode=driving&departure_time=now")!
 
 		let jsonURL = URL(string: withURLString)!
 		let task = session.dataTask(with: jsonURL) { data, _, error in
 
-		
-//		let jsonURL = URL(string:"https://api.takemobi.com/intermodal/v1/routes?origin=42.377806,-71.111969&destination=42.481285,-71.214729&mode=driving&departure_time=now")
-//		var routeURLRequest = URLRequest(url:jsonURL!)
-//		routeURLRequest.setValue("application/json", forHTTPHeaderField: "Accept")
-//		routeURLRequest.setValue("no-cache", forHTTPHeaderField: "Cache-Control")
-//		routeURLRequest.setValue("Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Ik1FUXhORUU0TjBVeE56WkJPVU01TURoRk9UQTVOamsyTmpjM1F6TkRNVGd4T1RVNVF6VkJPQSJ9.eyJpc3MiOiJodHRwczovL3Rha2Vtb2JpLmF1dGgwLmNvbS8iLCJzdWIiOiJmMnlQTjBYMDdaZDdydWNWaGdJeGo1d0pneWJoTTUxN0BjbGllbnRzIiwiYXVkIjoiaHR0cHM6Ly9hcGkudGFrZW1vYmkuY29tIiwiaWF0IjoxNTM2NjMxNDI0LCJleHAiOjE1MzY3MTc4MjQsImF6cCI6ImYyeVBOMFgwN1pkN3J1Y1ZoZ0l4ajV3Smd5YmhNNTE3IiwiZ3R5IjoiY2xpZW50LWNyZWRlbnRpYWxzIn0.PneY12AAlBe0bBn2ffhB8J_idlO87OpTIDwas3-rWSa_jgQftwzNPbtgXSXS8OnV9sk19i_HjUt6Q9OU2HxS3XIxmA7rsTGUkPgmtV5iUXr9KhpVJ2wjnvXPOIIuLLjbj1GVWNeyYWwZz7TScCbjzw8BLQHHNSPEljuOabVeopHakrDXDMKBF3E1MX9H_5zqOaXDo6DUxi8-dJb_y-_IhzIYoOKAq696GxeiXqAahlBMlzMzXeHMA7pfiitd9XhoXOrHw8efsAEev7-lTx2tSkOd7jd37IOEqkLfFsX5YlgWUcpduNp5Erqi_kOjrprNCq_srBO5OywPSRUI6KSY2A",
-//			forHTTPHeaderField: "Authorization")
-//		let task = session.dataTask(with: routeURLRequest) { data, _, error in
-			
-			
             // If we don't get data back, alert the user.
             guard let data = data else {
                 let description = NSLocalizedString("Could not get data from the remote server", comment: "")
